@@ -27,6 +27,10 @@ const config = {
         '@form-created/shared': 'FormCreated.Shared',
         '@form-created/core': 'FormCreated.Core',
         '@form-created/react': 'FormCreated.React',
+        '@form-created/react-settings-form': 'FormCreated.SettingsForm',
+        '@form-created/formily-transformer': 'FormCreated.Formily.Transformer',
+        '@form-created/formily-setters': 'FormCreated.Formily.Setters',
+        '@form-created/formily-antd': 'FormCreated.Formily.Antd'
       },
       plugins: [
         terser(),
@@ -56,7 +60,11 @@ const config = {
     '@formily/react',
     '@form-created/shared',
     '@form-created/core',
-    '@form-created/react'
+    '@form-created/react',
+    '@form-created/react-settings-form',
+    '@form-created/formily-transformer',
+    '@form-created/formily-setters',
+    '@form-created/formily-antd'
   ],
 }
 
