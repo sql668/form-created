@@ -1,5 +1,9 @@
 packages:
   - "packages/**"
   - docs
-  - example
   - internal/*
+  - formily/**
+
+publishConfig:
+  exclude:
+    - '@form-created/example' # 这里填写你想要排除的包名

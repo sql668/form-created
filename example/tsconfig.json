@@ -1,27 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
+    "target": "es5",
+    "allowJs": false,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "jsx": "react-jsx",
     "paths": {
-      "@form-created/antd": ["../packages/antd/src/index.tsx"],
-      "@form-created/antd/*": ["../packages/antd/src/*"],
+      "@form-created/react": ["../packages/react/src/index.ts"],
+      "@form-created/core": ["../packages/core/src/index.ts"],
+      "@form-created/formily-transformer": [
+        "../formily/transfomer/src/index"
+      ],
     }
   },
   "include": ["src"],

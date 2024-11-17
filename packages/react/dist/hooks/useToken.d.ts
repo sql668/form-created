@@ -1,0 +1,5 @@
+export declare const useToken: () => {
+    theme: import("@ant-design/cssinjs").Theme<import("antd/es/theme/internal").SeedToken, import("antd/es/theme/internal").AliasToken>;
+    token: import("antd").GlobalToken;
+    hashId: string;
+};

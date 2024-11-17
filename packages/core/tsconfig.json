@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "module": "ESNext",
+    "target": "es5",
+    "allowJs": false,
+    "noUnusedLocals": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "baseUrl": "./src/",
+    "paths": {
+      "@form-created/shared": [
+        "../shared/src/index.ts"
+      ],
+    }
+  },
+  "include": [
+      "./src/**/*.ts",
+      "./src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "./src/__tests__/*",
+    "./esm/*",
+    "./lib/*",
+    "./dist/*"
+  ]
+}

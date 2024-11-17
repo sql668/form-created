@@ -5,13 +5,32 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-jss": "^10.4.0",
+    "antd": "^5.18.2",
+    "@ant-design/icons": "^5.5.1",
+    "@formily/core": "^2.3.2",
+    "@formily/json-schema": "^2.3.2",
+    "@formily/reactive": "^2.3.2",
+    "@formily/reactive-react": "^2.3.2",
+    "@formily/shared": "^2.3.2",
+    "@formily/validator": "^2.3.2",
+    "@formily/react": "^2.3.2",
+    "@formily/antd-v5": "^1.1.0",
+    "hoist-non-react-statics": "^3.3.2",
+    "@form-created/core": "workspace:^",
+    "@form-created/react": "workspace:^",
+    "@form-created/react-settings-form": "workspace:^",
+    "@form-created/shared": "workspace:^",
+    "@form-created/formily-transformer": "workspace:^",
+    "@form-created/formily-setters": "workspace:^",
+    "@form-created/formily-antd": "workspace:^"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
