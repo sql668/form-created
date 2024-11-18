@@ -1,6 +1,6 @@
 {
   "name": "form-created",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "antd:build": "pnpm -C formily/antd build",
     "example:build": "pnpm -C example build",
     "preview": "pnpm -C example preview",
-    
-    "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx --cache"
+    "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx --cache",
+    "publish": "pnpm --filter '@form-created/shared' publish && pnpm --filter '@form-created/core' publish && pnpm --filter '@form-created/react' publish && pnpm --filter '@form-created/react-settings-form' publish && pnpm --filter '@form-created/formily-transformer' publish && pnpm --filter '@form-created/formily-setters' publish && pnpm --filter '@form-created/formily-antd' publish"
   },
   "keywords": [],
   "author": "",

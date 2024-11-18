@@ -10,7 +10,7 @@ import {
   Editable,
   Input,
   NumberPicker,
-  Switch,
+  //Switch,
   Password,
   PreviewText,
   Radio,
@@ -30,6 +30,7 @@ import {
   ArrayCards,
 } from '@formily/antd-v5'
 import { Card, Slider, Rate, Button } from 'antd'
+import { Switch} from "@fdesign/component"
 import { createExtForm, TreeNode } from '@form-created/core'
 import { transformToSchema } from '@form-created/formily-transformer'
 import { Slot } from '@form-created/formily-antd'

@@ -30,7 +30,8 @@ const config = {
         '@form-created/react-settings-form': 'FormCreated.SettingsForm',
         '@form-created/formily-transformer': 'FormCreated.Formily.Transformer',
         '@form-created/formily-setters': 'FormCreated.Formily.Setters',
-        '@form-created/formily-antd': 'FormCreated.Formily.Antd'
+        '@form-created/formily-antd': 'FormCreated.Formily.Antd',
+        '@fdesign/component':'FdesignComponent'
       },
       plugins: [
         terser(),
@@ -64,7 +65,8 @@ const config = {
     '@form-created/react-settings-form',
     '@form-created/formily-transformer',
     '@form-created/formily-setters',
-    '@form-created/formily-antd'
+    '@form-created/formily-antd',
+    '@fdesign/component'
   ],
 }
 

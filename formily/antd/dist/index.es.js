@@ -24,15 +24,17 @@ import { Switch as oe, Slider as re, Rate as ne, Card as ae, Table as pe, Tabs a
 
 import ce from "classnames";
 
-var de = function() {
-    return de = Object.assign || function(e) {
+import { Switch as de } from "@fdesign/component";
+
+var me = function() {
+    return me = Object.assign || function(e) {
         for (var t, o = 1, r = arguments.length; o < r; o++) for (var n in t = arguments[o], 
         t) Object.prototype.hasOwnProperty.call(t, n) && (e[n] = t[n]);
         return e;
-    }, de.apply(this, arguments);
+    }, me.apply(this, arguments);
 };
 
-function me(e, t) {
+function se(e, t) {
     var o = {};
     for (var r in e) Object.prototype.hasOwnProperty.call(e, r) && t.indexOf(r) < 0 && (o[r] = e[r]);
     if (null != e && "function" == typeof Object.getOwnPropertySymbols) {
@@ -42,7 +44,7 @@ function me(e, t) {
     return o;
 }
 
-function se(e, t) {
+function ue(e, t) {
     var o = "function" == typeof Symbol && e[Symbol.iterator];
     if (!o) return e;
     var r, n, a = o.call(e), p = [];
@@ -62,7 +64,7 @@ function se(e, t) {
     return p;
 }
 
-function ue(e, t, o) {
+function xe(e, t, o) {
     if (o || 2 === arguments.length) for (var r, n = 0, a = t.length; n < a; n++) !r && n in t || (r || (r = Array.prototype.slice.call(t, 0, n)), 
     r[n] = t[n]);
     return e.concat(r || Array.prototype.slice.call(t));
@@ -70,13 +72,13 @@ function ue(e, t, o) {
 
 "function" == typeof SuppressedError && SuppressedError;
 
-var xe = J((function(t) {
+var he = J((function(t) {
     return e.createElement(H, null, t.children);
-})), he = function(t) {
+})), ye = function(t) {
     return function(o) {
-        return e.createElement(H, null, e.createElement(t, de({}, o)));
+        return e.createElement(H, null, e.createElement(t, me({}, o)));
     };
-}, ye = {
+}, be = {
     "zh-CN": {
         settings: {
             style: {
@@ -128,7 +130,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, be = {
+}, Se = {
     "zh-CN": {
         settings: {
             name: "字段标识",
@@ -450,7 +452,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Se = {
+}, ge = {
     "zh-CN": {
         title: "输入框",
         settings: {
@@ -499,7 +501,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, ge = {
+}, fe = {
     "zh-CN": {
         title: "选择框",
         settings: {
@@ -599,7 +601,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, fe = {
+}, Fe = {
     "zh-CN": {
         title: "多行输入",
         settings: {
@@ -633,7 +635,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Fe = {
+}, Ie = {
     "zh-CN": {
         title: "树选择",
         settings: {
@@ -813,7 +815,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Ie = {
+}, we = {
     "zh-CN": {
         title: "联级选择",
         settings: {
@@ -871,7 +873,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, we = {
+}, Ce = {
     "zh-CN": {
         title: "单选框组",
         settings: {
@@ -917,7 +919,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Ce = {
+}, ve = {
     "zh-CN": {
         title: "复选框组"
     },
@@ -927,7 +929,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "체크박스"
     }
-}, ve = {
+}, Te = {
     "zh-CN": {
         title: "滑动条",
         settings: {
@@ -997,7 +999,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Te = {
+}, ke = {
     "zh-CN": {
         title: "评分器",
         settings: {
@@ -1037,7 +1039,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, ke = {
+}, Ae = {
     "zh-CN": {
         title: "日期选择",
         settings: {
@@ -1110,7 +1112,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Ae = D(ke, {
+}, Ne = D(Ae, {
     "zh-CN": {
         title: "日期范围"
     },
@@ -1120,7 +1122,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "날짜범위 선택 상자"
     }
-}), Ne = D(ke, {
+}), Pe = D(Ae, {
     "zh-CN": {
         title: "时间选择",
         settings: {
@@ -1178,7 +1180,7 @@ var xe = J((function(t) {
             }
         }
     }
-}), Pe = D(Ne, {
+}), Re = D(Pe, {
     "zh-CN": {
         title: "时间范围"
     },
@@ -1188,7 +1190,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "시간 범위"
     }
-}), Re = {
+}), Le = {
     "zh-CN": {
         title: "数字输入",
         settings: {
@@ -1264,7 +1266,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Le = D(Se, {
+}, Ee = D(ge, {
     "zh-CN": {
         title: "密码输入"
     },
@@ -1274,7 +1276,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "비밀번호"
     }
-}), Ee = {
+}), Oe = {
     "zh-CN": {
         title: "穿梭框",
         settings: {
@@ -1329,7 +1331,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Oe = {
+}, De = {
     "zh-CN": {
         title: "上传",
         settings: {
@@ -1405,7 +1407,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, De = D(Oe, {
+}, We = D(De, {
     "zh-CN": {
         title: "拖拽上传",
         settings: {
@@ -1424,7 +1426,7 @@ var xe = J((function(t) {
             "x-component-props": {}
         }
     }
-}), We = {
+}), Ve = {
     "zh-CN": {
         title: "开关"
     },
@@ -1434,7 +1436,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "스위치"
     }
-}, Ve = {
+}, ze = {
     "zh-CN": {
         title: "对象容器"
     },
@@ -1444,7 +1446,7 @@ var xe = J((function(t) {
     "ko-KR": {
         title: "오브젝트"
     }
-}, ze = D(ye, {
+}, Me = D(be, {
     "zh-CN": {
         title: "表单",
         settings: {
@@ -1565,7 +1567,7 @@ var xe = J((function(t) {
             }
         }
     }
-}), Me = {
+}), Ue = {
     "zh-CN": {
         title: "表单布局",
         settings: {
@@ -1692,7 +1694,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, Ue = {
+}, He = {
     "zh-CN": {
         title: "文本",
         settings: {
@@ -1729,7 +1731,7 @@ var xe = J((function(t) {
             }
         }
     }
-}, He = {
+}, Ge = {
     "zh-CN": {
         title: "卡片",
         settings: {
@@ -1797,7 +1799,7 @@ W.registerDesignerLocales({
     }
 });
 
-var Ge = {
+var Be = {
     "zh-CN": {
         title: "添加按钮",
         settings: {
@@ -1807,7 +1809,7 @@ var Ge = {
             }
         }
     }
-}, Be = {
+}, je = {
     "zh-CN": {
         title: "删除按钮"
     },
@@ -1817,7 +1819,7 @@ var Ge = {
     "ko-KR": {
         title: "삭제"
     }
-}, je = {
+}, Ke = {
     "zh-CN": {
         title: "上移按钮"
     },
@@ -1827,7 +1829,7 @@ var Ge = {
     "ko-KR": {
         title: "위로 옮기기"
     }
-}, Ke = {
+}, Xe = {
     "zh-CN": {
         title: "下移按钮"
     },
@@ -1837,7 +1839,7 @@ var Ge = {
     "ko-KR": {
         title: "아래로 옮기기"
     }
-}, Xe = {
+}, _e = {
     "zh-CN": {
         title: "索引标识"
     },
@@ -1847,7 +1849,7 @@ var Ge = {
     "ko-KR": {
         title: "색인"
     }
-}, _e = D(He, {
+}, Ye = D(Ge, {
     "zh-CN": {
         title: "自增卡片",
         addIndex: "添加索引",
@@ -1863,7 +1865,7 @@ var Ge = {
         addIndex: "색인 추가",
         addOperation: "작업 추가"
     }
-}), Ye = {
+}), qe = {
     "zh-CN": {
         title: "表格列",
         settings: {
@@ -1918,7 +1920,7 @@ var Ge = {
             }
         }
     }
-}, qe = {
+}, $e = {
     "zh-CN": {
         title: "弹性间距",
         settings: {
@@ -1970,7 +1972,7 @@ var Ge = {
             }
         }
     }
-}, $e = {
+}, Qe = {
     "zh-CN": {
         title: "选项卡",
         addTabPane: "添加选项卡",
@@ -2034,7 +2036,7 @@ var Ge = {
             }
         }
     }
-}, Qe = {
+}, Je = {
     "zh-CN": {
         title: "选项卡面板",
         settings: {
@@ -2059,7 +2061,7 @@ var Ge = {
             }
         }
     }
-}, Je = {
+}, Ze = {
     "zh-CN": {
         title: "折叠面板",
         addCollapsePanel: "添加面板",
@@ -2105,7 +2107,7 @@ var Ge = {
             }
         }
     }
-}, Ze = {
+}, et = {
     "zh-CN": {
         title: "面板",
         settings: {
@@ -2145,7 +2147,7 @@ var Ge = {
             }
         }
     }
-}, et = {
+}, tt = {
     "zh-CN": {
         title: "网格布局",
         addGridColumn: "添加网格列",
@@ -2196,7 +2198,7 @@ var Ge = {
             }
         }
     }
-}, tt = {
+}, ot = {
     "zh-CN": {
         title: "网格列",
         settings: {
@@ -2221,7 +2223,7 @@ var Ge = {
             }
         }
     }
-}, ot = {
+}, rt = {
     "zh-CN": {
         title: "插槽",
         settings: {
@@ -2244,39 +2246,39 @@ var Ge = {
             }
         }
     }
-}, rt = Object.freeze({
+}, nt = Object.freeze({
     __proto__: null,
-    Component: ye,
-    Field: be,
-    Input: Se,
-    Select: ge,
-    TextArea: fe,
-    TreeSelect: Fe,
-    Cascader: Ie,
-    RadioGroup: we,
-    CheckboxGroup: Ce,
-    Slider: ve,
-    Rate: Te,
-    DatePicker: ke,
-    DateRangePicker: Ae,
-    TimePicker: Ne,
-    TimeRangePicker: Pe,
-    NumberPicker: Re,
-    Password: Le,
-    Transfer: Ee,
-    Upload: Oe,
-    UploadDragger: De,
-    Switch: We,
-    ObjectLocale: Ve,
-    Form: ze,
-    FormLayout: Me,
-    Text: Ue,
-    Card: He,
-    ArrayAddition: Ge,
-    ArrayRemove: Be,
-    ArrayMoveUp: je,
-    ArrayMoveDown: Ke,
-    ArrayIndex: Xe,
+    Component: be,
+    Field: Se,
+    Input: ge,
+    Select: fe,
+    TextArea: Fe,
+    TreeSelect: Ie,
+    Cascader: we,
+    RadioGroup: Ce,
+    CheckboxGroup: ve,
+    Slider: Te,
+    Rate: ke,
+    DatePicker: Ae,
+    DateRangePicker: Ne,
+    TimePicker: Pe,
+    TimeRangePicker: Re,
+    NumberPicker: Le,
+    Password: Ee,
+    Transfer: Oe,
+    Upload: De,
+    UploadDragger: We,
+    Switch: Ve,
+    ObjectLocale: ze,
+    Form: Me,
+    FormLayout: Ue,
+    Text: He,
+    Card: Ge,
+    ArrayAddition: Be,
+    ArrayRemove: je,
+    ArrayMoveUp: Ke,
+    ArrayMoveDown: Xe,
+    ArrayIndex: _e,
     ArraySortHandle: {
         "zh-CN": {
             title: "排序标识"
@@ -2288,7 +2290,7 @@ var Ge = {
             title: "정렬 핸들"
         }
     },
-    ArrayCards: _e,
+    ArrayCards: Ye,
     ArrayTable: {
         "zh-CN": {
             title: "自增表格",
@@ -2371,7 +2373,7 @@ var Ge = {
             }
         }
     },
-    ArrayTableColumn: Ye,
+    ArrayTableColumn: qe,
     Void: {
         "zh-CN": {
             title: "虚拟容器"
@@ -2383,19 +2385,19 @@ var Ge = {
             title: "비어있음"
         }
     },
-    Space: qe,
-    FormTab: $e,
-    FormTabPane: Qe,
-    FormCollapse: Je,
-    FormCollapsePanel: Ze,
-    FormGrid: et,
-    FormGridColumn: tt,
-    Slot: ot
+    Space: $e,
+    FormTab: Qe,
+    FormTabPane: Je,
+    FormCollapse: Ze,
+    FormCollapsePanel: et,
+    FormGrid: tt,
+    FormGridColumn: ot,
+    Slot: rt
 });
 
 l.silent(!0);
 
-var nt = {
+var at = {
     title: "title",
     description: "description",
     default: "value",
@@ -2413,32 +2415,32 @@ var nt = {
     "x-hidden": "hidden",
     "x-display": "display",
     "x-pattern": "pattern"
-}, at = {
+}, pt = {
     title: !0,
     description: !0,
     default: !0,
     "x-content": !0,
     "x-value": !0
-}, pt = function(e) {
-    return $(e) && /^\{\{.*\}\}$/.test(e);
 }, lt = function(e) {
+    return $(e) && /^\{\{.*\}\}$/.test(e);
+}, it = function(e) {
     if ("object" == typeof e) {
         var t = Q(e), o = E(e, (function(e, o, r) {
-            if (pt(o)) return e;
-            var n = lt(o);
+            if (lt(o)) return e;
+            var n = it(o);
             return null == n ? e : t ? e.concat([ n ]) : (e[r] = n, e);
         }), t ? [] : {});
         return o;
     }
-    if (!pt(e)) return e;
-}, it = function(t, o, r, a) {
+    if (!lt(e)) return e;
+}, ct = function(t, o, r, a) {
     var l = {};
-    L(nt, (function(e, o) {
+    L(at, (function(e, o) {
         var r = t[o];
-        if (pt(r)) {
-            if (!at[o]) return;
+        if (lt(r)) {
+            if (!pt[o]) return;
             if (r) return void (l[e] = r);
-        } else r && (l[e] = lt(r));
+        } else r && (l[e] = it(r));
     })), o["FormItem"] || (o["FormItem"] = x);
     var i = t["x-decorator"] && n.getIn(o, t["x-decorator"]), c = t["x-component"] && n.getIn(o, t["x-component"]), d = t["x-decorator-props"] || {}, m = t["x-component-props"] || {};
     return i && (l.decorator = [ i, p(d) ]), c && (l.component = [ c, p(m) ]), i ? n.setIn(l["decorator"][1], r, a) : c && n.setIn(l["component"][1], r, a), 
@@ -2447,35 +2449,35 @@ var nt = {
     }, l.title), l.description = l.description && e.createElement("span", {
         "data-content-editable": "description"
     }, l.description), l;
-}, ct = i((function(t) {
+}, dt = i((function(t) {
     var o = G(), r = B(), n = j();
     if (!n) return null;
-    var a = it(t, r, o.props.nodeIdAttrName, n.id);
-    return "object" === t.type ? e.createElement(xe, null, e.createElement(c, de({}, a, {
+    var a = ct(t, r, o.props.nodeIdAttrName, n.id);
+    return "object" === t.type ? e.createElement(he, null, e.createElement(c, me({}, a, {
         name: n.id
-    }), t.children)) : "array" === t.type ? e.createElement(d, de({}, a, {
+    }), t.children)) : "array" === t.type ? e.createElement(d, me({}, a, {
         name: n.id
-    })) : "void" === n.props.type ? e.createElement(m, de({}, a, {
+    })) : "void" === n.props.type ? e.createElement(m, me({}, a, {
         name: n.id
-    }), t.children) : e.createElement(s, de({}, a, {
+    }), t.children) : e.createElement(s, me({}, a, {
         name: n.id
     }));
 }));
 
-ct.Behavior = V({
+dt.Behavior = V({
     name: "Field",
     selector: "Field",
-    designerLocales: be
+    designerLocales: Se
 });
 
-var dt = function(t) {
+var mt = function(t) {
     return e.createElement(oe, {
         checked: "FormItem" === t.value,
         onChange: function(e) {
             t.onChange(e ? "FormItem" : void 0);
         }
     });
-}, mt = {
+}, st = {
     type: "object",
     properties: {
         addonBefore: {
@@ -2563,7 +2565,7 @@ var dt = function(t) {
             }
         }
     }
-}, st = {
+}, ut = {
     type: "object",
     properties: {
         content: {
@@ -2581,7 +2583,7 @@ var dt = function(t) {
             enum: [ "h1", "h2", "h3", "p", "normal" ]
         }
     }
-}, ut = {
+}, xt = {
     type: "object",
     properties: {
         labelCol: {
@@ -2701,7 +2703,7 @@ var dt = function(t) {
             }
         }
     }
-}, xt = {
+}, ht = {
     type: "void",
     properties: {
         "style.width": {
@@ -2749,12 +2751,12 @@ var dt = function(t) {
             }
         }
     }
-}, ht = {
-    type: "object",
-    properties: de(de({}, ut.properties), {
-        style: xt
-    })
 }, yt = {
+    type: "object",
+    properties: me(me({}, xt.properties), {
+        style: ht
+    })
+}, bt = {
     type: "object",
     properties: {
         tooltip: {
@@ -2891,7 +2893,7 @@ var dt = function(t) {
             }
         }
     }
-}, bt = {
+}, St = {
     type: "object",
     properties: {
         mode: {
@@ -3036,7 +3038,7 @@ var dt = function(t) {
             }
         }
     }
-}, St = {
+}, gt = {
     type: "object",
     properties: {
         title: {
@@ -3068,7 +3070,7 @@ var dt = function(t) {
             }
         }
     }
-}, gt = {
+}, ft = {
     type: "object",
     properties: {
         allowClear: {
@@ -3141,7 +3143,7 @@ var dt = function(t) {
             }
         }
     }
-}, ft = {
+}, Ft = {
     type: "object",
     properties: {
         autoFocus: {
@@ -3150,7 +3152,7 @@ var dt = function(t) {
             "x-component": "Switch"
         }
     }
-}, Ft = {
+}, It = {
     type: "object",
     properties: {
         autoFocus: {
@@ -3184,7 +3186,7 @@ var dt = function(t) {
             }
         }
     }
-}, It = {
+}, wt = {
     allowClear: {
         type: "boolean",
         "x-decorator": "FormItem",
@@ -3247,9 +3249,9 @@ var dt = function(t) {
             placeholder: "YYYY-MM-DD"
         }
     }
-}, wt = {
+}, Ct = {
     type: "object",
-    properties: de(de({
+    properties: me(me({
         picker: {
             type: "string",
             enum: [ "time", "date", "month", "year", "quarter", "decade" ],
@@ -3259,7 +3261,7 @@ var dt = function(t) {
                 defaultValue: "date"
             }
         }
-    }, It), {
+    }, wt), {
         showNow: {
             type: "boolean",
             "x-decorator": "FormItem",
@@ -3278,9 +3280,9 @@ var dt = function(t) {
     })
 };
 
-wt.RangePicker = {
+Ct.RangePicker = {
     type: "object",
-    properties: de(de({
+    properties: me(me({
         picker: {
             type: "string",
             enum: [ "time", "date", "month", "year", "decade" ],
@@ -3290,7 +3292,7 @@ wt.RangePicker = {
                 defaultValue: "date"
             }
         }
-    }, It), {
+    }, wt), {
         showTime: {
             type: "boolean",
             "x-decorator": "FormItem",
@@ -3299,7 +3301,7 @@ wt.RangePicker = {
     })
 };
 
-var Ct = {
+var vt = {
     type: "object",
     properties: {
         decimalSeparator: {
@@ -3377,16 +3379,16 @@ var Ct = {
             }
         }
     }
-}, vt = {
+}, Tt = {
     type: "object",
-    properties: de(de({}, mt.properties), {
+    properties: me(me({}, st.properties), {
         checkStrength: {
             type: "boolean",
             "x-decorator": "FormItem",
             "x-component": "Switch"
         }
     })
-}, Tt = {
+}, kt = {
     type: "object",
     properties: {
         allowClear: {
@@ -3423,7 +3425,7 @@ var Ct = {
             "x-component": "Switch"
         }
     }
-}, kt = {
+}, At = {
     type: "object",
     properties: {
         allowClear: {
@@ -3498,7 +3500,7 @@ var Ct = {
             }
         }
     }
-}, At = {
+}, Nt = {
     allowClear: {
         type: "boolean",
         "x-decorator": "FormItem",
@@ -3609,17 +3611,17 @@ var Ct = {
             placeholder: "YYYY-MM-DD"
         }
     }
-}, Nt = {
+}, Pt = {
     type: "object",
-    properties: At
+    properties: Nt
 };
 
-Nt.RangePicker = {
+Pt.RangePicker = {
     type: "object",
-    properties: At
+    properties: Nt
 };
 
-var Pt = {
+var Rt = {
     type: "object",
     properties: {
         allowClear: {
@@ -3755,7 +3757,7 @@ var Pt = {
             }
         }
     }
-}, Rt = {
+}, Lt = {
     type: "object",
     properties: {
         oneWay: {
@@ -3798,7 +3800,7 @@ var Pt = {
             }
         }
     }
-}, Lt = {
+}, Et = {
     type: "object",
     properties: {
         textContent: {
@@ -3897,9 +3899,9 @@ var Pt = {
     }
 };
 
-Lt.Dragger = Lt;
+Et.Dragger = Et;
 
-var Et = {
+var Ot = {
     type: "object",
     properties: {
         autoFocus: {
@@ -3917,7 +3919,7 @@ var Et = {
             }
         }
     }
-}, Ot = {
+}, Dt = {
     type: "object",
     properties: {
         minWidth: {
@@ -4000,7 +4002,7 @@ var Et = {
             }
         }
     }
-}, Dt = {
+}, Wt = {
     type: "object",
     properties: {
         align: {
@@ -4038,7 +4040,7 @@ var Et = {
             "x-component": "Switch"
         }
     }
-}, Wt = {
+}, Vt = {
     type: "object",
     properties: {
         animated: {
@@ -4080,7 +4082,7 @@ var Et = {
             }
         }
     }
-}, Vt = {
+}, zt = {
     type: "object",
     properties: {
         accordion: {
@@ -4137,7 +4139,7 @@ var Et = {
             }
         }
     }
-}, zt = {
+}, Mt = {
     type: "object",
     properties: {
         bordered: {
@@ -4183,7 +4185,7 @@ var Et = {
     }
 };
 
-zt.Column = {
+Mt.Column = {
     type: "object",
     properties: {
         title: {
@@ -4221,7 +4223,7 @@ zt.Column = {
             }
         }
     }
-}, zt.Addition = {
+}, Mt.Addition = {
     type: "object",
     properties: {
         method: {
@@ -4242,11 +4244,11 @@ zt.Column = {
     }
 };
 
-var Mt = St;
+var Ut = gt;
 
-Mt.Addition = zt.Addition;
+Ut.Addition = Mt.Addition;
 
-var Ut = {
+var Ht = {
     type: "object",
     properties: {
         slotName: {
@@ -4255,38 +4257,38 @@ var Ut = {
             "x-component": "Input"
         }
     }
-}, Ht = Object.freeze({
+}, Gt = Object.freeze({
     __proto__: null,
-    Input: mt,
-    Text: st,
-    FormLayout: ut,
-    CSSStyle: xt,
-    Form: ht,
-    FormItem: yt,
-    Select: bt,
-    Card: St,
-    Cascader: gt,
-    Checkbox: ft,
-    Radio: Ft,
-    DatePicker: wt,
-    NumberPicker: Ct,
-    Password: vt,
-    Rate: Tt,
-    Slider: kt,
-    CommonTimePickerAPI: At,
-    TimePicker: Nt,
-    TreeSelect: Pt,
-    Transfer: Rt,
-    Upload: Lt,
-    Switch: Et,
-    FormGrid: Ot,
-    Space: Dt,
-    FormTab: Wt,
-    FormCollapse: Vt,
-    ArrayTable: zt,
-    ArrayCards: Mt,
-    Slot: Ut
-}), Gt = function(e, t) {
+    Input: st,
+    Text: ut,
+    FormLayout: xt,
+    CSSStyle: ht,
+    Form: yt,
+    FormItem: bt,
+    Select: St,
+    Card: gt,
+    Cascader: ft,
+    Checkbox: Ft,
+    Radio: It,
+    DatePicker: Ct,
+    NumberPicker: vt,
+    Password: Tt,
+    Rate: kt,
+    Slider: At,
+    CommonTimePickerAPI: Nt,
+    TimePicker: Pt,
+    TreeSelect: Rt,
+    Transfer: Lt,
+    Upload: Et,
+    Switch: Ot,
+    FormGrid: Dt,
+    Space: Wt,
+    FormTab: Vt,
+    FormCollapse: zt,
+    ArrayTable: Mt,
+    ArrayCards: Ut,
+    Slot: Ht
+}), Bt = function(e, t) {
     return {
         "component-group": e && {
             type: "void",
@@ -4333,7 +4335,7 @@ var Ut = {
                 }
             },
             properties: {
-                "x-component-props.style": xt
+                "x-component-props.style": ht
             }
         },
         "decorator-style-group": {
@@ -4350,14 +4352,14 @@ var Ut = {
                 }
             },
             properties: {
-                "x-decorator-props.style": xt
+                "x-decorator-props.style": ht
             }
         }
     };
-}, Bt = function(e, t) {
-    return void 0 === t && (t = yt), {
+}, jt = function(e, t) {
+    return void 0 === t && (t = bt), {
         type: "object",
-        properties: de({
+        properties: me({
             "field-group": {
                 type: "void",
                 "x-component": "CollapseItem",
@@ -4418,12 +4420,12 @@ var Ut = {
                     }
                 }
             }
-        }, Gt(e, t))
+        }, Bt(e, t))
     };
-}, jt = function(e, t) {
-    return void 0 === t && (t = yt), {
+}, Kt = function(e, t) {
+    return void 0 === t && (t = bt), {
         type: "object",
-        properties: de({
+        properties: me({
             "field-group": {
                 type: "void",
                 "x-component": "CollapseItem",
@@ -4482,13 +4484,13 @@ var Ut = {
                     "x-decorator": {
                         type: "string",
                         "x-decorator": "FormItem",
-                        "x-component": dt
+                        "x-component": mt
                     }
                 }
             }
-        }, Gt(e, t))
+        }, Bt(e, t))
     };
-}, Kt = function(e, t) {
+}, Xt = function(e, t) {
     var o, r, n, a = "ant";
     return o = {}, o[".".concat(e)] = (r = {}, r["\n            .".concat(a, "-input,\n            .").concat(a, "-input-number,\n            .").concat(a, "-input-affix-wrapper,\n            .").concat(a, "-cascader-picker,\n            .").concat(a, "-picker-input,\n            .").concat(a, "-picker,\n            .").concat(a, "-cascader-picker-label,\n            .").concat(a, "-slider,\n            .").concat(a, "-checkbox,\n            .").concat(a, "-rate,\n            .").concat(a, "-switch,\n            .").concat(a, "-radio,\n            .").concat(a, "-radio-wrapper,\n            .").concat(a, "-checkbox-group,\n            .").concat(a, "-checkbox-wrapper,\n            .").concat(a, "-radio-group,\n            .").concat(a, "-upload,\n            .").concat(a, "-transfer,\n            .").concat(a, "-select,\n            .").concat(a, "-select-selector\n            ")] = (n = {
         pointerEvents: "none"
@@ -4497,23 +4499,23 @@ var Ut = {
     }, n), r[".anticon svg "] = {
         pointerEvents: "none"
     }, r), o;
-}, Xt = i((function(o) {
+}, _t = i((function(o) {
     var r = K("designable-form"), n = X({
         prefix: r,
-        styleFun: Kt
+        styleFun: Xt
     }), p = n.hashId, l = n.wrapSSR, i = t((function() {
         return a({
             designable: !0
         });
     }), []);
-    return l(e.createElement(h, de({}, o, {
-        style: de({}, o.style),
+    return l(e.createElement(h, me({}, o, {
+        style: me({}, o.style),
         className: ce(r, p),
         form: i
     }), o.children));
 }));
 
-Xt.Behavior = V({
+_t.Behavior = V({
     name: "Form",
     selector: function(e) {
         return "Form" === e.componentName;
@@ -4526,8 +4528,8 @@ Xt.Behavior = V({
             droppable: !0,
             propsSchema: {
                 type: "object",
-                properties: de(de({}, ut.properties), {
-                    style: xt
+                properties: me(me({}, xt.properties), {
+                    style: ht
                 })
             },
             defaultProps: {
@@ -4536,8 +4538,8 @@ Xt.Behavior = V({
             }
         };
     },
-    designerLocales: ze
-}), Xt.Resource = z({
+    designerLocales: Me
+}), _t.Resource = z({
     title: {
         "zh-CN": "表单",
         "en-US": "Form"
@@ -4552,18 +4554,18 @@ Xt.Behavior = V({
     } ]
 });
 
-var _t = y;
+var Yt = y;
 
-_t.Behavior = V({
+Yt.Behavior = V({
     name: "Input",
     extends: [ "Field" ],
     selector: function(e) {
         return "Input" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(mt)
+        propsSchema: jt(st)
     },
-    designerLocales: Se
+    designerLocales: ge
 }, {
     name: "Input.TextArea",
     extends: [ "Field" ],
@@ -4571,10 +4573,10 @@ _t.Behavior = V({
         return "Input.TextArea" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(mt.TextArea)
+        propsSchema: jt(st.TextArea)
     },
-    designerLocales: fe
-}), _t.Resource = z({
+    designerLocales: Fe
+}), Yt.Resource = z({
     icon: "InputSource",
     elements: [ {
         componentName: "Field",
@@ -4598,19 +4600,19 @@ _t.Behavior = V({
     } ]
 });
 
-var Yt = b;
+var qt = b;
 
-Yt.Behavior = V({
+qt.Behavior = V({
     name: "Select",
     extends: [ "Field" ],
     selector: function(e) {
         return "Select" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(bt)
+        propsSchema: jt(St)
     },
-    designerLocales: ge
-}), Yt.Resource = z({
+    designerLocales: fe
+}), qt.Resource = z({
     icon: "SelectSource",
     elements: [ {
         componentName: "Field",
@@ -4622,19 +4624,19 @@ Yt.Behavior = V({
     } ]
 });
 
-var qt = S;
+var $t = S;
 
-qt.Behavior = V({
+$t.Behavior = V({
     name: "TreeSelect",
     extends: [ "Field" ],
     selector: function(e) {
         return "TreeSelect" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Pt)
+        propsSchema: jt(Rt)
     },
-    designerLocales: Fe
-}), qt.Resource = z({
+    designerLocales: Ie
+}), $t.Resource = z({
     icon: "TreeSelectSource",
     elements: [ {
         componentName: "Field",
@@ -4646,19 +4648,19 @@ qt.Behavior = V({
     } ]
 });
 
-var $t = g;
+var Qt = g;
 
-$t.Behavior = V({
+Qt.Behavior = V({
     name: "Cascader",
     extends: [ "Field" ],
     selector: function(e) {
         return "Cascader" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(gt)
+        propsSchema: jt(ft)
     },
-    designerLocales: Ie
-}), $t.Resource = z({
+    designerLocales: we
+}), Qt.Resource = z({
     icon: "CascaderSource",
     elements: [ {
         componentName: "Field",
@@ -4670,19 +4672,19 @@ $t.Behavior = V({
     } ]
 });
 
-var Qt = f;
+var Jt = f;
 
-Qt.Behavior = V({
+Jt.Behavior = V({
     name: "Checkbox.Group",
     extends: [ "Field" ],
     selector: function(e) {
         return "Checkbox.Group" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(ft.Group)
+        propsSchema: jt(Ft.Group)
     },
-    designerLocales: Ce
-}), Qt.Resource = z({
+    designerLocales: ve
+}), Jt.Resource = z({
     icon: "CheckboxGroupSource",
     elements: [ {
         componentName: "Field",
@@ -4702,19 +4704,19 @@ Qt.Behavior = V({
     } ]
 });
 
-var Jt = F;
+var Zt = F;
 
-Jt.Behavior = V({
+Zt.Behavior = V({
     name: "Radio.Group",
     extends: [ "Field" ],
     selector: function(e) {
         return "Radio.Group" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Ft.Group)
+        propsSchema: jt(It.Group)
     },
-    designerLocales: we
-}), Jt.Resource = z({
+    designerLocales: Ce
+}), Zt.Resource = z({
     icon: "RadioGroupSource",
     elements: [ {
         componentName: "Field",
@@ -4734,19 +4736,19 @@ Jt.Behavior = V({
     } ]
 });
 
-var Zt = re;
+var eo = re;
 
-Zt.Behavior = V({
+eo.Behavior = V({
     name: "Slider",
     extends: [ "Field" ],
     selector: function(e) {
         return "Slider" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(kt)
+        propsSchema: jt(At)
     },
-    designerLocales: ve
-}), Zt.Resource = z({
+    designerLocales: Te
+}), eo.Resource = z({
     icon: "SliderSource",
     elements: [ {
         componentName: "Field",
@@ -4759,19 +4761,19 @@ Zt.Behavior = V({
     } ]
 });
 
-var eo = ne;
+var to = ne;
 
-eo.Behavior = V({
+to.Behavior = V({
     name: "Rate",
     extends: [ "Field" ],
     selector: function(e) {
         return "Rate" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Tt)
+        propsSchema: jt(kt)
     },
-    designerLocales: Te
-}), eo.Resource = z({
+    designerLocales: ke
+}), to.Resource = z({
     icon: "RateSource",
     elements: [ {
         componentName: "Field",
@@ -4784,19 +4786,19 @@ eo.Behavior = V({
     } ]
 });
 
-var to = I;
+var oo = I;
 
-to.Behavior = V({
+oo.Behavior = V({
     name: "NumberPicker",
     extends: [ "Field" ],
     selector: function(e) {
         return "NumberPicker" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Ct)
+        propsSchema: jt(vt)
     },
-    designerLocales: Re
-}), to.Resource = z({
+    designerLocales: Le
+}), oo.Resource = z({
     icon: "NumberPickerSource",
     elements: [ {
         componentName: "Field",
@@ -4809,19 +4811,19 @@ to.Behavior = V({
     } ]
 });
 
-var oo = w;
+var ro = w;
 
-oo.Behavior = V({
+ro.Behavior = V({
     name: "Transfer",
     extends: [ "Field" ],
     selector: function(e) {
         return "Transfer" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Rt)
+        propsSchema: jt(Lt)
     },
-    designerLocales: Ee
-}), oo.Resource = z({
+    designerLocales: Oe
+}), ro.Resource = z({
     icon: "TransferSource",
     elements: [ {
         componentName: "Field",
@@ -4833,19 +4835,19 @@ oo.Behavior = V({
     } ]
 });
 
-var ro = C;
+var no = C;
 
-ro.Behavior = V({
+no.Behavior = V({
     name: "Password",
     extends: [ "Field" ],
     selector: function(e) {
         return "Password" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(vt)
+        propsSchema: jt(Tt)
     },
-    designerLocales: Le
-}), ro.Resource = z({
+    designerLocales: Ee
+}), no.Resource = z({
     icon: "PasswordSource",
     elements: [ {
         componentName: "Field",
@@ -4857,18 +4859,18 @@ ro.Behavior = V({
     } ]
 });
 
-var no = v;
+var ao = v;
 
-no.Behavior = V({
+ao.Behavior = V({
     name: "DatePicker",
     extends: [ "Field" ],
     selector: function(e) {
         return "DatePicker" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(wt)
+        propsSchema: jt(Ct)
     },
-    designerLocales: ke
+    designerLocales: Ae
 }, {
     name: "DatePicker.RangePicker",
     extends: [ "Field" ],
@@ -4876,10 +4878,10 @@ no.Behavior = V({
         return "DatePicker.RangePicker" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(wt.RangePicker)
+        propsSchema: jt(Ct.RangePicker)
     },
-    designerLocales: Ae
-}), no.Resource = z({
+    designerLocales: Ne
+}), ao.Resource = z({
     icon: "DatePickerSource",
     elements: [ {
         componentName: "Field",
@@ -4903,18 +4905,18 @@ no.Behavior = V({
     } ]
 });
 
-var ao = T;
+var po = T;
 
-ao.Behavior = V({
+po.Behavior = V({
     name: "TimePicker",
     extends: [ "Field" ],
     selector: function(e) {
         return "TimePicker" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Nt)
+        propsSchema: jt(Pt)
     },
-    designerLocales: Ne
+    designerLocales: Pe
 }, {
     name: "TimePicker.RangePicker",
     extends: [ "Field" ],
@@ -4922,10 +4924,10 @@ ao.Behavior = V({
         return "TimePicker.RangePicker" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Nt.RangePicker)
+        propsSchema: jt(Pt.RangePicker)
     },
-    designerLocales: Pe
-}), ao.Resource = z({
+    designerLocales: Re
+}), po.Resource = z({
     icon: "TimePickerSource",
     elements: [ {
         componentName: "Field",
@@ -4949,18 +4951,18 @@ ao.Behavior = V({
     } ]
 });
 
-var po = k;
+var lo = k;
 
-po.Behavior = V({
+lo.Behavior = V({
     name: "Upload",
     extends: [ "Field" ],
     selector: function(e) {
         return "Upload" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Lt)
+        propsSchema: jt(Et)
     },
-    designerLocales: Oe
+    designerLocales: De
 }, {
     name: "Upload.Dragger",
     extends: [ "Field" ],
@@ -4968,10 +4970,10 @@ po.Behavior = V({
         return "Upload.Dragger" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Lt.Dragger)
+        propsSchema: jt(Et.Dragger)
     },
-    designerLocales: De
-}), po.Resource = z({
+    designerLocales: We
+}), lo.Resource = z({
     icon: "UploadSource",
     elements: [ {
         componentName: "Field",
@@ -5001,19 +5003,19 @@ po.Behavior = V({
     } ]
 });
 
-var lo = oe;
+var io = de;
 
-lo.Behavior = V({
+io.Behavior = V({
     name: "Switch",
     extends: [ "Field" ],
     selector: function(e) {
         return "Switch" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: Bt(Et)
+        propsSchema: jt(Ot)
     },
-    designerLocales: We
-}), lo.Resource = z({
+    designerLocales: Ve
+}), io.Resource = z({
     icon: "SwitchSource",
     elements: [ {
         componentName: "Field",
@@ -5026,7 +5028,7 @@ lo.Behavior = V({
     } ]
 });
 
-var io = function(e, t) {
+var co = function(e, t) {
     var o, r;
     return o = {}, o[".".concat(e)] = (r = {}, r["&:empty::before"] = {
         content: "Please Input",
@@ -5035,28 +5037,28 @@ var io = function(e, t) {
     }, r["&:focus"] = {
         padding: "4px"
     }, r), o;
-}, co = function(t) {
+}, mo = function(t) {
     var o = "normal" !== t.mode && t.mode ? t.mode : "div", r = "dn-text", n = X({
         prefix: r,
-        styleFun: io
+        styleFun: co
     }), a = n.hashId, p = n.wrapSSR;
-    return p(e.createElement(o, de(de({}, t), {
+    return p(e.createElement(o, me(me({}, t), {
         className: ce(t.className, r, a),
         "data-content-editable": "x-component-props.content"
     }), t.content));
 };
 
-co.Behavior = V({
+mo.Behavior = V({
     name: "Text",
     extends: [ "Field" ],
     selector: function(e) {
         return "Text" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: jt(st)
+        propsSchema: Kt(ut)
     },
-    designerLocales: Ue
-}), co.Resource = z({
+    designerLocales: He
+}), mo.Resource = z({
     icon: "TextSource",
     elements: [ {
         componentName: "Field",
@@ -5067,15 +5069,15 @@ co.Behavior = V({
     } ]
 });
 
-var mo = function(t) {
-    return e.createElement(ae, de({}, t, {
+var so = function(t) {
+    return e.createElement(ae, me({}, t, {
         title: e.createElement("span", {
             "data-content-editable": "x-component-props.title"
         }, t.title)
     }), t.children);
 };
 
-mo.Behavior = V({
+so.Behavior = V({
     name: "Card",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5083,10 +5085,10 @@ mo.Behavior = V({
     },
     designerProps: {
         droppable: !0,
-        propsSchema: jt(St)
+        propsSchema: Kt(gt)
     },
-    designerLocales: He
-}), mo.Resource = z({
+    designerLocales: Ge
+}), so.Resource = z({
     icon: "CardSource",
     elements: [ {
         componentName: "Field",
@@ -5100,9 +5102,9 @@ mo.Behavior = V({
     } ]
 });
 
-var so = he(A);
+var uo = ye(A);
 
-so.Behavior = V({
+uo.Behavior = V({
     name: "Space",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5111,10 +5113,10 @@ so.Behavior = V({
     designerProps: {
         droppable: !0,
         inlineChildrenLayout: !0,
-        propsSchema: jt(Dt)
+        propsSchema: Kt(Wt)
     },
-    designerLocales: qe
-}), so.Resource = z({
+    designerLocales: $e
+}), uo.Resource = z({
     icon: "SpaceSource",
     elements: [ {
         componentName: "Field",
@@ -5125,9 +5127,9 @@ so.Behavior = V({
     } ]
 });
 
-var uo = xe;
+var xo = he;
 
-uo.Behavior = V({
+xo.Behavior = V({
     name: "Object",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5135,10 +5137,10 @@ uo.Behavior = V({
     },
     designerProps: {
         droppable: !0,
-        propsSchema: Bt()
+        propsSchema: jt()
     },
-    designerLocales: Ve
-}), uo.Resource = z({
+    designerLocales: ze
+}), xo.Resource = z({
     icon: "ObjectSource",
     elements: [ {
         componentName: "Field",
@@ -5148,41 +5150,41 @@ uo.Behavior = V({
     } ]
 });
 
-var xo = function(t) {
+var ho = function(t) {
     var o;
     return e.createElement(_, null, null === (o = t.actions) || void 0 === o ? void 0 : o.map((function(t, o) {
-        return e.createElement(_.Action, de({}, t, {
+        return e.createElement(_.Action, me({}, t, {
             key: o
         }));
     })));
-}, ho = function(e, t, o) {
-    var r;
-    if ("*" === t) return !0;
-    var n = null === (r = null == e ? void 0 : e.props) || void 0 === r ? void 0 : r["x-component"];
-    return "function" == typeof t ? t(n || "", e, o) : Array.isArray(t) ? t.includes(n) : n === t;
 }, yo = function(e, t, o) {
     var r;
     if ("*" === t) return !0;
     var n = null === (r = null == e ? void 0 : e.props) || void 0 === r ? void 0 : r["x-component"];
+    return "function" == typeof t ? t(n || "", e, o) : Array.isArray(t) ? t.includes(n) : n === t;
+}, bo = function(e, t, o) {
+    var r;
+    if ("*" === t) return !0;
+    var n = null === (r = null == e ? void 0 : e.props) || void 0 === r ? void 0 : r["x-component"];
     return !!n && ("function" == typeof t ? t(n || "", e, o) : Array.isArray(t) ? t.includes(n) : n.indexOf("".concat(t, ".")) > -1);
-}, bo = function(e, t) {
-    return 0 === (null == t ? void 0 : t.length) ? [] : 1 === (null == t ? void 0 : t.length) && ho(e, t[0]) ? [ e ] : ho(e, t[0]) ? e.children.reduce((function(e, o) {
-        return e.concat(bo(o, t.slice(1)));
-    }), []) : [];
 }, So = function(e, t) {
+    return 0 === (null == t ? void 0 : t.length) ? [] : 1 === (null == t ? void 0 : t.length) && yo(e, t[0]) ? [ e ] : yo(e, t[0]) ? e.children.reduce((function(e, o) {
+        return e.concat(So(o, t.slice(1)));
+    }), []) : [];
+}, go = function(e, t) {
     if (0 !== (null == t ? void 0 : t.length)) {
-        if (1 === (null == t ? void 0 : t.length) && ho(e, t[0])) return e;
-        if (ho(e, t[0])) for (var o = 0; o < e.children.length; o++) {
-            var r = So(e.children[o], t.slice(1));
+        if (1 === (null == t ? void 0 : t.length) && yo(e, t[0])) return e;
+        if (yo(e, t[0])) for (var o = 0; o < e.children.length; o++) {
+            var r = go(e.children[o], t.slice(1));
             if (r) return r;
         }
     }
-}, go = function(e, t) {
-    return !!So(e, t);
 }, fo = function(e, t) {
+    return !!go(e, t);
+}, Fo = function(e, t) {
     var o;
     return o = {}, o[e.props.nodeIdAttrName] = t, o;
-}, Fo = function(e) {
+}, Io = function(e) {
     return function(t) {
         var o = t.children.find((function(t) {
             return t.props["type"] === e;
@@ -5196,19 +5198,19 @@ var xo = function(t) {
         });
         return t.prepend(r), r;
     };
-}, Io = function(e, t) {
+}, wo = function(e, t) {
     return G((function(o) {
         return o.subscribeTo(U, (function(o) {
             var r = o.data, n = r.source, a = r.target;
-            if (!Array.isArray(a) && Array.isArray(n)) return ho(a, (function(t) {
+            if (!Array.isArray(a) && Array.isArray(n)) return yo(a, (function(t) {
                 return t === e && n.every((function(t) {
-                    return !yo(t, e);
+                    return !bo(t, e);
                 }));
-            })) && 0 === a.children.length ? (a.setChildren.apply(a, ue([], se(t(n)), !1)), 
+            })) && 0 === a.children.length ? (a.setChildren.apply(a, xe([], ue(t(n)), !1)), 
             !1) : void 0;
         }));
     }));
-}, wo = function(e) {
+}, Co = function(e) {
     return V({
         name: e,
         extends: [ "Field" ],
@@ -5217,9 +5219,9 @@ var xo = function(t) {
         },
         designerProps: {
             droppable: !0,
-            propsSchema: Bt(Ht[e])
+            propsSchema: jt(Gt[e])
         },
-        designerLocales: rt[e]
+        designerLocales: nt[e]
     }, {
         name: "".concat(e, ".Addition"),
         extends: [ "Field" ],
@@ -5230,9 +5232,9 @@ var xo = function(t) {
             allowDrop: function(t) {
                 return t.props["x-component"] === e;
             },
-            propsSchema: jt(Ht[e].Addition)
+            propsSchema: Kt(Gt[e].Addition)
         },
-        designerLocales: Ge
+        designerLocales: Be
     }, {
         name: "".concat(e, ".Remove"),
         extends: [ "Field" ],
@@ -5243,9 +5245,9 @@ var xo = function(t) {
             allowDrop: function(t) {
                 return t.props["x-component"] === e;
             },
-            propsSchema: jt()
+            propsSchema: Kt()
         },
-        designerLocales: Be
+        designerLocales: je
     }, {
         name: "".concat(e, ".Index"),
         extends: [ "Field" ],
@@ -5256,9 +5258,9 @@ var xo = function(t) {
             allowDrop: function(t) {
                 return t.props["x-component"] === e;
             },
-            propsSchema: jt()
+            propsSchema: Kt()
         },
-        designerLocales: Xe
+        designerLocales: _e
     }, {
         name: "".concat(e, ".MoveUp"),
         extends: [ "Field" ],
@@ -5269,9 +5271,9 @@ var xo = function(t) {
             allowDrop: function(t) {
                 return t.props["x-component"] === e;
             },
-            propsSchema: jt()
+            propsSchema: Kt()
         },
-        designerLocales: je
+        designerLocales: Ke
     }, {
         name: "".concat(e, ".MoveDown"),
         extends: [ "Field" ],
@@ -5282,19 +5284,19 @@ var xo = function(t) {
             allowDrop: function(e) {
                 return "ArrayCards" === e.props["x-component"];
             },
-            propsSchema: jt()
+            propsSchema: Kt()
         },
-        designerLocales: Ke
+        designerLocales: Xe
     });
-}, Co = function(e, t) {
+}, vo = function(e, t) {
     var o;
     return o = {}, o[".".concat(e)] = {
         backgroundColor: t.colorBgContainer
     }, o;
-}, vo = Fo("object"), To = function(e) {
+}, To = Io("object"), ko = function(e) {
     return "ArrayCards.Remove" === e || "ArrayCards.MoveDown" === e || "ArrayCards.MoveUp" === e;
-}, ko = i((function(t) {
-    var r = j(), n = Y(), a = Io("ArrayCards", (function(e) {
+}, Ao = i((function(t) {
+    var r = j(), n = Y(), a = wo("ArrayCards", (function(e) {
         var t = new M({
             componentName: r.componentName,
             props: {
@@ -5334,18 +5336,18 @@ var xo = function(t) {
             props: {
                 type: "object"
             },
-            children: ue(ue([ t ], se(e), !1), [ n, a, p ], !1)
+            children: xe(xe([ t ], ue(e), !1), [ n, a, p ], !1)
         });
         return [ l, o ];
     })), p = X({
         prefix: "dn-array-cards",
-        styleFun: Co
+        styleFun: vo
     }), l = p.hashId, i = p.wrapSSR;
-    return i(e.createElement("div", de({}, n, {
+    return i(e.createElement("div", me({}, n, {
         className: ce("dn-array-cards", l)
     }), function() {
         if (0 === r.children.length) return e.createElement(H, null);
-        var n = bo(r, [ "ArrayCards", "ArrayCards.Addition" ]), p = bo(r, [ "ArrayCards", "*", "ArrayCards.Index" ]), l = bo(r, [ "ArrayCards", "*", To ]), i = bo(r, [ "ArrayCards", "*", function(e) {
+        var n = So(r, [ "ArrayCards", "ArrayCards.Addition" ]), p = So(r, [ "ArrayCards", "*", "ArrayCards.Index" ]), l = So(r, [ "ArrayCards", "*", ko ]), i = So(r, [ "ArrayCards", "*", function(e) {
             return -1 === e.indexOf("ArrayCards.");
         } ]);
         return e.createElement(N, {
@@ -5353,7 +5355,7 @@ var xo = function(t) {
         }, e.createElement(N.Item, {
             index: 0,
             record: null
-        }, e.createElement(ae, de({}, t, {
+        }, e.createElement(ae, me({}, t, {
             title: e.createElement(o, null, p.map((function(t, o) {
                 return e.createElement(q, {
                     key: o,
@@ -5369,7 +5371,7 @@ var xo = function(t) {
                     node: t
                 });
             })), t.extra)
-        }), e.createElement("div", de({}, fo(a, vo(r).id)), i.length ? i.map((function(t) {
+        }), e.createElement("div", me({}, Fo(a, To(r).id)), i.length ? i.map((function(t) {
             return e.createElement(q, {
                 key: t.id,
                 node: t
@@ -5382,12 +5384,12 @@ var xo = function(t) {
                 node: t
             });
         })));
-    }(), e.createElement(xo, {
+    }(), e.createElement(ho, {
         actions: [ {
             title: r.getMessage("addIndex"),
             icon: "AddIndex",
             onClick: function() {
-                if (!go(r, [ "ArrayCards", "*", "ArrayCards.Index" ])) {
+                if (!fo(r, [ "ArrayCards", "*", "ArrayCards.Index" ])) {
                     var e = new M({
                         componentName: r.componentName,
                         props: {
@@ -5395,14 +5397,14 @@ var xo = function(t) {
                             "x-component": "ArrayCards.Index"
                         }
                     });
-                    vo(r).append(e);
+                    To(r).append(e);
                 }
             }
         }, {
             title: r.getMessage("addOperation"),
             icon: "AddOperation",
             onClick: function() {
-                var e = So(r, [ "ArrayCards", "ArrayCards.Addition" ]);
+                var e = go(r, [ "ArrayCards", "ArrayCards.Addition" ]);
                 if (!e) {
                     var t = new M({
                         componentName: r.componentName,
@@ -5412,22 +5414,22 @@ var xo = function(t) {
                             "x-component": "ArrayCards.Addition"
                         }
                     });
-                    vo(r).insertAfter(t);
+                    To(r).insertAfter(t);
                 }
-                var o = So(r, [ "ArrayCards", "*", "ArrayCards.Remove" ]), n = So(r, [ "ArrayCards", "*", "ArrayCards.MoveDown" ]), a = So(r, [ "ArrayCards", "*", "ArrayCards.MoveUp" ]);
-                o || vo(r).append(new M({
+                var o = go(r, [ "ArrayCards", "*", "ArrayCards.Remove" ]), n = go(r, [ "ArrayCards", "*", "ArrayCards.MoveDown" ]), a = go(r, [ "ArrayCards", "*", "ArrayCards.MoveUp" ]);
+                o || To(r).append(new M({
                     componentName: r.componentName,
                     props: {
                         type: "void",
                         "x-component": "ArrayCards.Remove"
                     }
-                })), n || vo(r).append(new M({
+                })), n || To(r).append(new M({
                     componentName: r.componentName,
                     props: {
                         type: "void",
                         "x-component": "ArrayCards.MoveDown"
                     }
-                })), a || vo(r).append(new M({
+                })), a || To(r).append(new M({
                     componentName: r.componentName,
                     props: {
                         type: "void",
@@ -5439,7 +5441,7 @@ var xo = function(t) {
     })));
 }));
 
-N.mixin(ko), ko.Behavior = wo("ArrayCards"), ko.Resource = z({
+N.mixin(Ao), Ao.Behavior = Co("ArrayCards"), Ao.Resource = z({
     icon: "ArrayCardsSource",
     elements: [ {
         componentName: "Field",
@@ -5454,27 +5456,27 @@ N.mixin(ko), ko.Behavior = wo("ArrayCards"), ko.Resource = z({
     } ]
 });
 
-var Ao = function(e, t) {
+var No = function(e, t) {
     var o;
     return o = {}, o[".".concat(e)] = {
         backgroundColor: t.colorBgContainer
     }, o;
-}, No = Fo("object"), Po = function(t) {
+}, Po = Io("object"), Ro = function(t) {
     var o;
-    return e.createElement("th", de({}, t, {
+    return e.createElement("th", me({}, t, {
         "data-designer-node-id": null === (o = t.className.match(/data-id\:([^\s]+)/)) || void 0 === o ? void 0 : o[1]
     }), t.children);
-}, Ro = function(t) {
+}, Lo = function(t) {
     var o;
-    return e.createElement("td", de({}, t, {
+    return e.createElement("td", me({}, t, {
         "data-designer-node-id": null === (o = t.className.match(/data-id\:([^\s]+)/)) || void 0 === o ? void 0 : o[1]
     }), t.children);
-}, Lo = i((function(t) {
+}, Eo = i((function(t) {
     var o = j(), r = Y(), n = "dn-array-table", a = X({
         prefix: n,
-        styleFun: Ao
+        styleFun: No
     }), p = a.hashId, l = a.wrapSSR;
-    Io("ArrayTable", (function(e) {
+    wo("ArrayTable", (function(e) {
         var t = new M({
             componentName: "Field",
             props: {
@@ -5563,18 +5565,18 @@ var Ao = function(e, t) {
         });
         return [ a, p ];
     }));
-    var i = bo(o, [ "ArrayTable", "*", "ArrayTable.Column" ]), c = bo(o, [ "ArrayTable", "ArrayTable.Addition" ]), d = function() {
+    var i = So(o, [ "ArrayTable", "*", "ArrayTable.Column" ]), c = So(o, [ "ArrayTable", "ArrayTable.Addition" ]), d = function() {
         return o.id;
     };
-    return Io("ArrayTable.Column", (function(e) {
+    return wo("ArrayTable.Column", (function(e) {
         return e.map((function(e) {
             return e.props.title = void 0, e;
         }));
-    })), l(e.createElement("div", de({}, r, {
+    })), l(e.createElement("div", me({}, r, {
         className: ce(n, p)
     }), 0 === o.children.length ? e.createElement(H, null) : e.createElement(N, {
         disabled: !0
-    }, e.createElement(pe, de({
+    }, e.createElement(pe, me({
         size: "small",
         bordered: !0
     }, t, {
@@ -5582,7 +5584,7 @@ var Ao = function(e, t) {
             x: "100%"
         },
         className: ce("ant-formily-array-table", t.className),
-        style: de({
+        style: me({
             marginBottom: 10
         }, t.style),
         rowKey: d,
@@ -5592,10 +5594,10 @@ var Ao = function(e, t) {
         pagination: !1,
         components: {
             header: {
-                cell: Po
+                cell: Ro
             },
             body: {
-                cell: Ro
+                cell: Lo
             }
         }
     }), i.map((function(t) {
@@ -5605,7 +5607,7 @@ var Ao = function(e, t) {
                 key: t.id
             });
         })), r = t.props["x-component-props"];
-        return e.createElement(pe.Column, de({}, r, {
+        return e.createElement(pe.Column, me({}, r, {
             title: e.createElement("div", {
                 "data-content-editable": "x-component-props.title"
             }, r.title),
@@ -5629,12 +5631,12 @@ var Ao = function(e, t) {
             node: t,
             key: t.id
         });
-    }))), e.createElement(xo, {
+    }))), e.createElement(ho, {
         actions: [ {
             title: o.getMessage("addSortHandle"),
             icon: "AddSort",
             onClick: function() {
-                if (!go(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.SortHandle" ])) {
+                if (!fo(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.SortHandle" ])) {
                     var e = new M({
                         componentName: "Field",
                         props: {
@@ -5652,14 +5654,14 @@ var Ao = function(e, t) {
                             }
                         } ]
                     });
-                    No(o).prepend(e);
+                    Po(o).prepend(e);
                 }
             }
         }, {
             title: o.getMessage("addIndex"),
             icon: "AddIndex",
             onClick: function() {
-                if (!go(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.Index" ])) {
+                if (!fo(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.Index" ])) {
                     var e = new M({
                         componentName: "Field",
                         props: {
@@ -5676,15 +5678,15 @@ var Ao = function(e, t) {
                                 "x-component": "ArrayTable.Index"
                             }
                         } ]
-                    }), t = So(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.SortHandle" ]);
-                    t ? t.parent.insertAfter(e) : No(o).prepend(e);
+                    }), t = go(o, [ "ArrayTable", "*", "ArrayTable.Column", "ArrayTable.SortHandle" ]);
+                    t ? t.parent.insertAfter(e) : Po(o).prepend(e);
                 }
             }
         }, {
             title: o.getMessage("addColumn"),
             icon: "AddColumn",
             onClick: function() {
-                var e = So(o, [ "ArrayTable", "*", "ArrayTable.Column", function(e) {
+                var e = go(o, [ "ArrayTable", "*", "ArrayTable.Column", function(e) {
                     return "ArrayTable.Remove" === e || "ArrayTable.MoveDown" === e || "ArrayTable.MoveUp" === e;
                 } ]), t = new M({
                     componentName: "Field",
@@ -5696,15 +5698,15 @@ var Ao = function(e, t) {
                         }
                     }
                 });
-                e ? e.parent.insertBefore(t) : No(o).append(t);
+                e ? e.parent.insertBefore(t) : Po(o).append(t);
             }
         }, {
             title: o.getMessage("addOperation"),
             icon: "AddOperation",
             onClick: function() {
-                var e = So(o, [ "ArrayTable", "*", "ArrayTable.Column", function(e) {
+                var e = go(o, [ "ArrayTable", "*", "ArrayTable.Column", function(e) {
                     return "ArrayTable.Remove" === e || "ArrayTable.MoveDown" === e || "ArrayTable.MoveUp" === e;
-                } ]), t = So(o, [ "ArrayTable", "ArrayTable.Addition" ]);
+                } ]), t = go(o, [ "ArrayTable", "ArrayTable.Addition" ]);
                 if (!e) {
                     var r = new M({
                         componentName: "Field",
@@ -5735,7 +5737,7 @@ var Ao = function(e, t) {
                             }
                         } ]
                     });
-                    No(o).append(r);
+                    Po(o).append(r);
                 }
                 if (!t) {
                     var n = new M({
@@ -5746,14 +5748,14 @@ var Ao = function(e, t) {
                             "x-component": "ArrayTable.Addition"
                         }
                     });
-                    No(o).insertAfter(n);
+                    Po(o).insertAfter(n);
                 }
             }
         } ]
     })));
 }));
 
-N.mixin(Lo), Lo.Behavior = V(wo("ArrayTable"), {
+N.mixin(Eo), Eo.Behavior = V(Co("ArrayTable"), {
     name: "ArrayTable.Column",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5765,10 +5767,10 @@ N.mixin(Lo), Lo.Behavior = V(wo("ArrayTable"), {
             var t, o;
             return "object" === e.props["type"] && "ArrayTable" === (null === (o = null === (t = e.parent) || void 0 === t ? void 0 : t.props) || void 0 === o ? void 0 : o["x-component"]);
         },
-        propsSchema: jt(zt.Column)
+        propsSchema: Kt(Mt.Column)
     },
-    designerLocales: Ye
-}), Lo.Resource = z({
+    designerLocales: qe
+}), Eo.Resource = z({
     icon: "ArrayTableSource",
     elements: [ {
         componentName: "Field",
@@ -5780,17 +5782,17 @@ N.mixin(Lo), Lo.Behavior = V(wo("ArrayTable"), {
     } ]
 });
 
-var Eo = function(e) {
+var Oo = function(e) {
     var t = [];
     return e.children.forEach((function(e) {
-        ho(e, "FormTab.TabPane") && t.push(e);
+        yo(e, "FormTab.TabPane") && t.push(e);
     })), t;
-}, Oo = function(e, t) {
+}, Do = function(e, t) {
     if (0 !== t.length) return t.some((function(t) {
         return t.id === e;
     })) ? e : t[t.length - 1].id;
-}, Do = i((function(t) {
-    var o = se(r(), 2), n = o[0], a = o[1], p = Y(), l = j(), i = Io("FormTab", (function(e) {
+}, Wo = i((function(t) {
+    var o = ue(r(), 2), n = o[0], a = o[1], p = Y(), l = j(), i = wo("FormTab", (function(e) {
         return [ new M({
             componentName: "Field",
             props: {
@@ -5802,18 +5804,18 @@ var Eo = function(e) {
             },
             children: e
         }) ];
-    })), c = Eo(l);
-    return e.createElement("div", de({}, p), function() {
+    })), c = Oo(l);
+    return e.createElement("div", me({}, p), function() {
         var o;
-        return (null === (o = l.children) || void 0 === o ? void 0 : o.length) ? e.createElement(le, de({}, t, {
-            activeKey: Oo(n, c),
+        return (null === (o = l.children) || void 0 === o ? void 0 : o.length) ? e.createElement(le, me({}, t, {
+            activeKey: Do(n, c),
             onChange: function(e) {
                 a(e);
             }
         }), c.map((function(t) {
             var o, r = t.props["x-component-props"] || {};
-            return e.createElement(le.TabPane, de({}, r, {
-                style: de({}, r.style),
+            return e.createElement(le.TabPane, me({}, r, {
+                style: me({}, r.style),
                 tab: e.createElement("span", {
                     "data-content-editable": "x-component-props.tab",
                     "data-content-editable-node-id": t.id
@@ -5827,7 +5829,7 @@ var Eo = function(e) {
                 node: t
             })));
         }))) : e.createElement(H, null);
-    }(), e.createElement(xo, {
+    }(), e.createElement(ho, {
         actions: [ {
             title: l.getMessage("addTabPane"),
             icon: "AddPanel",
@@ -5848,9 +5850,9 @@ var Eo = function(e) {
     }));
 }));
 
-Do.TabPane = function(t) {
+Wo.TabPane = function(t) {
     return e.createElement(o, null, t.children);
-}, Do.Behavior = V({
+}, Wo.Behavior = V({
     name: "FormTab",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5863,9 +5865,9 @@ Do.TabPane = function(t) {
                 return "FormTab.TabPane" === e.props["x-component"];
             }));
         },
-        propsSchema: jt(Wt)
+        propsSchema: Kt(Vt)
     },
-    designerLocales: $e
+    designerLocales: Qe
 }, {
     name: "FormTab.TabPane",
     extends: [ "Field" ],
@@ -5877,10 +5879,10 @@ Do.TabPane = function(t) {
         allowDrop: function(e) {
             return "FormTab" === e.props["x-component"];
         },
-        propsSchema: jt(Wt.TabPane)
+        propsSchema: Kt(Vt.TabPane)
     },
-    designerLocales: Qe
-}), Do.Resource = z({
+    designerLocales: Je
+}), Wo.Resource = z({
     icon: "TabSource",
     elements: [ {
         componentName: "Field",
@@ -5891,8 +5893,8 @@ Do.TabPane = function(t) {
     } ]
 });
 
-var Wo = i((function(t) {
-    var o, n, a = se(r([]), 2), p = a[0], l = a[1], i = j(), c = Y(), d = Io("FormCollapse", (function(e) {
+var Vo = i((function(t) {
+    var o, n, a = ue(r([]), 2), p = a[0], l = a[1], i = j(), c = Y(), d = wo("FormCollapse", (function(e) {
         var t = new M({
             componentName: "Field",
             props: {
@@ -5906,18 +5908,18 @@ var Wo = i((function(t) {
         });
         return l(O(p).concat(t.id)), [ t ];
     })), m = (o = i, n = [], o.children.forEach((function(e) {
-        ho(e, "FormCollapse.CollapsePanel") && n.push(e);
+        yo(e, "FormCollapse.CollapsePanel") && n.push(e);
     })), n);
-    return e.createElement("div", de({}, c), function() {
+    return e.createElement("div", me({}, c), function() {
         var o;
-        return (null === (o = i.children) || void 0 === o ? void 0 : o.length) ? e.createElement(ie, de({}, t, {
+        return (null === (o = i.children) || void 0 === o ? void 0 : o.length) ? e.createElement(ie, me({}, t, {
             activeKey: m.map((function(e) {
                 return e.id;
             }))
         }), m.map((function(t) {
             var o, r = t.props["x-component-props"] || {};
-            return e.createElement(ie.Panel, de({}, r, {
-                style: de({}, r.style),
+            return e.createElement(ie.Panel, me({}, r, {
+                style: me({}, r.style),
                 header: e.createElement("span", {
                     "data-content-editable": "x-component-props.header",
                     "data-content-editable-node-id": t.id
@@ -5929,7 +5931,7 @@ var Wo = i((function(t) {
                 node: t
             }) : e.createElement(H, null)));
         }))) : e.createElement(H, null);
-    }(), e.createElement(xo, {
+    }(), e.createElement(ho, {
         actions: [ {
             title: i.getMessage("addCollapsePanel"),
             icon: "AddPanel",
@@ -5952,9 +5954,9 @@ var Wo = i((function(t) {
     }));
 }));
 
-Wo.CollapsePanel = function(t) {
+Vo.CollapsePanel = function(t) {
     return e.createElement(o, null, t.children);
-}, Wo.Behavior = V({
+}, Vo.Behavior = V({
     name: "FormCollapse",
     extends: [ "Field" ],
     selector: function(e) {
@@ -5967,9 +5969,9 @@ Wo.CollapsePanel = function(t) {
                 return "FormCollapse.CollapsePanel" === e.props["x-component"];
             }));
         },
-        propsSchema: jt(Vt)
+        propsSchema: Kt(zt)
     },
-    designerLocales: Je
+    designerLocales: Ze
 }, {
     name: "FormCollapse.CollapsePanel",
     extends: [ "Field" ],
@@ -5981,10 +5983,10 @@ Wo.CollapsePanel = function(t) {
         allowDrop: function(e) {
             return "FormCollapse" === e.props["x-component"];
         },
-        propsSchema: jt(Vt.CollapsePanel)
+        propsSchema: Kt(zt.CollapsePanel)
     },
-    designerLocales: Ze
-}), Wo.Resource = z({
+    designerLocales: et
+}), Vo.Resource = z({
     icon: "CollapseSource",
     elements: [ {
         componentName: "Field",
@@ -5995,11 +5997,11 @@ Wo.CollapsePanel = function(t) {
     } ]
 });
 
-var Vo = J((function(t) {
+var zo = J((function(t) {
     var o = j(), r = Y();
-    return 0 === o.children.length ? e.createElement(H, de({}, t)) : e.createElement("div", de({}, r, {
+    return 0 === o.children.length ? e.createElement(H, me({}, t)) : e.createElement("div", me({}, r, {
         className: "dn-grid"
-    }), e.createElement(P, de({}, t), t.children), e.createElement(xo, {
+    }), e.createElement(P, me({}, t), t.children), e.createElement(ho, {
         actions: [ {
             title: o.getMessage("addGridColumn"),
             icon: "AddColumn",
@@ -6017,12 +6019,12 @@ var Vo = J((function(t) {
     }));
 }));
 
-Vo.GridColumn = J((function(t) {
-    var o = t.gridSpan, r = me(t, [ "gridSpan" ]);
-    return e.createElement(H, de({}, r, {
+zo.GridColumn = J((function(t) {
+    var o = t.gridSpan, r = se(t, [ "gridSpan" ]);
+    return e.createElement(H, me({}, r, {
         "data-grid-span": o
     }), r.children);
-})), Vo.Behavior = V({
+})), zo.Behavior = V({
     name: "FormGrid",
     extends: [ "Field" ],
     selector: function(e) {
@@ -6033,9 +6035,9 @@ Vo.GridColumn = J((function(t) {
         allowDrop: function(e) {
             return "FormGrid" !== e.props["x-component"];
         },
-        propsSchema: Bt(Ot)
+        propsSchema: jt(Dt)
     },
-    designerLocales: et
+    designerLocales: tt
 }, {
     name: "FormGrid.GridColumn",
     extends: [ "Field" ],
@@ -6066,10 +6068,10 @@ Vo.GridColumn = J((function(t) {
         allowDrop: function(e) {
             return "FormGrid" === e.props["x-component"];
         },
-        propsSchema: Bt(Ot.GridColumn)
+        propsSchema: jt(Dt.GridColumn)
     },
-    designerLocales: tt
-}), Vo.Resource = z({
+    designerLocales: ot
+}), zo.Resource = z({
     icon: "GridSource",
     elements: [ {
         componentName: "Field",
@@ -6099,9 +6101,9 @@ Vo.GridColumn = J((function(t) {
     } ]
 });
 
-var zo = he(R);
+var Mo = ye(R);
 
-zo.Behavior = V({
+Mo.Behavior = V({
     name: "FormLayout",
     extends: [ "Field" ],
     selector: function(e) {
@@ -6109,10 +6111,10 @@ zo.Behavior = V({
     },
     designerProps: {
         droppable: !0,
-        propsSchema: jt(ut)
+        propsSchema: Kt(xt)
     },
-    designerLocales: Me
-}), zo.Resource = z({
+    designerLocales: Ue
+}), Mo.Resource = z({
     icon: "FormLayoutSource",
     elements: [ {
         componentName: "Field",
@@ -6123,13 +6125,13 @@ zo.Behavior = V({
     } ]
 });
 
-var Mo = function(e, t) {
+var Uo = function(e, t) {
     var o;
     return o = {}, o[".".concat(e)] = {}, o;
-}, Uo = function(t) {
+}, Ho = function(t) {
     var o, r, n, a, p = t.slotName, l = t.className, i = u(), c = "dn-slot", d = X({
         prefix: c,
-        styleFun: Mo
+        styleFun: Uo
     }), m = d.hashId, s = d.wrapSSR;
     return s(e.createElement("div", {
         className: ce(c, l, m)
@@ -6141,17 +6143,17 @@ var Mo = function(e, t) {
     }, "插槽占位 ", p)));
 };
 
-Uo.Behavior = V({
+Ho.Behavior = V({
     name: "Slot",
     extends: [ "Field" ],
     selector: function(e) {
         return "Slot" === e.props["x-component"];
     },
     designerProps: {
-        propsSchema: jt(Ut)
+        propsSchema: Kt(Ht)
     },
-    designerLocales: ot
-}), Uo.Resource = z({
+    designerLocales: rt
+}), Ho.Resource = z({
     icon: "SlotSource",
     elements: [ {
         componentName: "Field",
@@ -6162,4 +6164,4 @@ Uo.Behavior = V({
     } ]
 });
 
-export { rt as AllLocales, Ht as AllSchemas, ko as ArrayCards, Lo as ArrayTable, mo as Card, $t as Cascader, Qt as Checkbox, no as DatePicker, ct as Field, Xt as Form, Wo as FormCollapse, Vo as FormGrid, zo as FormLayout, Do as FormTab, _t as Input, to as NumberPicker, uo as ObjectContainer, ro as Password, Jt as Radio, eo as Rate, Yt as Select, Zt as Slider, Uo as Slot, so as Space, lo as Switch, co as Text, ao as TimePicker, oo as Transfer, qt as TreeSelect, po as Upload, Gt as createComponentSchema, Bt as createFieldSchema, jt as createVoidFieldSchema };
+export { nt as AllLocales, Gt as AllSchemas, Ao as ArrayCards, Eo as ArrayTable, so as Card, Qt as Cascader, Jt as Checkbox, ao as DatePicker, dt as Field, _t as Form, Vo as FormCollapse, zo as FormGrid, Mo as FormLayout, Wo as FormTab, Yt as Input, oo as NumberPicker, xo as ObjectContainer, no as Password, Zt as Radio, to as Rate, qt as Select, eo as Slider, Ho as Slot, uo as Space, io as Switch, mo as Text, po as TimePicker, ro as Transfer, $t as TreeSelect, lo as Upload, Bt as createComponentSchema, jt as createFieldSchema, Kt as createVoidFieldSchema };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch as AntdSwitch } from 'antd';
+//import { Switch as AntdSwitch } from 'antd';
+import { Switch as AntdSwitch} from '@fdesign/component'
 import { createBehavior, createResource } from '@form-created/core';
 import { DnFC } from '@form-created/react';
 import { createFieldSchema } from '../Field';
