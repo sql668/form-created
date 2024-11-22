@@ -12,6 +12,7 @@ export interface IViewToolsWidget {
   className?: string;
 }
 
+// 视图切换工具 设计、markup、jsonschema、preview
 export const ViewToolsWidget: React.FC<IViewToolsWidget> = observer(
   ({ use = ['DESIGNABLE', 'JSONTREE', 'PREVIEW'], style, className }) => {
     const workbench = useWorkbench();

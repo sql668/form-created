@@ -6,15 +6,16 @@ import { Viewport } from '../containers'
 import { requestIdle } from '@form-created/shared'
 
 export interface IViewPanelProps {
-  type: WorkbenchTypes
+  type: WorkbenchTypes // 容器类型，用于标识它是什么视图模式的容器
   children: (
     tree: TreeNode,
     onChange: (tree: ITreeNode) => void
   ) => React.ReactElement
-  scrollable?: boolean
-  dragTipsDirection?: 'left' | 'right'
+  scrollable?: boolean // 容器的内容溢出是否需要滚动条，如果开启样式的 overflow 等于 overlay，关闭则为 hidden。
+  dragTipsDirection?: 'left' | 'right' // 可视化设计（type=DESIGNABLE）的模式时，缺省状态的操作动画，从左往右还是从右往左。
 }
 
+// 视图布局面板，也就是设计器最中心区域的“壳”。它是四种视图模式（可视化设计、json、jsx、预览）的容器组件，并给子组件赋能。
 export const ViewPanel: React.FC<IViewPanelProps> = observer((props) => {
   const { scrollable = true} = props
   const [visible, setVisible] = useState(true)

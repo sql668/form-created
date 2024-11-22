@@ -79,6 +79,7 @@ export const TreeNodeWidget: React.FC<ITreeNodeWidgetProps> = observer(
   },
 );
 
+// 组件树渲染器
 export const ComponentTreeWidget: React.FC<IComponentTreeWidgetProps> =
   observer((props: IComponentTreeWidgetProps) => {
     const tree = useTree();

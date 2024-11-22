@@ -23,6 +23,9 @@ export type IDesignerToolsWidgetProps = {
   use?: DesignerToolsType[];
 };
 
+
+// 画板工具挂件
+// 前进、后退、设备(PC、pad、phone)切换
 export const DesignerToolsWidget: React.FC<IDesignerToolsWidgetProps> =
   observer((props) => {
     const { use = ['HISTORY', 'CURSOR', 'SCREEN_TYPE']} = props

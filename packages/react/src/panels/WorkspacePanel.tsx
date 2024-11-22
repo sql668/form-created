@@ -11,6 +11,9 @@ export interface IWorkspaceItemProps {
   flexable?: boolean;
 }
 
+// 工作区布局面板
+// 纯粹的布局组件（如果把设计器分为左中右三部分，工作区布局面板就是中间部分的“壳”），挂了.dn-workspace-panel样式，仅此而已
+// 不过它的子组件WorkspacePanel.Item在其它地方用的满多的，比如 ToolbarPanel、ViewportPanel 都是用它做跟组件。
 export const WorkspacePanel: React.FC<{ children?: React.ReactNode }> & {
   Item?: React.FC<IWorkspaceItemProps>;
 } = (props) => {

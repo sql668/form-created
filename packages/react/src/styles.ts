@@ -19,6 +19,9 @@ export const genAppStyle = (
       [`::-webkit-scrollbar-thumb:hover`]: {
         backgroundColor: '#f0f0f0',
       },
+      height: '100%',
+      width: '100%',
+      overflow: 'hidden',
       color: '#222',
       fontSize: '14px',
       fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,

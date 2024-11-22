@@ -24,6 +24,8 @@ export interface IResourceWidgetProps {
   children?: SourceMapper | React.ReactElement;
 }
 
+
+// 资源组件，可拖拽组件展示区
 export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
   (props) => {
     const { defaultExpand = true} = props

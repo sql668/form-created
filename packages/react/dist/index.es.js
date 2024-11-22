@@ -6757,7 +6757,8 @@ var dl = function(e) {
         transition: "all 0.25s ease-in-out"
     }, a["::-webkit-scrollbar-thumb:hover"] = {
         backgroundColor: "#f0f0f0"
-    }, a.color = "#222", a.fontSize = "14px", a.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,\n    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',\n    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'", 
+    }, a.height = "100%", a.width = "100%", a.overflow = "hidden", a.color = "#222", 
+    a.fontSize = "14px", a.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,\n    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',\n    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'", 
     a.fontVariant = "tabular-nums", a.lineHeight = 1.5715, a.fontFeatureSettings = "tnum", 
     a["*"] = {
         boxSizing: "border-box"

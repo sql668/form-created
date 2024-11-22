@@ -1,4 +1,9 @@
 import { isValidNumber } from './types'
+
+// 实现拖拽功能的计算函数集。
+
+
+// // 点的位置
 export interface IPoint {
   x: number
   y: number
@@ -31,6 +36,7 @@ export function isLineSegment(val: any): val is ILineSegment {
   return isPoint(val?.start) && isPoint(val?.end)
 }
 
+// 点的类形态
 export class Point implements IPoint {
   x: number
   y: number
@@ -78,6 +84,7 @@ export class LineSegment {
   }
 }
 
+// 矩形，包含起点坐标以及宽高
 export interface IRect {
   x: number
   y: number
@@ -85,15 +92,16 @@ export interface IRect {
   height: number
 }
 
+// 象限，框选多个组件时使用
 export enum RectQuadrant {
   Inner1 = 'I1', //内部第一象限
   Inner2 = 'I2', //内部第二象限
   Inner3 = 'I3', //内部第三象限
   Inner4 = 'I4', //内部第四象限
-  Outer1 = 'O1', //内部第五象限
-  Outer2 = 'O2', //内部第六象限
-  Outer3 = 'O3', //内部第七象限
-  Outer4 = 'O4', //内部第八象限
+  Outer1 = 'O1', //外部第一象限
+  Outer2 = 'O2', //外部第二象限
+  Outer3 = 'O3', //外部第三象限
+  Outer4 = 'O4', //外部第四象限
 }
 
 export interface IPointToRectRelative {
@@ -101,6 +109,13 @@ export interface IPointToRectRelative {
   distance: number
 }
 
+/**
+ * 点是否在矩形内，前两个参数分别是点和矩形。 第三个参数是“是否敏感”，如果关闭，点在矩形内就可以返回 true 了；如果关闭，点在矩形的宽高-10%的范围内才返回 true
+ * @param point 
+ * @param rect 
+ * @param sensitive 
+ * @returns 
+ */
 export function isPointInRect(point: IPoint, rect: IRect, sensitive = true) {
   const boundSensor = (value: number) => {
     if (!sensitive) return 0
@@ -127,6 +142,11 @@ export function isEqualRect(target: IRect, source: IRect) {
   )
 }
 
+/**
+ * 返回矩形的四个点的坐标
+ * @param source 
+ * @returns 
+ */
 export function getRectPoints(source: IRect) {
   const p1 = new Point(source.x, source.y)
   const p2 = new Point(source.x + source.width, source.y)
@@ -135,6 +155,13 @@ export function getRectPoints(source: IRect) {
   return [p1, p2, p3, p4]
 }
 
+
+/**
+ * 矩形是否在矩形内，
+ * @param target 
+ * @param source 
+ * @returns 
+ */
 export function isRectInRect(target: IRect, source: IRect) {
   const [p1, p2, p3, p4] = getRectPoints(target)
   return (
@@ -145,6 +172,13 @@ export function isRectInRect(target: IRect, source: IRect) {
   )
 }
 
+
+/**
+ * 两个矩形是否存在交集
+ * @param target 
+ * @param source 
+ * @returns 
+ */
 export function isCrossRectInRect(target: IRect, source: IRect) {
   const targetCenterPoint = new Point(
     target.x + target.width / 2,
@@ -200,6 +234,12 @@ export function calcQuadrantOfPointToRect(point: IPoint, rect: IRect) {
   }
 }
 
+/**
+ * 点跟矩形之间的距离
+ * @param point 
+ * @param rect 
+ * @returns 
+ */
 export function calcDistanceOfPointToRect(point: IPoint, rect: IRect) {
   let minX = Math.min(
     Math.abs(point.x - rect.x),
@@ -219,6 +259,13 @@ export function calcDistanceOfPointToRect(point: IPoint, rect: IRect) {
   return Math.sqrt(minX ** 2 + minY ** 2)
 }
 
+
+/**
+ * 点到边的距离
+ * @param point 
+ * @param rect 
+ * @returns 
+ */
 export function calcDistancePointToEdge(point: IPoint, rect: IRect) {
   const distanceTop = Math.abs(point.y - rect.y)
   const distanceBottom = Math.abs(point.y - (rect.y + rect.height))
@@ -227,6 +274,14 @@ export function calcDistancePointToEdge(point: IPoint, rect: IRect) {
   return Math.min(distanceTop, distanceBottom, distanceLeft, distanceRight)
 }
 
+
+/**
+ * 计算点的位置是否在矩形的下方或者右下方 比如拖拽组件时，把组件放置在另一个组件的“下方或者右下方”可以视为插入在其后面，否则就插入到其前面
+ * @param point 
+ * @param rect 
+ * @param inline 
+ * @returns 
+ */
 export function isNearAfter(point: IPoint, rect: IRect, inline = false) {
   if (inline) {
     return (
@@ -239,7 +294,7 @@ export function isNearAfter(point: IPoint, rect: IRect, inline = false) {
 }
 
 /**
- * 计算点鱼矩形的相对位置信息
+ * 点在矩形里的相对位置
  * @param point
  * @param rect
  */
@@ -255,6 +310,12 @@ export function calcRelativeOfPointToRect(
   }
 }
 
+
+/**
+ * 可以把多个矩形合并计算成一个更大的矩形
+ * @param rects 
+ * @returns 
+ */
 export function calcBoundingRect(rects: IRect[]) {
   if (!rects?.length) return
   if (rects?.length === 1 && !rects[0]) return
@@ -280,6 +341,15 @@ export function calcBoundingRect(rects: IRect[]) {
   return new Rect(minLeft, minTop, maxRight - minLeft, maxBottom - minTop)
 }
 
+
+/**
+ * 按起点和终点计算矩形
+ * @param startPoint 
+ * @param endPoint 
+ * @param scrollX 
+ * @param scrollY 
+ * @returns 
+ */
 export function calcRectByStartEndPoint(
   startPoint: IPoint,
   endPoint: IPoint,
