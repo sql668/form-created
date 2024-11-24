@@ -75,7 +75,8 @@ function App() {
   )
   //const tree = useTree("form")
   return (
-    <Designer engine={engine}>
+    <div className='designer-container'>
+      <Designer engine={engine} position='relative'>
       <StudioPanel logo={<LogoWidget />} actions={<ActionsWidget />}>
         <CompositePanel>
           <CompositePanel.Item title="panels.Component" icon="Component">
@@ -199,6 +200,8 @@ function App() {
         </SettingsPanel>
       </StudioPanel>
     </Designer>
+    </div>
+    
   )
 }
 
