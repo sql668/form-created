@@ -24,12 +24,13 @@ import { mergeLocales } from '../internals'
 
 export interface ITreeNode {
   componentName?: string
-  sourceName?: string
+  sourceName?: string  // 组件的名称， 不填的话会自动生成一串md5来标识这个组件，需要唯一
   operation?: Operation
-  hidden?: boolean
+  hidden?: boolean  // 在当前组件分类中是否展示
   isSourceNode?: boolean
   id?: string
-  props?: Record<string | number | symbol, any>
+  /** // 组件的props, decorator 属性，代表字段的 UI 装饰器，通常我们都会指定为 FormItem， component 属性，代表我们这个组件所需要展示UI的使用用的组件，在设置容器组件的时候，需要设置 type = void */
+  props?: Record<string | number | symbol, any>  // 组件的props, decorator 属性，代表字段的 UI 装饰器，通常我们都会指定为 FormItem， component 属性，代表我们这个组件所需要展示UI的使用用的组件，在设置容器组件的时候，需要设置 type = void
   children?: ITreeNode[]
 }
 

@@ -7,13 +7,13 @@ import { genCompositePanelStyle } from './styles';
 
 export interface ICompositePanelProps {
   children?: React.ReactNode;
-  direction?: 'left' | 'right';
-  showNavTitle?: boolean;
+  direction?: 'left' | 'right';  // 大类的分组（包含组件、大纲树、历史记录 icon 的小区域）包含放在组件板块的左侧还是右侧
+  showNavTitle?: boolean; // 是否需要在大类的 icon 下显示标题
   defaultOpen?: boolean;
-  defaultPinning?: boolean;
-  defaultActiveKey?: number;
-  activeKey?: number | string;
-  onChange?: (activeKey: number | string) => void;
+  defaultPinning?: boolean; // 是否默认“固定”面板 只有 direction="right"时才能看到效果，因为没有叠放在设计区上面，体现不出“固定”的作用
+  defaultActiveKey?: number; // 默认展示哪个分组，注意下标从 0 开始
+  activeKey?: number | string; // 展示哪个分组，如果是 number 则按“下标”显示，如果是 string 则与其子组件CompositePanel.Item的key字段对应
+  onChange?: (activeKey: number | string) => void; // 切换时触发的回调函数（开始切换就执行了，早于展示）
 }
 
 export interface ICompositePanelItemProps {
@@ -21,7 +21,7 @@ export interface ICompositePanelItemProps {
   shape?: 'tab' | 'button' | 'link';
   title?: React.ReactNode;
   icon?: React.ReactNode;
-  key?: number | string;
+  key?: number | string;  // 组件标识，与 CompositePanel 组件的activeKey字段配合使用
   href?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   extra?: React.ReactNode;
@@ -55,6 +55,14 @@ const getDefaultKey = (children: React.ReactNode) => {
   return items?.[0].key;
 };
 
+
+
+/**
+ * 左侧功能面板 组件、大纲、历史记录...
+ * 可以根据业务，自行扩展 
+ * @param props 
+ * @returns 
+ */
 export const CompositePanel: React.FC<ICompositePanelProps> & {
   Item: React.FC<ICompositePanelItemProps>;
 } = (props) => {

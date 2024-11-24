@@ -44,6 +44,8 @@ export const createLocales = (...packages: IDesignerLocales[]) => {
   return results
 }
 
+
+// 创建组件的行为，locals 信息、propsSchema 可修改属性
 export const createBehavior = (
   ...behaviors: Array<IBehaviorCreator | IBehaviorCreator[]>
 ): IBehavior[] => {
@@ -58,6 +60,7 @@ export const createBehavior = (
   }, [])
 }
 
+// 创建资源基础信息，用于左侧拖拽组件
 export const createResource = (...sources: IResourceCreator[]): IResource[] => {
   return sources.reduce((buf, source) => {
     return buf.concat({
@@ -71,6 +74,8 @@ export const createResource = (...sources: IResourceCreator[]): IResource[] => {
   }, [])
 }
 
+
+// 创建设计器实例
 export const createDesigner = (props: IEngineProps<Engine> = {}) => {
   const drivers = props.drivers || []
   const effects = props.effects || []

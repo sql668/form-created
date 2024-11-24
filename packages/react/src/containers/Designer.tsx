@@ -8,6 +8,11 @@ import { Layout } from './Layout'
 import * as icons from '../icons'
 GlobalRegistry.registerDesignerIcons(icons)
 
+/**
+ * 设计器根组件，用于下发上下文
+ * @param props 
+ * @returns 
+ */
 export const Designer: React.FC<IDesignerProps> = (props) => {
   const engine = useDesigner()
   const ref = useRef<Engine>()

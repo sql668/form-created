@@ -11,6 +11,7 @@ import {
 
 export type ISimulatorProps = React.HTMLAttributes<HTMLDivElement>
 
+// 视图模拟器组件，通过适当配置，可以实现给中间的操作区套上“手机壳”、“自适应壳“的展示
 export const Simulator: React.FC<ISimulatorProps> = observer(
   (props: ISimulatorProps) => {
     const screen = useScreen()

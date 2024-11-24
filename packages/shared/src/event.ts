@@ -138,6 +138,7 @@ export class EventDriver<Engine extends Event = Event, Context = any>
     return this.engine.subscribeWith(type, subscriber)
   }
 
+  
   attach(container: EventDriverContainer) {
     console.error('attach must implement.')
   }
@@ -155,6 +156,12 @@ export class EventDriver<Engine extends Event = Event, Context = any>
     return this.container
   }
 
+  /**
+   * 添加事件监听器 和原生的addEventListener作用一致
+   * @param type  事件名称，例如 'mousedown'
+   * @param listener 回调函数
+   * @param options 
+   */
   addEventListener<K extends keyof HTMLElementEventMap>(
     type: K,
     listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,

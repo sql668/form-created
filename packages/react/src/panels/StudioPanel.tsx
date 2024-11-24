@@ -8,8 +8,8 @@ export interface IStudioPanelProps {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
-  logo?: React.ReactNode;
-  actions?: React.ReactNode;
+  logo?: React.ReactNode; // 左上角logo区
+  actions?: React.ReactNode; // 右上角操作区
   prefixCls?: string;
   theme?: string;
   position?: React.ComponentProps<typeof Layout>['position'];
@@ -55,6 +55,7 @@ const StudioPanelInternal: React.FC<IStudioPanelProps> = ({
   );
 };
 
+// 主布局面板，整个工程的壳。
 export const StudioPanel: React.FC<IStudioPanelProps> = (props) => {
   return (
     <Layout
