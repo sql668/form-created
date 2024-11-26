@@ -1,905 +1,1927 @@
-var t = function(e, n) {
-    return t = Object.setPrototypeOf || {
-        __proto__: []
-    } instanceof Array && function(t, e) {
-        t.__proto__ = e;
-    } || function(t, e) {
-        for (var n in e) Object.prototype.hasOwnProperty.call(e, n) && (t[n] = e[n]);
-    }, t(e, n);
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol */
+
+var extendStatics = function(d, b) {
+  extendStatics = Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+      function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+  return extendStatics(d, b);
 };
 
-function e(e, n) {
-    if ("function" != typeof n && null !== n) throw new TypeError("Class extends value " + String(n) + " is not a constructor or null");
-    function r() {
-        this.constructor = e;
-    }
-    t(e, n), e.prototype = null === n ? Object.create(n) : (r.prototype = n.prototype, 
-    new r);
+function __extends(d, b) {
+  if (typeof b !== "function" && b !== null)
+      throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+  extendStatics(d, b);
+  function __() { this.constructor = d; }
+  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-var n = function() {
-    return n = Object.assign || function(t) {
-        for (var e, n = 1, r = arguments.length; n < r; n++) for (var i in e = arguments[n], 
-        e) Object.prototype.hasOwnProperty.call(e, i) && (t[i] = e[i]);
-        return t;
-    }, n.apply(this, arguments);
+var __assign = function() {
+  __assign = Object.assign || function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+      return t;
+  };
+  return __assign.apply(this, arguments);
 };
 
-function r(t, e) {
-    var n = "function" == typeof Symbol && t[Symbol.iterator];
-    if (!n) return t;
-    var r, i, o = n.call(t), u = [];
-    try {
-        for (;(void 0 === e || e-- > 0) && !(r = o.next()).done; ) u.push(r.value);
-    } catch (s) {
-        i = {
-            error: s
+function __read(o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o), r, ar = [], e;
+  try {
+      while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+  }
+  catch (error) { e = { error: error }; }
+  finally {
+      try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+      }
+      finally { if (e) throw e.error; }
+  }
+  return ar;
+}
+
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+  var e = new Error(message);
+  return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+var isType = function (type) {
+    return function (obj) {
+        return obj != null &&
+            (Array.isArray(type) ? type : [type]).some(function (t) { return getType(obj) === "[object ".concat(t, "]"); });
+    };
+};
+var getType = function (obj) { return Object.prototype.toString.call(obj); };
+var isFn = isType([
+    'Function',
+    'AsyncFunction',
+    'GeneratorFunction',
+]);
+var isWindow = isType('Window');
+var isHTMLElement = function (obj) {
+    return (obj === null || obj === void 0 ? void 0 : obj['nodeName']) || (obj === null || obj === void 0 ? void 0 : obj['tagName']);
+};
+var isArr = Array.isArray;
+var isPlainObj = isType('Object');
+var isStr = isType('String');
+var isBool = isType('Boolean');
+var isNum = isType('Number');
+var isObj = function (val) { return typeof val === 'object'; };
+var isRegExp = isType('RegExp');
+var isValid = function (val) { return val !== null && val !== undefined; };
+var isValidNumber = function (val) {
+    return !isNaN(val) && isNum(val);
+};
+
+var UNSUBSCRIBE_ID_SYMBOL = Symbol('UNSUBSCRIBE_ID_SYMBOL');
+var Subscribable = /** @class */ (function () {
+    function Subscribable() {
+        var _this = this;
+        this.subscribers = {
+            index: 0,
         };
-    } finally {
-        try {
-            r && !r.done && (n = o["return"]) && n.call(o);
-        } finally {
-            if (i) throw i.error;
+        this.unsubscribe = function (id) {
+            if (id === undefined || id === null) {
+                for (var key in _this.subscribers) {
+                    _this.unsubscribe(key);
+                }
+                return;
+            }
+            if (!isFn(id)) {
+                delete _this.subscribers[id];
+            }
+            else {
+                delete _this.subscribers[id[UNSUBSCRIBE_ID_SYMBOL]];
+            }
+        };
+    }
+    Subscribable.prototype.dispatch = function (event, context) {
+        var interrupted = false;
+        for (var key in this.subscribers) {
+            if (isFn(this.subscribers[key])) {
+                event['context'] = context;
+                if (this.subscribers[key](event) === false) {
+                    interrupted = true;
+                }
+            }
+        }
+        return interrupted ? false : true;
+    };
+    Subscribable.prototype.subscribe = function (subscriber) {
+        var _this = this;
+        var id;
+        if (isFn(subscriber)) {
+            id = this.subscribers.index + 1;
+            this.subscribers[id] = subscriber;
+            this.subscribers.index++;
+        }
+        var unsubscribe = function () {
+            _this.unsubscribe(id);
+        };
+        unsubscribe[UNSUBSCRIBE_ID_SYMBOL] = id;
+        return unsubscribe;
+    };
+    return Subscribable;
+}());
+
+function getGlobalThis() {
+    try {
+        if (typeof self !== 'undefined') {
+            return self;
         }
     }
-    return u;
+    catch (e) { }
+    try {
+        if (typeof globalThisPolyfill !== 'undefined') {
+            return globalThisPolyfill;
+        }
+    }
+    catch (e) { }
+    try {
+        if (typeof global !== 'undefined') {
+            return global;
+        }
+    }
+    catch (e) { }
+    return Function('return this')();
 }
+var globalThisPolyfill = getGlobalThis();
 
-"function" == typeof SuppressedError && SuppressedError;
-
-var i = function(t) {
-    return function(e) {
-        return null != e && (Array.isArray(t) ? t : [ t ]).some((function(t) {
-            return o(e) === "[object ".concat(t, "]");
-        }));
+var ATTACHED_SYMBOL = Symbol('ATTACHED_SYMBOL');
+var EVENTS_SYMBOL = Symbol('__EVENTS_SYMBOL__');
+var EVENTS_ONCE_SYMBOL = Symbol('EVENTS_ONCE_SYMBOL');
+var EVENTS_BATCH_SYMBOL = Symbol('EVENTS_BATCH_SYMBOL');
+var DRIVER_INSTANCES_SYMBOL = Symbol('DRIVER_INSTANCES_SYMBOL');
+var isOnlyMode = function (mode) {
+    return mode === 'onlyOne' || mode === 'onlyChild' || mode === 'onlyParent';
+};
+/**
+ * 事件驱动器基类
+ */
+var EventDriver = /** @class */ (function () {
+    function EventDriver(engine, context) {
+        this.container = document;
+        this.contentWindow = globalThisPolyfill;
+        this.engine = engine;
+        this.context = context;
+    }
+    EventDriver.prototype.dispatch = function (event) {
+        return this.engine.dispatch(event, this.context);
     };
-}, o = function(t) {
-    return Object.prototype.toString.call(t);
-}, u = i([ "Function", "AsyncFunction", "GeneratorFunction" ]), s = i("Window"), a = function(t) {
-    return (null == t ? void 0 : t["nodeName"]) || (null == t ? void 0 : t["tagName"]);
-}, h = Array.isArray, c = i("Object"), l = i("String"), f = i("Boolean"), d = i("Number"), y = function(t) {
-    return "object" == typeof t;
-}, v = i("RegExp"), p = function(t) {
-    return null != t;
-}, b = function(t) {
-    return !isNaN(t) && d(t);
-}, m = Symbol("UNSUBSCRIBE_ID_SYMBOL"), g = function() {
-    function t() {
-        var t = this;
-        this.subscribers = {
-            index: 0
-        }, this.unsubscribe = function(e) {
-            if (null != e) u(e) ? delete t.subscribers[e[m]] : delete t.subscribers[e]; else for (var n in t.subscribers) t.unsubscribe(n);
-        };
-    }
-    return t.prototype.dispatch = function(t, e) {
-        var n = !1;
-        for (var r in this.subscribers) u(this.subscribers[r]) && (t["context"] = e, !1 === this.subscribers[r](t) && (n = !0));
-        return !n;
-    }, t.prototype.subscribe = function(t) {
-        var e, n = this;
-        u(t) && (e = this.subscribers.index + 1, this.subscribers[e] = t, this.subscribers.index++);
-        var r = function() {
-            n.unsubscribe(e);
-        };
-        return r[m] = e, r;
-    }, t;
-}();
-
-var w = function() {
-    try {
-        if ("undefined" != typeof self) return self;
-    } catch (t) {}
-    try {
-        if ("undefined" != typeof w) return w;
-    } catch (t) {}
-    try {
-        if ("undefined" != typeof global) return global;
-    } catch (t) {}
-    return Function("return this")();
-}(), x = Symbol("ATTACHED_SYMBOL"), S = Symbol("__EVENTS_SYMBOL__"), E = Symbol("EVENTS_ONCE_SYMBOL"), M = Symbol("EVENTS_BATCH_SYMBOL"), O = Symbol("DRIVER_INSTANCES_SYMBOL"), A = function(t) {
-    return "onlyOne" === t || "onlyChild" === t || "onlyParent" === t;
-}, T = function() {
-    function t(t, e) {
-        this.container = document, this.contentWindow = w, this.engine = t, this.context = e;
-    }
-    return t.prototype.dispatch = function(t) {
-        return this.engine.dispatch(t, this.context);
-    }, t.prototype.subscribe = function(t) {
-        return this.engine.subscribe(t);
-    }, t.prototype.subscribeTo = function(t, e) {
-        return this.engine.subscribeTo(t, e);
-    }, t.prototype.subscribeWith = function(t, e) {
-        return this.engine.subscribeWith(t, e);
-    }, t.prototype.attach = function(t) {}, t.prototype.detach = function(t) {}, t.prototype.eventTarget = function(t) {
-        var e;
-        return "resize" !== t && "scroll" !== t || this.container !== (null === (e = this.contentWindow) || void 0 === e ? void 0 : e.document) ? this.container : this.contentWindow;
-    }, t.prototype.addEventListener = function(t, e, n) {
-        var r, i, o, u, s = this.eventTarget(t);
-        if (A(null == n ? void 0 : n.mode)) {
-            s[E] = s[E] || {};
-            var a = this["constructor"];
-            a[E] = a[E] || {};
-            var h = s[E][t], c = a[E][t];
-            if (!h) {
-                if (c) if ("onlyChild" === n.mode) c.contains(s) && (c.removeEventListener(t, c[E][t], n), 
-                delete c[E][t]); else if ("onlyParent" === n.mode && c.contains(s)) return;
-                s.addEventListener(t, e, n), s[E][t] = e, a[E][t] = s;
+    EventDriver.prototype.subscribe = function (subscriber) {
+        return this.engine.subscribe(subscriber);
+    };
+    EventDriver.prototype.subscribeTo = function (type, subscriber) {
+        return this.engine.subscribeTo(type, subscriber);
+    };
+    EventDriver.prototype.subscribeWith = function (type, subscriber) {
+        return this.engine.subscribeWith(type, subscriber);
+    };
+    EventDriver.prototype.attach = function (container) {
+        console.error('attach must implement.');
+    };
+    EventDriver.prototype.detach = function (container) {
+        console.error('attach must implement.');
+    };
+    EventDriver.prototype.eventTarget = function (type) {
+        var _a;
+        if (type === 'resize' || type === 'scroll') {
+            if (this.container === ((_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document)) {
+                return this.contentWindow;
             }
-        } else s[S] = s[S] || {}, s[S][t] = s[S][t] || new Map, (null === (i = null === (r = s[S][t]) || void 0 === r ? void 0 : r.get) || void 0 === i ? void 0 : i.call(r, e)) || (s.addEventListener(t, e, n), 
-        null === (u = null === (o = s[S][t]) || void 0 === o ? void 0 : o.set) || void 0 === u || u.call(o, e, !0));
-    }, t.prototype.removeEventListener = function(t, e, n) {
-        var r, i, o = this.eventTarget(t);
-        if (A(null == n ? void 0 : n.mode)) {
-            var u = this["constructor"];
-            u[E] = u[E] || {}, o[E] = o[E] || {}, delete u[E][t], delete o[E][t], o.removeEventListener(t, e, n);
-        } else o[S] = o[S] || {}, o[S][t] = o[S][t] || new Map, null === (i = null === (r = o[S][t]) || void 0 === r ? void 0 : r.delete) || void 0 === i || i.call(r, e), 
-        o.removeEventListener(t, e, n);
-    }, t.prototype.batchAddEventListener = function(t, e, n) {
-        this.engine[O] = this.engine[O] || [], this.engine[O].includes(this) || this.engine[O].push(this), 
-        this.engine[O].forEach((function(r) {
-            var i = r.eventTarget(t);
-            i[M] = i[M] || {}, i[M][t] || (i.addEventListener(t, e, n), i[M][t] = e);
-        }));
-    }, t.prototype.batchRemoveEventListener = function(t, e, n) {
-        this.engine[O] = this.engine[O] || [], this.engine[O].forEach((function(r) {
-            var i = r.eventTarget(t);
-            i[M] = i[M] || {}, i.removeEventListener(t, e, n), delete i[M][t];
-        }));
-    }, t;
-}(), k = function(t) {
-    function n(e) {
-        var n = t.call(this) || this;
-        return n.drivers = [], n.containers = [], h(null == e ? void 0 : e.effects) && e.effects.forEach((function(t) {
-            t(n);
-        })), h(null == e ? void 0 : e.drivers) && (n.drivers = e.drivers), n;
-    }
-    return e(n, t), n.prototype.subscribeTo = function(t, e) {
-        return this.subscribe((function(n) {
-            if (t && n instanceof t) return e(n);
-        }));
-    }, n.prototype.subscribeWith = function(t, e) {
-        return this.subscribe((function(n) {
-            if (h(t)) {
-                if (t.includes(null == n ? void 0 : n.type)) return e(n);
-            } else if (t && (null == n ? void 0 : n.type) === t) return e(n);
-        }));
-    }, n.prototype.attachEvents = function(t, e, n) {
-        var r = this;
-        if (void 0 === e && (e = w), t) return s(t) ? this.attachEvents(t.document, t, n) : void (t[x] || (t[x] = this.drivers.map((function(i) {
-            var o = new i(r, n);
-            return o.contentWindow = e, o.container = t, o.attach(t), o;
-        })), this.containers.includes(t) || this.containers.push(t)));
-    }, n.prototype.detachEvents = function(t) {
-        var e = this;
-        if (t) return s(t) ? this.detachEvents(t.document) : void (t[x] && (t[x].forEach((function(e) {
-            e.detach(t);
-        })), this[O] = this[O] || [], this[O] = this[O].reduce((function(e, n) {
-            return n.container === t ? (n.detach(t), e) : e.concat(n);
-        }), []), this.containers = this.containers.filter((function(e) {
-            return e !== t;
-        })), delete t[x], delete t[S], delete t[E], delete t[M]));
-        this.containers.forEach((function(t) {
-            e.detachEvents(t);
-        }));
-    }, n;
-}(g), F = function(t, e) {
-    void 0 === t && (t = 10);
-    var n = null, r = null, i = function() {
-        n || (n = requestAnimationFrame((function(o) {
-            null === r && (r = o);
-            var u = o - r, s = u / 1e3 * t;
-            e(s), n = null, i();
-        })));
+        }
+        return this.container;
     };
-    return i(), function() {
-        n && (cancelAnimationFrame(n), n = null), r = null;
+    EventDriver.prototype.addEventListener = function (type, listener, options) {
+        var _a, _b, _c, _d;
+        var target = this.eventTarget(type);
+        if (isOnlyMode(options === null || options === void 0 ? void 0 : options.mode)) {
+            target[EVENTS_ONCE_SYMBOL] = target[EVENTS_ONCE_SYMBOL] || {};
+            var constructor = this['constructor'];
+            constructor[EVENTS_ONCE_SYMBOL] = constructor[EVENTS_ONCE_SYMBOL] || {};
+            var handler = target[EVENTS_ONCE_SYMBOL][type];
+            var container = constructor[EVENTS_ONCE_SYMBOL][type];
+            if (!handler) {
+                if (container) {
+                    if (options.mode === 'onlyChild') {
+                        if (container.contains(target)) {
+                            container.removeEventListener(type, container[EVENTS_ONCE_SYMBOL][type], options);
+                            delete container[EVENTS_ONCE_SYMBOL][type];
+                        }
+                    }
+                    else if (options.mode === 'onlyParent') {
+                        if (container.contains(target))
+                            return;
+                    }
+                }
+                target.addEventListener(type, listener, options);
+                target[EVENTS_ONCE_SYMBOL][type] = listener;
+                constructor[EVENTS_ONCE_SYMBOL][type] = target;
+            }
+        }
+        else {
+            target[EVENTS_SYMBOL] = target[EVENTS_SYMBOL] || {};
+            target[EVENTS_SYMBOL][type] = target[EVENTS_SYMBOL][type] || new Map();
+            if (!((_b = (_a = target[EVENTS_SYMBOL][type]) === null || _a === void 0 ? void 0 : _a.get) === null || _b === void 0 ? void 0 : _b.call(_a, listener))) {
+                target.addEventListener(type, listener, options);
+                (_d = (_c = target[EVENTS_SYMBOL][type]) === null || _c === void 0 ? void 0 : _c.set) === null || _d === void 0 ? void 0 : _d.call(_c, listener, true);
+            }
+        }
     };
-}, L = function(t, e) {
-    return void 0 === t && (t = 0), void 0 === e && (e = 1 / 0), e >= t ? (e - t) / e : 0;
-}, N = function(t, e, n, r) {
-    void 0 === r && (r = 80);
-    var i, o, u, s, a = n.left, h = n.right, c = n.top, l = n.bottom, f = t.x, d = t.y;
-    "x" === e ? (i = a, o = h, u = f) : (i = c, o = l, u = d);
-    var y = o - i, v = y > 400 ? 100 : y / 3;
-    return o - u < v ? {
-        direction: "end",
-        speedFactor: s,
-        speed: r * L(o - u, v)
-    } : u - i < v ? {
-        direction: "begin",
-        speedFactor: s,
-        speed: r * L(u - i, v)
-    } : null;
-}, _ = function(t, e, n, r) {
-    if (t) if (s(t)) "x" === e ? t.scrollBy({
-        left: n,
-        behavior: "smooth"
-    }) : t.scrollBy({
-        top: n,
-        behavior: "smooth"
-    }), u(r) && r(n); else if ("x" === e) {
-        if (t.scrollLeft + n > t.scrollWidth) return;
-        t.scrollLeft += n, u(r) && r(t.scrollLeft);
-    } else {
-        if (t.scrollTop + n > t.scrollHeight) return;
-        t.scrollTop += n, u(r) && r(t.scrollTop);
+    EventDriver.prototype.removeEventListener = function (type, listener, options) {
+        var _a, _b;
+        var target = this.eventTarget(type);
+        if (isOnlyMode(options === null || options === void 0 ? void 0 : options.mode)) {
+            var constructor = this['constructor'];
+            constructor[EVENTS_ONCE_SYMBOL] = constructor[EVENTS_ONCE_SYMBOL] || {};
+            target[EVENTS_ONCE_SYMBOL] = target[EVENTS_ONCE_SYMBOL] || {};
+            delete constructor[EVENTS_ONCE_SYMBOL][type];
+            delete target[EVENTS_ONCE_SYMBOL][type];
+            target.removeEventListener(type, listener, options);
+        }
+        else {
+            target[EVENTS_SYMBOL] = target[EVENTS_SYMBOL] || {};
+            target[EVENTS_SYMBOL][type] = target[EVENTS_SYMBOL][type] || new Map();
+            (_b = (_a = target[EVENTS_SYMBOL][type]) === null || _a === void 0 ? void 0 : _a.delete) === null || _b === void 0 ? void 0 : _b.call(_a, listener);
+            target.removeEventListener(type, listener, options);
+        }
+    };
+    EventDriver.prototype.batchAddEventListener = function (type, listener, options) {
+        this.engine[DRIVER_INSTANCES_SYMBOL] =
+            this.engine[DRIVER_INSTANCES_SYMBOL] || [];
+        if (!this.engine[DRIVER_INSTANCES_SYMBOL].includes(this)) {
+            this.engine[DRIVER_INSTANCES_SYMBOL].push(this);
+        }
+        this.engine[DRIVER_INSTANCES_SYMBOL].forEach(function (driver) {
+            var target = driver.eventTarget(type);
+            target[EVENTS_BATCH_SYMBOL] = target[EVENTS_BATCH_SYMBOL] || {};
+            if (!target[EVENTS_BATCH_SYMBOL][type]) {
+                target.addEventListener(type, listener, options);
+                target[EVENTS_BATCH_SYMBOL][type] = listener;
+            }
+        });
+    };
+    EventDriver.prototype.batchRemoveEventListener = function (type, listener, options) {
+        this.engine[DRIVER_INSTANCES_SYMBOL] =
+            this.engine[DRIVER_INSTANCES_SYMBOL] || [];
+        this.engine[DRIVER_INSTANCES_SYMBOL].forEach(function (driver) {
+            var target = driver.eventTarget(type);
+            target[EVENTS_BATCH_SYMBOL] = target[EVENTS_BATCH_SYMBOL] || {};
+            target.removeEventListener(type, listener, options);
+            delete target[EVENTS_BATCH_SYMBOL][type];
+        });
+    };
+    return EventDriver;
+}());
+/**
+ * 事件引擎
+ */
+var Event = /** @class */ (function (_super) {
+    __extends(Event, _super);
+    function Event(props) {
+        var _this = _super.call(this) || this;
+        _this.drivers = [];
+        _this.containers = [];
+        if (isArr(props === null || props === void 0 ? void 0 : props.effects)) {
+            props.effects.forEach(function (plugin) {
+                plugin(_this);
+            });
+        }
+        if (isArr(props === null || props === void 0 ? void 0 : props.drivers)) {
+            _this.drivers = props.drivers;
+        }
+        return _this;
     }
-}, P = function(t, e, n, r, i) {
-    return F(r, (function(r) {
-        _(t, e, "begin" === n ? 0 - r : r, i);
-    }));
+    Event.prototype.subscribeTo = function (type, subscriber) {
+        return this.subscribe(function (event) {
+            if (type && event instanceof type) {
+                return subscriber(event);
+            }
+        });
+    };
+    Event.prototype.subscribeWith = function (type, subscriber) {
+        return this.subscribe(function (event) {
+            if (isArr(type)) {
+                if (type.includes(event === null || event === void 0 ? void 0 : event.type)) {
+                    return subscriber(event);
+                }
+            }
+            else {
+                if (type && (event === null || event === void 0 ? void 0 : event.type) === type) {
+                    return subscriber(event);
+                }
+            }
+        });
+    };
+    Event.prototype.attachEvents = function (container, contentWindow, context) {
+        var _this = this;
+        if (contentWindow === void 0) { contentWindow = globalThisPolyfill; }
+        if (!container)
+            return;
+        if (isWindow(container)) {
+            return this.attachEvents(container.document, container, context);
+        }
+        if (container[ATTACHED_SYMBOL])
+            return;
+        container[ATTACHED_SYMBOL] = this.drivers.map(function (EventDriver) {
+            var driver = new EventDriver(_this, context);
+            driver.contentWindow = contentWindow;
+            driver.container = container;
+            driver.attach(container);
+            return driver;
+        });
+        if (!this.containers.includes(container)) {
+            this.containers.push(container);
+        }
+    };
+    Event.prototype.detachEvents = function (container) {
+        var _this = this;
+        if (!container) {
+            this.containers.forEach(function (container) {
+                _this.detachEvents(container);
+            });
+            return;
+        }
+        if (isWindow(container)) {
+            return this.detachEvents(container.document);
+        }
+        if (!container[ATTACHED_SYMBOL])
+            return;
+        container[ATTACHED_SYMBOL].forEach(function (driver) {
+            driver.detach(container);
+        });
+        this[DRIVER_INSTANCES_SYMBOL] = this[DRIVER_INSTANCES_SYMBOL] || [];
+        this[DRIVER_INSTANCES_SYMBOL] = this[DRIVER_INSTANCES_SYMBOL].reduce(function (drivers, driver) {
+            if (driver.container === container) {
+                driver.detach(container);
+                return drivers;
+            }
+            return drivers.concat(driver);
+        }, []);
+        this.containers = this.containers.filter(function (item) { return item !== container; });
+        delete container[ATTACHED_SYMBOL];
+        delete container[EVENTS_SYMBOL];
+        delete container[EVENTS_ONCE_SYMBOL];
+        delete container[EVENTS_BATCH_SYMBOL];
+    };
+    return Event;
+}(Subscribable));
+
+var createUniformSpeedAnimation = function (speed, callback) {
+    if (speed === void 0) { speed = 10; }
+    var request = null;
+    var startTime = null;
+    var start = function () {
+        if (request)
+            return;
+        request = requestAnimationFrame(function (timestamp) {
+            if (startTime === null) {
+                startTime = timestamp;
+            }
+            var deltaTime = timestamp - startTime;
+            var delta = (deltaTime / 1000) * speed;
+            callback(delta);
+            request = null;
+            start();
+        });
+    };
+    start();
+    return function () {
+        if (request) {
+            cancelAnimationFrame(request);
+            request = null;
+        }
+        startTime = null;
+    };
+};
+//越接近阈值，速度越小，越远离阈值，速度越大
+var calcSpeedFactor = function (delta, threshold) {
+    if (delta === void 0) { delta = 0; }
+    if (threshold === void 0) { threshold = Infinity; }
+    if (threshold >= delta) {
+        return (threshold - delta) / threshold;
+    }
+    return 0;
 };
 
-function I(t) {
-    return (null == t ? void 0 : t.x) && (null == t ? void 0 : t.y) && (null == t ? void 0 : t.width) && (null == t ? void 0 : t.height);
-}
-
-function R(t) {
-    return b(null == t ? void 0 : t.x) && b(null == t ? void 0 : t.y);
-}
-
-function B(t) {
-    return R(null == t ? void 0 : t.start) && R(null == t ? void 0 : t.end);
-}
-
-var D, C = function(t, e) {
-    this.x = t, this.y = e;
-}, U = function() {
-    function t(t, e, n, r) {
-        this.x = 0, this.y = 0, this.width = 0, this.height = 0, this.x = t, this.y = e, 
-        this.width = n, this.height = r;
+var MAX_SPEED = 80; // px/s
+var calcAutoScrollBasicInfo = function (point, axis, viewport, maxSpeed) {
+    if (maxSpeed === void 0) { maxSpeed = MAX_SPEED; }
+    var left = viewport.left, right = viewport.right, top = viewport.top, bottom = viewport.bottom;
+    var x = point.x, y = point.y;
+    var begin;
+    var end;
+    var pos;
+    var speedFactor;
+    if (axis === 'x') {
+        begin = left;
+        end = right;
+        pos = x;
     }
-    return Object.defineProperty(t.prototype, "left", {
-        get: function() {
+    else {
+        begin = top;
+        end = bottom;
+        pos = y;
+    }
+    var scrollerSize = end - begin;
+    var moveDistance = scrollerSize > 400 ? 100 : scrollerSize / 3;
+    if (end - pos < moveDistance) {
+        return {
+            direction: 'end',
+            speedFactor: speedFactor,
+            speed: maxSpeed * calcSpeedFactor(end - pos, moveDistance),
+        };
+    }
+    else if (pos - begin < moveDistance) {
+        return {
+            direction: 'begin',
+            speedFactor: speedFactor,
+            speed: maxSpeed * calcSpeedFactor(pos - begin, moveDistance),
+        };
+    }
+    return null;
+};
+var updateScrollValue = function (element, axis, value, callback) {
+    if (element) {
+        if (!isWindow(element)) {
+            if (axis === 'x') {
+                if (element.scrollLeft + value > element.scrollWidth)
+                    return;
+                element.scrollLeft += value;
+                if (isFn(callback)) {
+                    callback(element.scrollLeft);
+                }
+            }
+            else {
+                if (element.scrollTop + value > element.scrollHeight)
+                    return;
+                element.scrollTop += value;
+                if (isFn(callback)) {
+                    callback(element.scrollTop);
+                }
+            }
+        }
+        else {
+            if (axis === 'x') {
+                element.scrollBy({
+                    left: value,
+                    behavior: 'smooth',
+                });
+            }
+            else {
+                element.scrollBy({
+                    top: value,
+                    behavior: 'smooth',
+                });
+            }
+            if (isFn(callback)) {
+                callback(value);
+            }
+        }
+    }
+};
+var scrollAnimate = function (element, axis, direction, speed, callback) {
+    return createUniformSpeedAnimation(speed, function (delta) {
+        updateScrollValue(element, axis, direction === 'begin' ? 0 - delta : delta, callback);
+    });
+};
+
+function isRect(rect) {
+    return (rect === null || rect === void 0 ? void 0 : rect.x) && (rect === null || rect === void 0 ? void 0 : rect.y) && (rect === null || rect === void 0 ? void 0 : rect.width) && (rect === null || rect === void 0 ? void 0 : rect.height);
+}
+function isPoint(val) {
+    return isValidNumber(val === null || val === void 0 ? void 0 : val.x) && isValidNumber(val === null || val === void 0 ? void 0 : val.y);
+}
+function isLineSegment(val) {
+    return isPoint(val === null || val === void 0 ? void 0 : val.start) && isPoint(val === null || val === void 0 ? void 0 : val.end);
+}
+// 点的类形态
+var Point = /** @class */ (function () {
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    return Point;
+}());
+var Rect = /** @class */ (function () {
+    function Rect(x, y, width, height) {
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+    Object.defineProperty(Rect.prototype, "left", {
+        get: function () {
             return this.x;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "right", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Rect.prototype, "right", {
+        get: function () {
             return this.x + this.width;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "top", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Rect.prototype, "top", {
+        get: function () {
             return this.y;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "bottom", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Rect.prototype, "bottom", {
+        get: function () {
             return this.y + this.height;
         },
-        enumerable: !1,
-        configurable: !0
-    }), t;
-}(), j = function(t, e) {
-    this.start = n({}, t), this.end = n({}, e);
+        enumerable: false,
+        configurable: true
+    });
+    return Rect;
+}());
+var LineSegment = /** @class */ (function () {
+    function LineSegment(start, end) {
+        this.start = __assign({}, start);
+        this.end = __assign({}, end);
+    }
+    return LineSegment;
+}());
+// 象限，框选多个组件时使用
+var RectQuadrant;
+(function (RectQuadrant) {
+    RectQuadrant["Inner1"] = "I1";
+    RectQuadrant["Inner2"] = "I2";
+    RectQuadrant["Inner3"] = "I3";
+    RectQuadrant["Inner4"] = "I4";
+    RectQuadrant["Outer1"] = "O1";
+    RectQuadrant["Outer2"] = "O2";
+    RectQuadrant["Outer3"] = "O3";
+    RectQuadrant["Outer4"] = "O4";
+})(RectQuadrant || (RectQuadrant = {}));
+/**
+ * 点是否在矩形内，前两个参数分别是点和矩形。 第三个参数是“是否敏感”，如果关闭，点在矩形内就可以返回 true 了；如果关闭，点在矩形的宽高-10%的范围内才返回 true
+ * @param point
+ * @param rect
+ * @param sensitive
+ * @returns
+ */
+function isPointInRect(point, rect, sensitive) {
+    if (sensitive === void 0) { sensitive = true; }
+    var boundSensor = function (value) {
+        if (!sensitive)
+            return 0;
+        var sensor = value * 0.1;
+        if (sensor > 20)
+            return 20;
+        if (sensor < 10)
+            return 10;
+        return sensor;
+    };
+    return (point.x >= rect.x + boundSensor(rect.width) &&
+        point.x <= rect.x + rect.width - boundSensor(rect.width) &&
+        point.y >= rect.y + boundSensor(rect.height) &&
+        point.y <= rect.y + rect.height - boundSensor(rect.height));
+}
+function isEqualRect(target, source) {
+    return ((target === null || target === void 0 ? void 0 : target.x) === (source === null || source === void 0 ? void 0 : source.x) &&
+        target.y === source.y &&
+        target.width === source.width &&
+        target.height === source.height);
+}
+/**
+ * 返回矩形的四个点的坐标
+ * @param source
+ * @returns
+ */
+function getRectPoints(source) {
+    var p1 = new Point(source.x, source.y);
+    var p2 = new Point(source.x + source.width, source.y);
+    var p3 = new Point(source.x + source.width, source.y + source.height);
+    var p4 = new Point(source.x, source.y + source.height);
+    return [p1, p2, p3, p4];
+}
+/**
+ * 矩形是否在矩形内，
+ * @param target
+ * @param source
+ * @returns
+ */
+function isRectInRect(target, source) {
+    var _a = __read(getRectPoints(target), 4), p1 = _a[0], p2 = _a[1], p3 = _a[2], p4 = _a[3];
+    return (isPointInRect(p1, source, false) &&
+        isPointInRect(p2, source, false) &&
+        isPointInRect(p3, source, false) &&
+        isPointInRect(p4, source, false));
+}
+/**
+ * 两个矩形是否存在交集
+ * @param target
+ * @param source
+ * @returns
+ */
+function isCrossRectInRect(target, source) {
+    var targetCenterPoint = new Point(target.x + target.width / 2, target.y + target.height / 2);
+    var sourceCenterPoint = new Point(source.x + source.width / 2, source.y + source.height / 2);
+    return (Math.abs(targetCenterPoint.x - sourceCenterPoint.x) <=
+        target.width / 2 + source.width / 2 &&
+        Math.abs(targetCenterPoint.y - sourceCenterPoint.y) <=
+            target.height / 2 + source.height / 2);
+}
+/**
+ * 计算点在矩形的哪个象限
+ * @param point
+ * @param rect
+ */
+function calcQuadrantOfPointToRect(point, rect) {
+    var isInner = isPointInRect(point, rect);
+    if (point.x <= rect.x + rect.width / 2) {
+        if (point.y <= rect.y + rect.height / 2) {
+            if (isInner) {
+                return RectQuadrant.Inner1;
+            }
+            else {
+                return RectQuadrant.Outer1;
+            }
+        }
+        else {
+            if (isInner) {
+                return RectQuadrant.Inner4;
+            }
+            else {
+                return RectQuadrant.Outer4;
+            }
+        }
+    }
+    else {
+        if (point.y <= rect.y + rect.height / 2) {
+            if (isInner) {
+                return RectQuadrant.Inner2;
+            }
+            else {
+                return RectQuadrant.Outer2;
+            }
+        }
+        else {
+            if (isInner) {
+                return RectQuadrant.Inner3;
+            }
+            else {
+                return RectQuadrant.Outer3;
+            }
+        }
+    }
+}
+/**
+ * 点跟矩形之间的距离
+ * @param point
+ * @param rect
+ * @returns
+ */
+function calcDistanceOfPointToRect(point, rect) {
+    var minX = Math.min(Math.abs(point.x - rect.x), Math.abs(point.x - (rect.x + rect.width)));
+    var minY = Math.min(Math.abs(point.y - rect.y), Math.abs(point.y - (rect.y + rect.height)));
+    if (point.x >= rect.x && point.x <= rect.x + rect.width) {
+        minX = 0;
+    }
+    if (point.y >= rect.y && point.y <= rect.y + rect.height) {
+        minY = 0;
+    }
+    return Math.sqrt(Math.pow(minX, 2) + Math.pow(minY, 2));
+}
+/**
+ * 点到边的距离
+ * @param point
+ * @param rect
+ * @returns
+ */
+function calcDistancePointToEdge(point, rect) {
+    var distanceTop = Math.abs(point.y - rect.y);
+    var distanceBottom = Math.abs(point.y - (rect.y + rect.height));
+    var distanceLeft = Math.abs(point.x - rect.x);
+    var distanceRight = Math.abs(point.x - (rect.x + rect.width));
+    return Math.min(distanceTop, distanceBottom, distanceLeft, distanceRight);
+}
+/**
+ * 计算点的位置是否在矩形的下方或者右下方 比如拖拽组件时，把组件放置在另一个组件的“下方或者右下方”可以视为插入在其后面，否则就插入到其前面
+ * @param point
+ * @param rect
+ * @param inline
+ * @returns
+ */
+function isNearAfter(point, rect, inline) {
+    if (inline === void 0) { inline = false; }
+    if (inline) {
+        return (Math.abs(point.x - rect.x) + Math.abs(point.y - rect.y) >
+            Math.abs(point.x - (rect.x + rect.width)) +
+                Math.abs(point.y - (rect.y + rect.height)));
+    }
+    return Math.abs(point.y - rect.y) > Math.abs(point.y - (rect.y + rect.height));
+}
+/**
+ * 点在矩形里的相对位置
+ * @param point
+ * @param rect
+ */
+function calcRelativeOfPointToRect(point, rect) {
+    var distance = calcDistanceOfPointToRect(point, rect);
+    var quadrant = calcQuadrantOfPointToRect(point, rect);
+    return {
+        quadrant: quadrant,
+        distance: distance,
+    };
+}
+/**
+ * 可以把多个矩形合并计算成一个更大的矩形
+ * @param rects
+ * @returns
+ */
+function calcBoundingRect(rects) {
+    if (!(rects === null || rects === void 0 ? void 0 : rects.length))
+        return;
+    if ((rects === null || rects === void 0 ? void 0 : rects.length) === 1 && !rects[0])
+        return;
+    var minTop = Infinity;
+    var maxBottom = -Infinity;
+    var minLeft = Infinity;
+    var maxRight = -Infinity;
+    rects.forEach(function (item) {
+        var rect = new Rect(item.x, item.y, item.width, item.height);
+        if (rect.top <= minTop) {
+            minTop = rect.top;
+        }
+        if (rect.bottom >= maxBottom) {
+            maxBottom = rect.bottom;
+        }
+        if (rect.left <= minLeft) {
+            minLeft = rect.left;
+        }
+        if (rect.right >= maxRight) {
+            maxRight = rect.right;
+        }
+    });
+    return new Rect(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
+}
+/**
+ * 按起点和终点计算矩形
+ * @param startPoint
+ * @param endPoint
+ * @param scrollX
+ * @param scrollY
+ * @returns
+ */
+function calcRectByStartEndPoint(startPoint, endPoint, scrollX, scrollY) {
+    if (scrollX === void 0) { scrollX = 0; }
+    if (scrollY === void 0) { scrollY = 0; }
+    var drawStartX = 0, drawStartY = 0;
+    if (endPoint.x + scrollX >= startPoint.x &&
+        endPoint.y + scrollY >= startPoint.y) {
+        //4象限
+        drawStartX = startPoint.x;
+        drawStartY = startPoint.y;
+        return new Rect(drawStartX - scrollX, drawStartY - scrollY, Math.abs(endPoint.x - startPoint.x + scrollX), Math.abs(endPoint.y - startPoint.y + scrollY));
+    }
+    else if (endPoint.x + scrollX < startPoint.x &&
+        endPoint.y + scrollY < startPoint.y) {
+        //1象限
+        drawStartX = endPoint.x;
+        drawStartY = endPoint.y;
+        return new Rect(drawStartX, drawStartY, Math.abs(endPoint.x - startPoint.x + scrollX), Math.abs(endPoint.y - startPoint.y + scrollY));
+    }
+    else if (endPoint.x + scrollX < startPoint.x &&
+        endPoint.y + scrollY >= startPoint.y) {
+        //3象限
+        drawStartX = endPoint.x;
+        drawStartY = startPoint.y;
+        return new Rect(drawStartX - scrollX, drawStartY - scrollY, Math.abs(endPoint.x - startPoint.x + scrollX), Math.abs(endPoint.y - startPoint.y + scrollY));
+    }
+    else {
+        //2象限
+        drawStartX = startPoint.x;
+        drawStartY = endPoint.y;
+        return new Rect(drawStartX, drawStartY, Math.abs(endPoint.x - startPoint.x + scrollX), Math.abs(endPoint.y - startPoint.y + scrollY));
+    }
+}
+function calcEdgeLinesOfRect(rect) {
+    return {
+        v: [
+            new LineSegment(new Point(rect.x, rect.y), new Point(rect.x, rect.y + rect.height)),
+            new LineSegment(new Point(rect.x + rect.width / 2, rect.y), new Point(rect.x + rect.width / 2, rect.y + rect.height)),
+            new LineSegment(new Point(rect.x + rect.width, rect.y), new Point(rect.x + rect.width, rect.y + rect.height)),
+        ],
+        h: [
+            new LineSegment(new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y)),
+            new LineSegment(new Point(rect.x, rect.y + rect.height / 2), new Point(rect.x + rect.width, rect.y + rect.height / 2)),
+            new LineSegment(new Point(rect.x, rect.y + rect.height), new Point(rect.x + rect.width, rect.y + rect.height)),
+        ],
+    };
+}
+function calcRectOfAxisLineSegment(line) {
+    if (!isLineSegment(line))
+        return;
+    var isXAxis = line.start.x === line.end.x;
+    return new Rect(line.start.x, line.start.y, isXAxis ? 0 : line.end.x - line.start.x, isXAxis ? line.end.y - line.start.y : 0);
+}
+function calcSpaceBlockOfRect(target, source, type) {
+    var targetRect = new Rect(target.x, target.y, target.width, target.height);
+    var sourceRect = new Rect(source.x, source.y, source.width, source.height);
+    if (sourceRect.bottom < targetRect.top && sourceRect.left > targetRect.right)
+        return;
+    if (sourceRect.top > targetRect.bottom && sourceRect.left > targetRect.right)
+        return;
+    if (sourceRect.bottom < targetRect.top && sourceRect.right < targetRect.left)
+        return;
+    if (sourceRect.top > targetRect.bottom && sourceRect.right < targetRect.left)
+        return;
+    if (sourceRect.bottom < targetRect.top) {
+        var distance = targetRect.top - sourceRect.bottom;
+        var left = Math.min(sourceRect.left, targetRect.left);
+        var right = Math.max(sourceRect.right, targetRect.right);
+        if (type && type !== 'top')
+            return;
+        return {
+            type: 'top',
+            distance: distance,
+            rect: new Rect(left, sourceRect.bottom, right - left, distance),
+        };
+    }
+    else if (sourceRect.top > targetRect.bottom) {
+        var distance = sourceRect.top - targetRect.bottom;
+        var left = Math.min(sourceRect.left, targetRect.left);
+        var right = Math.max(sourceRect.right, targetRect.right);
+        if (type && type !== 'bottom')
+            return;
+        return {
+            type: 'bottom',
+            distance: distance,
+            rect: new Rect(left, targetRect.bottom, right - left, distance),
+        };
+    }
+    else if (sourceRect.right < targetRect.left) {
+        var distance = targetRect.left - sourceRect.right;
+        var top_1 = Math.min(sourceRect.top, targetRect.top);
+        var bottom = Math.max(sourceRect.bottom, targetRect.bottom);
+        if (type && type !== 'left')
+            return;
+        return {
+            type: 'left',
+            distance: distance,
+            rect: new Rect(sourceRect.right, top_1, distance, bottom - top_1),
+        };
+    }
+    else if (sourceRect.left > targetRect.right) {
+        var distance = sourceRect.left - targetRect.right;
+        var top_2 = Math.min(sourceRect.top, targetRect.top);
+        var bottom = Math.max(sourceRect.bottom, targetRect.bottom);
+        if (type && type !== 'right')
+            return;
+        return {
+            type: 'right',
+            distance: distance,
+            rect: new Rect(targetRect.right, top_2, distance, bottom - top_2),
+        };
+    }
+}
+function calcExtendsLineSegmentOfRect(targetRect, referRect) {
+    if (referRect.right < targetRect.right &&
+        targetRect.left <= referRect.right) {
+        //右侧
+        if (referRect.bottom < targetRect.top) {
+            //上方
+            return {
+                start: { x: referRect.right, y: referRect.bottom },
+                end: { x: targetRect.right, y: referRect.bottom },
+            };
+        }
+        else if (referRect.top > targetRect.bottom) {
+            //下方
+            return {
+                start: { x: referRect.right, y: referRect.top },
+                end: { x: targetRect.right, y: referRect.top },
+            };
+        }
+    }
+    else if (referRect.left > targetRect.left &&
+        targetRect.right >= referRect.left) {
+        //左侧
+        if (referRect.bottom < targetRect.top) {
+            //上方
+            return {
+                start: { x: targetRect.left, y: referRect.bottom },
+                end: { x: referRect.left, y: referRect.bottom },
+            };
+        }
+        else if (referRect.top > targetRect.bottom) {
+            //下方
+            return {
+                start: { x: targetRect.left, y: referRect.top },
+                end: { x: referRect.left, y: referRect.top },
+            };
+        }
+    }
+    if (referRect.top < targetRect.top && targetRect.bottom >= referRect.top) {
+        //refer在上方
+        if (referRect.right < targetRect.left) {
+            //右侧
+            return {
+                start: { x: referRect.right, y: referRect.bottom },
+                end: { x: referRect.right, y: targetRect.bottom },
+            };
+        }
+        else if (referRect.left > targetRect.right) {
+            //左侧
+            return {
+                start: { x: referRect.left, y: referRect.bottom },
+                end: { x: referRect.left, y: targetRect.bottom },
+            };
+        }
+    }
+    else if (referRect.bottom > targetRect.bottom &&
+        referRect.top <= targetRect.bottom) {
+        //refer下方
+        if (referRect.right < targetRect.left) {
+            //右侧
+            return {
+                start: { x: referRect.right, y: targetRect.top },
+                end: { x: referRect.right, y: referRect.top },
+            };
+        }
+        else if (referRect.left > targetRect.right) {
+            //左侧
+            return {
+                start: { x: referRect.left, y: targetRect.top },
+                end: { x: referRect.left, y: referRect.top },
+            };
+        }
+    }
+}
+function calcOffsetOfSnapLineSegmentToEdge(line, current) {
+    var edges = calcEdgeLinesOfRect(current);
+    var isVerticalLine = line.start.x === line.end.x;
+    if (isVerticalLine) {
+        return { x: calcMinDistanceValue(edges.x, line.start.x) - current.x, y: 0 };
+    }
+    function calcEdgeLinesOfRect(rect) {
+        return {
+            x: [rect.x, rect.x + rect.width / 2, rect.x + rect.width],
+            y: [rect.y, rect.y + rect.height / 2, rect.y + rect.height],
+        };
+    }
+    function calcMinDistanceValue(edges, targetValue) {
+        var minDistance = Infinity, minDistanceIndex = -1;
+        for (var i = 0; i < edges.length; i++) {
+            var distance = Math.abs(edges[i] - targetValue);
+            if (minDistance > distance) {
+                minDistance = distance;
+                minDistanceIndex = i;
+            }
+        }
+        return edges[minDistanceIndex];
+    }
+    return { x: 0, y: calcMinDistanceValue(edges.y, line.start.y) - current.y };
+}
+function calcDistanceOfSnapLineToEdges(line, edges) {
+    var _a, _b, _c, _d;
+    var distance = Infinity;
+    if (((_a = line === null || line === void 0 ? void 0 : line.start) === null || _a === void 0 ? void 0 : _a.y) === ((_b = line === null || line === void 0 ? void 0 : line.end) === null || _b === void 0 ? void 0 : _b.y)) {
+        edges.h.forEach(function (target) {
+            var _distance = Math.abs(target.start.y - line.start.y);
+            if (_distance < distance) {
+                distance = _distance;
+            }
+        });
+    }
+    else if (((_c = line === null || line === void 0 ? void 0 : line.start) === null || _c === void 0 ? void 0 : _c.x) === ((_d = line === null || line === void 0 ? void 0 : line.end) === null || _d === void 0 ? void 0 : _d.x)) {
+        edges.v.forEach(function (target) {
+            var _distance = Math.abs(target.start.x - line.start.x);
+            if (_distance < distance) {
+                distance = _distance;
+            }
+        });
+    }
+    else {
+        throw new Error('can not calculate slash distance');
+    }
+    return distance;
+}
+function calcCombineSnapLineSegment(target, source) {
+    if (target.start.x === target.end.x) {
+        return new LineSegment(new Point(target.start.x, target.start.y > source.start.y ? source.start.y : target.start.y), new Point(target.start.x, target.end.y > source.end.y ? target.end.y : source.end.y));
+    }
+    return new LineSegment(new Point(target.start.x > source.start.x ? source.start.x : target.start.x, target.start.y), new Point(target.end.x > source.end.x ? target.end.x : source.end.x, target.end.y));
+}
+function calcClosestEdges(line, edges) {
+    var _a, _b, _c, _d;
+    var result;
+    var distance = Infinity;
+    if (((_a = line === null || line === void 0 ? void 0 : line.start) === null || _a === void 0 ? void 0 : _a.y) === ((_b = line === null || line === void 0 ? void 0 : line.end) === null || _b === void 0 ? void 0 : _b.y)) {
+        edges.h.forEach(function (target) {
+            var _distance = Math.abs(target.start.y - line.start.y);
+            if (_distance < distance) {
+                distance = _distance;
+                result = target;
+            }
+        });
+    }
+    else if (((_c = line === null || line === void 0 ? void 0 : line.start) === null || _c === void 0 ? void 0 : _c.x) === ((_d = line === null || line === void 0 ? void 0 : line.end) === null || _d === void 0 ? void 0 : _d.x)) {
+        edges.v.forEach(function (target) {
+            var _distance = Math.abs(target.start.x - line.start.x);
+            if (_distance < distance) {
+                distance = _distance;
+                result = target;
+            }
+        });
+    }
+    else {
+        throw new Error('can not calculate slash distance');
+    }
+    return [distance, result];
+}
+
+var IDX = 36, HEX = '';
+while (IDX--)
+    HEX += IDX.toString(36);
+function uid(len) {
+    var str = '', num = len || 11;
+    while (num--)
+        str += HEX[(Math.random() * 36) | 0];
+    return str;
+}
+
+var instOf = function (value, cls) {
+    if (isFn(cls))
+        return value instanceof cls;
+    if (isStr(cls))
+        return globalThisPolyfill[cls]
+            ? value instanceof globalThisPolyfill[cls]
+            : false;
+    return false;
 };
 
-function z(t, e, n) {
-    void 0 === n && (n = !0);
-    var r = function(t) {
-        if (!n) return 0;
-        var e = .1 * t;
-        return e > 20 ? 20 : e < 10 ? 10 : e;
-    };
-    return t.x >= e.x + r(e.width) && t.x <= e.x + e.width - r(e.width) && t.y >= e.y + r(e.height) && t.y <= e.y + e.height - r(e.height);
-}
-
-function W(t, e) {
-    return (null == t ? void 0 : t.x) === (null == e ? void 0 : e.x) && t.y === e.y && t.width === e.width && t.height === e.height;
-}
-
-function V(t) {
-    var e = new C(t.x, t.y), n = new C(t.x + t.width, t.y), r = new C(t.x + t.width, t.y + t.height), i = new C(t.x, t.y + t.height);
-    return [ e, n, r, i ];
-}
-
-function H(t, e) {
-    var n = r(V(t), 4), i = n[0], o = n[1], u = n[2], s = n[3];
-    return z(i, e, !1) && z(o, e, !1) && z(u, e, !1) && z(s, e, !1);
-}
-
-function Y(t, e) {
-    var n = new C(t.x + t.width / 2, t.y + t.height / 2), r = new C(e.x + e.width / 2, e.y + e.height / 2);
-    return Math.abs(n.x - r.x) <= t.width / 2 + e.width / 2 && Math.abs(n.y - r.y) <= t.height / 2 + e.height / 2;
-}
-
-function G(t, e) {
-    var n = z(t, e);
-    return t.x <= e.x + e.width / 2 ? t.y <= e.y + e.height / 2 ? n ? D.Inner1 : D.Outer1 : n ? D.Inner4 : D.Outer4 : t.y <= e.y + e.height / 2 ? n ? D.Inner2 : D.Outer2 : n ? D.Inner3 : D.Outer3;
-}
-
-function q(t, e) {
-    var n = Math.min(Math.abs(t.x - e.x), Math.abs(t.x - (e.x + e.width))), r = Math.min(Math.abs(t.y - e.y), Math.abs(t.y - (e.y + e.height)));
-    return t.x >= e.x && t.x <= e.x + e.width && (n = 0), t.y >= e.y && t.y <= e.y + e.height && (r = 0), 
-    Math.sqrt(Math.pow(n, 2) + Math.pow(r, 2));
-}
-
-function J(t, e) {
-    var n = Math.abs(t.y - e.y), r = Math.abs(t.y - (e.y + e.height)), i = Math.abs(t.x - e.x), o = Math.abs(t.x - (e.x + e.width));
-    return Math.min(n, r, i, o);
-}
-
-function K(t, e, n) {
-    return void 0 === n && (n = !1), n ? Math.abs(t.x - e.x) + Math.abs(t.y - e.y) > Math.abs(t.x - (e.x + e.width)) + Math.abs(t.y - (e.y + e.height)) : Math.abs(t.y - e.y) > Math.abs(t.y - (e.y + e.height));
-}
-
-function Q(t, e) {
-    var n = q(t, e), r = G(t, e);
-    return {
-        quadrant: r,
-        distance: n
-    };
-}
-
-function X(t) {
-    if ((null == t ? void 0 : t.length) && (1 !== (null == t ? void 0 : t.length) || t[0])) {
-        var e = 1 / 0, n = -1 / 0, r = 1 / 0, i = -1 / 0;
-        return t.forEach((function(t) {
-            var o = new U(t.x, t.y, t.width, t.height);
-            o.top <= e && (e = o.top), o.bottom >= n && (n = o.bottom), o.left <= r && (r = o.left), 
-            o.right >= i && (i = o.right);
-        })), new U(r, e, i - r, n - e);
-    }
-}
-
-function Z(t, e, n, r) {
-    void 0 === n && (n = 0), void 0 === r && (r = 0);
-    var i = 0, o = 0;
-    return e.x + n >= t.x && e.y + r >= t.y ? (i = t.x, o = t.y, new U(i - n, o - r, Math.abs(e.x - t.x + n), Math.abs(e.y - t.y + r))) : e.x + n < t.x && e.y + r < t.y ? (i = e.x, 
-    o = e.y, new U(i, o, Math.abs(e.x - t.x + n), Math.abs(e.y - t.y + r))) : e.x + n < t.x && e.y + r >= t.y ? (i = e.x, 
-    o = t.y, new U(i - n, o - r, Math.abs(e.x - t.x + n), Math.abs(e.y - t.y + r))) : (i = t.x, 
-    o = e.y, new U(i, o, Math.abs(e.x - t.x + n), Math.abs(e.y - t.y + r)));
-}
-
-function $(t) {
-    return {
-        v: [ new j(new C(t.x, t.y), new C(t.x, t.y + t.height)), new j(new C(t.x + t.width / 2, t.y), new C(t.x + t.width / 2, t.y + t.height)), new j(new C(t.x + t.width, t.y), new C(t.x + t.width, t.y + t.height)) ],
-        h: [ new j(new C(t.x, t.y), new C(t.x + t.width, t.y)), new j(new C(t.x, t.y + t.height / 2), new C(t.x + t.width, t.y + t.height / 2)), new j(new C(t.x, t.y + t.height), new C(t.x + t.width, t.y + t.height)) ]
-    };
-}
-
-function tt(t) {
-    if (B(t)) {
-        var e = t.start.x === t.end.x;
-        return new U(t.start.x, t.start.y, e ? 0 : t.end.x - t.start.x, e ? t.end.y - t.start.y : 0);
-    }
-}
-
-function et(t, e, n) {
-    var r = new U(t.x, t.y, t.width, t.height), i = new U(e.x, e.y, e.width, e.height);
-    if (!(i.bottom < r.top && i.left > r.right || i.top > r.bottom && i.left > r.right || i.bottom < r.top && i.right < r.left || i.top > r.bottom && i.right < r.left)) {
-        if (i.bottom < r.top) {
-            var o = r.top - i.bottom, u = Math.min(i.left, r.left), s = Math.max(i.right, r.right);
-            if (n && "top" !== n) return;
-            return {
-                type: "top",
-                distance: o,
-                rect: new U(u, i.bottom, s - u, o)
-            };
+var NATIVE_KEYS = [
+    ['Map', function (map) { return new Map(map); }],
+    ['WeakMap', function (map) { return new WeakMap(map); }],
+    ['WeakSet', function (set) { return new WeakSet(set); }],
+    ['Set', function (set) { return new Set(set); }],
+    ['Date', function (date) { return new Date(date); }],
+    'FileList',
+    'File',
+    'URL',
+    'RegExp',
+    [
+        'Promise',
+        function (promise) {
+            return new Promise(function (resolve, reject) { return promise.then(resolve, reject); });
+        },
+    ],
+];
+var isNativeObject = function (values) {
+    for (var i = 0; i < NATIVE_KEYS.length; i++) {
+        var item = NATIVE_KEYS[i];
+        if (Array.isArray(item) && item[0]) {
+            if (instOf(values, item[0])) {
+                return item[1] ? item[1] : item[0];
+            }
         }
-        if (i.top > r.bottom) {
-            o = i.top - r.bottom, u = Math.min(i.left, r.left), s = Math.max(i.right, r.right);
-            if (n && "bottom" !== n) return;
-            return {
-                type: "bottom",
-                distance: o,
-                rect: new U(u, r.bottom, s - u, o)
-            };
-        }
-        if (i.right < r.left) {
-            o = r.left - i.right;
-            var a = Math.min(i.top, r.top), h = Math.max(i.bottom, r.bottom);
-            if (n && "left" !== n) return;
-            return {
-                type: "left",
-                distance: o,
-                rect: new U(i.right, a, o, h - a)
-            };
-        }
-        if (i.left > r.right) {
-            o = i.left - r.right;
-            var c = Math.min(i.top, r.top);
-            h = Math.max(i.bottom, r.bottom);
-            if (n && "right" !== n) return;
-            return {
-                type: "right",
-                distance: o,
-                rect: new U(r.right, c, o, h - c)
-            };
+        else {
+            if (instOf(values, item)) {
+                return item;
+            }
         }
     }
-}
-
-function nt(t, e) {
-    if (e.right < t.right && t.left <= e.right) {
-        if (e.bottom < t.top) return {
-            start: {
-                x: e.right,
-                y: e.bottom
-            },
-            end: {
-                x: t.right,
-                y: e.bottom
-            }
-        };
-        if (e.top > t.bottom) return {
-            start: {
-                x: e.right,
-                y: e.top
-            },
-            end: {
-                x: t.right,
-                y: e.top
-            }
-        };
-    } else if (e.left > t.left && t.right >= e.left) {
-        if (e.bottom < t.top) return {
-            start: {
-                x: t.left,
-                y: e.bottom
-            },
-            end: {
-                x: e.left,
-                y: e.bottom
-            }
-        };
-        if (e.top > t.bottom) return {
-            start: {
-                x: t.left,
-                y: e.top
-            },
-            end: {
-                x: e.left,
-                y: e.top
-            }
-        };
+};
+var shallowClone = function (values) {
+    var nativeClone;
+    if (Array.isArray(values)) {
+        return values.slice(0);
     }
-    if (e.top < t.top && t.bottom >= e.top) {
-        if (e.right < t.left) return {
-            start: {
-                x: e.right,
-                y: e.bottom
-            },
-            end: {
-                x: e.right,
-                y: t.bottom
-            }
-        };
-        if (e.left > t.right) return {
-            start: {
-                x: e.left,
-                y: e.bottom
-            },
-            end: {
-                x: e.left,
-                y: t.bottom
-            }
-        };
-    } else if (e.bottom > t.bottom && e.top <= t.bottom) {
-        if (e.right < t.left) return {
-            start: {
-                x: e.right,
-                y: t.top
-            },
-            end: {
-                x: e.right,
-                y: e.top
-            }
-        };
-        if (e.left > t.right) return {
-            start: {
-                x: e.left,
-                y: t.top
-            },
-            end: {
-                x: e.left,
-                y: e.top
-            }
-        };
+    else if (isNativeObject(values)) {
+        nativeClone = isNativeObject(values);
+        return isFn(nativeClone) ? nativeClone(values) : values;
     }
-}
-
-function rt(t, e) {
-    var n, r = (n = e, {
-        x: [ n.x, n.x + n.width / 2, n.x + n.width ],
-        y: [ n.y, n.y + n.height / 2, n.y + n.height ]
-    }), i = t.start.x === t.end.x;
-    if (i) return {
-        x: o(r.x, t.start.x) - e.x,
-        y: 0
-    };
-    function o(t, e) {
-        for (var n = 1 / 0, r = -1, i = 0; i < t.length; i++) {
-            var o = Math.abs(t[i] - e);
-            n > o && (n = o, r = i);
+    else if (typeof values === 'object' && !!values) {
+        return __assign({}, values);
+    }
+};
+var clone = function (values, filter) {
+    var nativeClone;
+    if (Array.isArray(values)) {
+        return values.map(function (item) { return clone(item, filter); });
+    }
+    else if (isNativeObject(values)) {
+        nativeClone = isNativeObject(values);
+        return isFn(nativeClone) ? nativeClone(values) : values;
+    }
+    else if (typeof values === 'object' && !!values) {
+        if ('$$typeof' in values && '_owner' in values) {
+            return values;
         }
-        return t[r];
+        if (values._isAMomentObject) {
+            return values;
+        }
+        if (values._isJSONSchemaObject) {
+            return values;
+        }
+        if (isFn(values.toJS)) {
+            return values;
+        }
+        if (isFn(values.toJSON)) {
+            return values;
+        }
+        if (Object.getOwnPropertySymbols(values || {}).length) {
+            return values;
+        }
+        var res = {};
+        for (var key in values) {
+            if (Object.hasOwnProperty.call(values, key)) {
+                if (isFn(filter)) {
+                    if (filter(values[key], key)) {
+                        res[key] = clone(values[key], filter);
+                    }
+                    else {
+                        res[key] = values[key];
+                    }
+                }
+                else {
+                    res[key] = clone(values[key], filter);
+                }
+            }
+        }
+        return res;
     }
-    return {
-        x: 0,
-        y: o(r.y, t.start.y) - e.y
+    else {
+        return values;
+    }
+};
+
+/**
+ * A doubly linked list-based Least Recently Used (LRU) cache. Will keep most
+ * recently used items while discarding least recently used items when its limit
+ * is reached.
+ *
+ * Licensed under MIT. Copyright (c) 2010 Rasmus Andersson <http://hunch.se/>
+ * See README.md for details.
+ *
+ * Illustration of the design:
+ *
+ *       entry             entry             entry             entry
+ *       ______            ______            ______            ______
+ *      | head |.newer => |      |.newer => |      |.newer => | tail |
+ *      |  A   |          |  B   |          |  C   |          |  D   |
+ *      |______| <= older.|______| <= older.|______| <= older.|______|
+ *
+ *  removed  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  added
+ */
+/* eslint-disable */
+var NEWER = Symbol('newer');
+var OLDER = Symbol('older');
+function Entry(key, value) {
+    this.key = key;
+    this.value = value;
+    this[NEWER] = undefined;
+    this[OLDER] = undefined;
+}
+var LRUMap = /** @class */ (function () {
+    function LRUMap(limit, entries) {
+        if (typeof limit !== 'number') {
+            // called as (entries)
+            entries = limit;
+            limit = 0;
+        }
+        this.size = 0;
+        this.limit = limit;
+        this.oldest = this.newest = undefined;
+        this._keymap = new Map();
+        if (entries) {
+            this.assign(entries);
+            if (limit < 1) {
+                this.limit = this.size;
+            }
+        }
+    }
+    LRUMap.prototype._markEntryAsUsed = function (entry) {
+        if (entry === this.newest) {
+            // Already the most recenlty used entry, so no need to update the list
+            return;
+        }
+        // HEAD--------------TAIL
+        //   <.older   .newer>
+        //  <--- add direction --
+        //   A  B  C  <D>  E
+        if (entry[NEWER]) {
+            if (entry === this.oldest) {
+                this.oldest = entry[NEWER];
+            }
+            entry[NEWER][OLDER] = entry[OLDER]; // C <-- E.
+        }
+        if (entry[OLDER]) {
+            entry[OLDER][NEWER] = entry[NEWER]; // C. --> E
+        }
+        entry[NEWER] = undefined; // D --x
+        entry[OLDER] = this.newest; // D. --> E
+        if (this.newest) {
+            this.newest[NEWER] = entry; // E. <-- D
+        }
+        this.newest = entry;
     };
-}
-
-function it(t, e) {
-    var n, r, i, o, u = 1 / 0;
-    if ((null === (n = null == t ? void 0 : t.start) || void 0 === n ? void 0 : n.y) === (null === (r = null == t ? void 0 : t.end) || void 0 === r ? void 0 : r.y)) e.h.forEach((function(e) {
-        var n = Math.abs(e.start.y - t.start.y);
-        n < u && (u = n);
-    })); else {
-        if ((null === (i = null == t ? void 0 : t.start) || void 0 === i ? void 0 : i.x) !== (null === (o = null == t ? void 0 : t.end) || void 0 === o ? void 0 : o.x)) throw new Error("can not calculate slash distance");
-        e.v.forEach((function(e) {
-            var n = Math.abs(e.start.x - t.start.x);
-            n < u && (u = n);
-        }));
-    }
-    return u;
-}
-
-function ot(t, e) {
-    return t.start.x === t.end.x ? new j(new C(t.start.x, t.start.y > e.start.y ? e.start.y : t.start.y), new C(t.start.x, t.end.y > e.end.y ? t.end.y : e.end.y)) : new j(new C(t.start.x > e.start.x ? e.start.x : t.start.x, t.start.y), new C(t.end.x > e.end.x ? t.end.x : e.end.x, t.end.y));
-}
-
-function ut(t, e) {
-    var n, r, i, o, u, s = 1 / 0;
-    if ((null === (n = null == t ? void 0 : t.start) || void 0 === n ? void 0 : n.y) === (null === (r = null == t ? void 0 : t.end) || void 0 === r ? void 0 : r.y)) e.h.forEach((function(e) {
-        var n = Math.abs(e.start.y - t.start.y);
-        n < s && (s = n, u = e);
-    })); else {
-        if ((null === (i = null == t ? void 0 : t.start) || void 0 === i ? void 0 : i.x) !== (null === (o = null == t ? void 0 : t.end) || void 0 === o ? void 0 : o.x)) throw new Error("can not calculate slash distance");
-        e.v.forEach((function(e) {
-            var n = Math.abs(e.start.x - t.start.x);
-            n < s && (s = n, u = e);
-        }));
-    }
-    return [ s, u ];
-}
-
-(function(t) {
-    t["Inner1"] = "I1", t["Inner2"] = "I2", t["Inner3"] = "I3", t["Inner4"] = "I4", 
-    t["Outer1"] = "O1", t["Outer2"] = "O2", t["Outer3"] = "O3", t["Outer4"] = "O4";
-})(D || (D = {}));
-
-for (var st = 36, at = ""; st--; ) at += st.toString(36);
-
-function ht(t) {
-    for (var e = "", n = t || 11; n--; ) e += at[36 * Math.random() | 0];
-    return e;
-}
-
-var ct = function(t, e) {
-    return u(e) ? t instanceof e : !!l(e) && (!!w[e] && t instanceof w[e]);
-}, lt = [ [ "Map", function(t) {
-    return new Map(t);
-} ], [ "WeakMap", function(t) {
-    return new WeakMap(t);
-} ], [ "WeakSet", function(t) {
-    return new WeakSet(t);
-} ], [ "Set", function(t) {
-    return new Set(t);
-} ], [ "Date", function(t) {
-    return new Date(t);
-} ], "FileList", "File", "URL", "RegExp", [ "Promise", function(t) {
-    return new Promise((function(e, n) {
-        return t.then(e, n);
-    }));
-} ] ], ft = function(t) {
-    for (var e = 0; e < lt.length; e++) {
-        var n = lt[e];
-        if (Array.isArray(n) && n[0]) {
-            if (ct(t, n[0])) return n[1] ? n[1] : n[0];
-        } else if (ct(t, n)) return n;
-    }
-}, dt = function(t) {
-    var e;
-    return Array.isArray(t) ? t.slice(0) : ft(t) ? (e = ft(t), u(e) ? e(t) : t) : "object" == typeof t && t ? n({}, t) : void 0;
-}, yt = function(t, e) {
-    var n;
-    if (Array.isArray(t)) return t.map((function(t) {
-        return yt(t, e);
-    }));
-    if (ft(t)) return n = ft(t), u(n) ? n(t) : t;
-    if ("object" == typeof t && t) {
-        if ("$$typeof" in t && "_owner" in t) return t;
-        if (t._isAMomentObject) return t;
-        if (t._isJSONSchemaObject) return t;
-        if (u(t.toJS)) return t;
-        if (u(t.toJSON)) return t;
-        if (Object.getOwnPropertySymbols(t || {}).length) return t;
-        var r = {};
-        for (var i in t) Object.hasOwnProperty.call(t, i) && (u(e) ? e(t[i], i) ? r[i] = yt(t[i], e) : r[i] = t[i] : r[i] = yt(t[i], e));
-        return r;
-    }
-    return t;
-}, vt = Symbol("newer"), pt = Symbol("older");
-
-function bt(t, e) {
-    this.key = t, this.value = e, this[vt] = void 0, this[pt] = void 0;
-}
-
-var mt = function() {
-    function t(t, e) {
-        "number" != typeof t && (e = t, t = 0), this.size = 0, this.limit = t, this.oldest = this.newest = void 0, 
-        this._keymap = new Map, e && (this.assign(e), t < 1 && (this.limit = this.size));
-    }
-    return t.prototype._markEntryAsUsed = function(t) {
-        t !== this.newest && (t[vt] && (t === this.oldest && (this.oldest = t[vt]), t[vt][pt] = t[pt]), 
-        t[pt] && (t[pt][vt] = t[vt]), t[vt] = void 0, t[pt] = this.newest, this.newest && (this.newest[vt] = t), 
-        this.newest = t);
-    }, t.prototype.assign = function(t) {
-        var e, n = this.limit || Number.MAX_VALUE;
+    LRUMap.prototype.assign = function (entries) {
+        var entry;
+        var limit = this.limit || Number.MAX_VALUE;
         this._keymap.clear();
-        for (var r = t[Symbol.iterator](), i = r.next(); !i.done; i = r.next()) {
-            var o = new bt(i.value[0], i.value[1]);
-            if (this._keymap.set(o.key, o), e ? (e[vt] = o, o[pt] = e) : this.oldest = o, e = o, 
-            0 == n--) throw new Error("overflow");
+        var it = entries[Symbol.iterator]();
+        for (var itv = it.next(); !itv.done; itv = it.next()) {
+            var e = new Entry(itv.value[0], itv.value[1]);
+            this._keymap.set(e.key, e);
+            if (!entry) {
+                this.oldest = e;
+            }
+            else {
+                entry[NEWER] = e;
+                e[OLDER] = entry;
+            }
+            entry = e;
+            if (limit-- === 0) {
+                throw new Error('overflow');
+            }
         }
-        this.newest = e, this.size = this._keymap.size;
-    }, t.prototype.get = function(t) {
-        var e = this._keymap.get(t);
-        if (e) return this._markEntryAsUsed(e), e.value;
-    }, t.prototype.set = function(t, e) {
-        var n = this._keymap.get(t);
-        return n ? (n.value = e, this._markEntryAsUsed(n), this) : (this._keymap.set(t, n = new bt(t, e)), 
-        this.newest ? (this.newest[vt] = n, n[pt] = this.newest) : this.oldest = n, this.newest = n, 
-        ++this.size, this.size > this.limit && this.shift(), this);
-    }, t.prototype.shift = function() {
-        var t = this.oldest;
-        if (t) return this.oldest[vt] ? (this.oldest = this.oldest[vt], this.oldest[pt] = void 0) : (this.oldest = void 0, 
-        this.newest = void 0), t[vt] = t[pt] = void 0, this._keymap.delete(t.key), --this.size, 
-        [ t.key, t.value ];
-    }, t.prototype.find = function(t) {
-        var e = this._keymap.get(t);
-        return e ? e.value : void 0;
-    }, t.prototype.has = function(t) {
-        return this._keymap.has(t);
-    }, t.prototype.delete = function(t) {
-        var e = this._keymap.get(t);
-        if (e) return this._keymap.delete(e.key), e[vt] && e[pt] ? (e[pt][vt] = e[vt], e[vt][pt] = e[pt]) : e[vt] ? (e[vt][pt] = void 0, 
-        this.oldest = e[vt]) : e[pt] ? (e[pt][vt] = void 0, this.newest = e[pt]) : this.oldest = this.newest = void 0, 
-        this.size--, e.value;
-    }, t.prototype.clear = function() {
-        this.oldest = this.newest = void 0, this.size = 0, this._keymap.clear();
-    }, t.prototype.keys = function() {
-        return new wt(this.oldest);
-    }, t.prototype.values = function() {
-        return new xt(this.oldest);
-    }, t.prototype.entries = function() {}, t.prototype.forEach = function(t, e) {
-        "object" != typeof e && (e = this);
-        for (var n = this.oldest; n; ) t.call(e, n.value, n.key, this), n = n[vt];
-    }, t.prototype.toJSON = function() {
-        for (var t = new Array(this.size), e = 0, n = this.oldest; n; ) t[e++] = {
-            key: n.key,
-            value: n.value
-        }, n = n[vt];
-        return t;
-    }, t.prototype.toString = function() {
-        for (var t = "", e = this.oldest; e; ) t += String(e.key) + ":" + e.value, e = e[vt], 
-        e && (t += " < ");
-        return t;
-    }, t.prototype[Symbol.iterator] = function() {
-        return new gt(this.oldest);
-    }, t;
-}(), gt = function() {
-    function t(t) {
-        this.entry = t;
-    }
-    return t.prototype[Symbol.iterator] = function() {
-        return this;
-    }, t.prototype.next = function() {
-        var t = this.entry;
-        return t ? (this.entry = t[vt], {
-            done: !1,
-            value: [ t.key, t.value ]
-        }) : {
-            done: !0,
-            value: void 0
-        };
-    }, t;
-}(), wt = function() {
-    function t(t) {
-        this.entry = t;
-    }
-    return t.prototype[Symbol.iterator] = function() {
-        return this;
-    }, t.prototype.next = function() {
-        var t = this.entry;
-        return t ? (this.entry = t[vt], {
-            done: !1,
-            value: t.key
-        }) : {
-            done: !0,
-            value: void 0
-        };
-    }, t;
-}(), xt = function() {
-    function t(t) {
-        this.entry = t;
-    }
-    return t.prototype[Symbol.iterator] = function() {
-        return this;
-    }, t.prototype.next = function() {
-        var t = this.entry;
-        return t ? (this.entry = t[vt], {
-            done: !1,
-            value: t.value
-        }) : {
-            done: !0,
-            value: void 0
-        };
-    }, t;
-}(), St = function() {
-    for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-    return function(e) {
-        return t.reduce((function(t, e) {
-            return e(t);
-        }), e);
+        this.newest = entry;
+        this.size = this._keymap.size;
     };
-}, Et = function(t) {
-    return h(t) ? t : t ? [ t ] : [];
-};
-
-function Mt(t, e, n) {
-    if (h(t) || l(t)) {
-        if (n) {
-            for (var r = t.length - 1; r >= 0; r--) if (!1 === e(t[r], r)) return;
-        } else for (r = 0; r < t.length; r++) if (!1 === e(t[r], r)) return;
-    } else if (y(t)) {
-        var i = void 0;
-        for (i in t) if (Object.hasOwnProperty.call(t, i) && !1 === e(t[i], i)) return;
-    }
-}
-
-function Ot(t, e, n) {
-    var r = h(t) || l(t) ? [] : {};
-    return Mt(t, (function(t, n) {
-        var i = e(t, n);
-        h(r) ? r.push(i) : r[n] = i;
-    }), n), r;
-}
-
-function At(t, e, n, r) {
-    var i = n;
-    return Mt(t, (function(t, n) {
-        i = e(i, t, n);
-    }), r), i;
-}
-
-function Tt(t, e, n) {
-    var r = !0;
-    return Mt(t, (function(t, n) {
-        if (!e(t, n)) return r = !1, !1;
-    }), n), r;
-}
-
-function kt(t, e, n) {
-    var r = !1;
-    return Mt(t, (function(t, n) {
-        if (e(t, n)) return r = !0, !1;
-    }), n), r;
-}
-
-function Ft(t, e, n) {
-    var r = -1;
-    return Mt(t, (function(t, n) {
-        if (e(t, n)) return r = n, !1;
-    }), n), r;
-}
-
-function Lt(t, e, n) {
-    var r;
-    return Mt(t, (function(t, n) {
-        if (e(t, n)) return r = t, !1;
-    }), n), r;
-}
-
-function Nt(t, e, n) {
-    return l(t) ? t.includes(e) : kt(t, (function(t) {
-        return t === e;
-    }), n);
-}
-
-function _t(t, e) {
-    return !!h(t) && t.some((function(t) {
-        return e(t);
-    }));
-}
-
-var Pt, It = function(t) {
-    return Et(t).reduce((function(t, e) {
-        return h(e) ? t.concat(It(e)) : t.concat(e);
-    }), []);
-};
-
-(function(t) {
-    t["Backspace"] = "Backspace", t["Tab"] = "Tab", t["Enter"] = "Enter", t["Shift"] = "Shift", 
-    t["Control"] = "Control", t["Alt"] = "Alt", t["CapsLock"] = "CapsLock", t["Escape"] = "Escape", 
-    t["Space"] = " ", t["PageUp"] = "PageUp", t["PageDown"] = "PageDown", t["End"] = "End", 
-    t["Home"] = "Home", t["ArrowLeft"] = "ArrowLeft", t["ArrowUp"] = "ArrowUp", t["ArrowRight"] = "ArrowRight", 
-    t["ArrowDown"] = "ArrowDown", t["Left"] = "Left", t["Up"] = "Up", t["Right"] = "Right", 
-    t["Down"] = "Down", t["Insert"] = "Insert", t["Delete"] = "Delete", t["Zero"] = "0", 
-    t["ClosedParen"] = ")", t["One"] = "1", t["ExclamationMark"] = "!", t["Two"] = "2", 
-    t["AtSign"] = "@", t["Three"] = "3", t["PoundSign"] = "£", t["Hash"] = "#", t["Four"] = "4", 
-    t["DollarSign"] = "$", t["Five"] = "5", t["PercentSign"] = "%", t["Six"] = "6", 
-    t["Caret"] = "^", t["Hat"] = "^", t["Seven"] = "7", t["Ampersand"] = "&", t["Eight"] = "8", 
-    t["Star"] = "*", t["Asterisk"] = "*", t["Nine"] = "9", t["OpenParen"] = "(", t["a"] = "a", 
-    t["b"] = "b", t["c"] = "c", t["d"] = "d", t["e"] = "e", t["f"] = "f", t["g"] = "g", 
-    t["h"] = "h", t["i"] = "i", t["j"] = "j", t["k"] = "k", t["l"] = "l", t["m"] = "m", 
-    t["n"] = "n", t["o"] = "o", t["p"] = "p", t["q"] = "q", t["r"] = "r", t["s"] = "s", 
-    t["t"] = "t", t["u"] = "u", t["v"] = "v", t["w"] = "w", t["x"] = "x", t["y"] = "y", 
-    t["z"] = "z", t["A"] = "A", t["B"] = "B", t["C"] = "C", t["D"] = "D", t["E"] = "E", 
-    t["F"] = "F", t["G"] = "G", t["H"] = "H", t["I"] = "I", t["J"] = "J", t["K"] = "K", 
-    t["L"] = "L", t["M"] = "M", t["N"] = "N", t["O"] = "O", t["P"] = "P", t["Q"] = "Q", 
-    t["R"] = "R", t["S"] = "S", t["T"] = "T", t["U"] = "U", t["V"] = "V", t["W"] = "W", 
-    t["X"] = "X", t["Y"] = "Y", t["Z"] = "Z", t["Meta"] = "Meta", t["LeftWindowKey"] = "Meta", 
-    t["RightWindowKey"] = "Meta", t["Numpad0"] = "0", t["Numpad1"] = "1", t["Numpad2"] = "2", 
-    t["Numpad3"] = "3", t["Numpad4"] = "4", t["Numpad5"] = "5", t["Numpad6"] = "6", 
-    t["Numpad7"] = "7", t["Numpad8"] = "8", t["Numpad9"] = "9", t["Multiply"] = "*", 
-    t["Add"] = "+", t["Subtract"] = "-", t["DecimalPoint"] = ".", t["MSDecimalPoint"] = "Decimal", 
-    t["Divide"] = "/", t["F1"] = "F1", t["F2"] = "F2", t["F3"] = "F3", t["F4"] = "F4", 
-    t["F5"] = "F5", t["F6"] = "F6", t["F7"] = "F7", t["F8"] = "F8", t["F9"] = "F9", 
-    t["F10"] = "F10", t["F11"] = "F11", t["F12"] = "F12", t["NumLock"] = "NumLock", 
-    t["ScrollLock"] = "ScrollLock", t["SemiColon"] = ";", t["Equals"] = "=", t["Comma"] = ",", 
-    t["Dash"] = "-", t["Period"] = ".", t["UnderScore"] = "_", t["PlusSign"] = "+", 
-    t["ForwardSlash"] = "/", t["Tilde"] = "~", t["GraveAccent"] = "`", t["OpenBracket"] = "[", 
-    t["ClosedBracket"] = "]", t["Quote"] = "'";
-})(Pt || (Pt = {}));
-
-var Rt = function(t) {
-    return t.key;
-}, Bt = function(t, e) {
-    return w["requestIdleCallback"](t, e);
-}, Dt = function(t) {
-    w["cancelIdleCallback"](t);
-}, Ct = new Set([ "A", "ABBR", "ACRONYM", "AUDIO", "B", "BDI", "BDO", "BIG", "BR", "BUTTON", "CANVAS", "CITE", "CODE", "DATA", "DATALIST", "DEL", "DFN", "EM", "EMBED", "I", "IFRAME", "IMG", "INS", "KBD", "LABEL", "MAP", "MARK", "METER", "NOSCRIPT", "OBJECT", "OUTPUT", "PICTURE", "PROGRESS", "Q", "RUBY", "S", "SAMP", "SELECT", "SLOT", "SMALL", "STRONG", "SUB", "SUP", "SVG", "TEMPLATE", "TEXTAREA", "TIME", "U", "TT", "VAR", "VIDEO", "WBR", "INPUT", "SPAN" ]), Ut = function(t, e) {
-    return t + parseFloat(e.marginLeft) + parseFloat(e.marginRight) + parseFloat(e.paddingLeft) + parseFloat(e.paddingRight) + parseFloat(e.borderLeftWidth) + parseFloat(e.borderRightWidth);
-}, jt = function(t) {
-    if (!t) return "vertical";
-    var e = t.parentElement;
-    if (!e) return "vertical";
-    var n = t.tagName, r = e.tagName, i = getComputedStyle(t), o = getComputedStyle(e), u = function() {
-        var n = t.getBoundingClientRect().width, r = Ut(n, i), o = e.getBoundingClientRect().width;
-        return r.toFixed(0) < o.toFixed(0);
+    LRUMap.prototype.get = function (key) {
+        // First, find our cache entry
+        var entry = this._keymap.get(key);
+        if (!entry) {
+            return;
+        } // Not cached. Sorry.
+        // As <key> was found in the cache, register it as being requested recently
+        this._markEntryAsUsed(entry);
+        return entry.value;
     };
-    return "TH" !== n && "TD" !== n || "TR" !== r ? "flex" === o.display && "row" === o.flexDirection || "grid" === o.display && u() ? "horizontal" : Ct.has(n) ? "block" === i.display && ("left" !== i.float && "right" !== i.float || !u()) ? "vertical" : "horizontal" : void 0 : "horizontal";
-}, zt = function(t) {
-    var e, n, i, o = null === (e = null == t ? void 0 : t.style) || void 0 === e ? void 0 : e.transform;
-    if (o) {
-        var u = r(null !== (i = null === (n = o.match(/translate(?:3d)?\(\s*([-\d.]+)[a-z]+?[\s,]+([-\d.]+)[a-z]+?(?:[\s,]+([-\d.]+))?[a-z]+?\s*\)/)) || void 0 === n ? void 0 : n.slice(1, 3)) && void 0 !== i ? i : [ 0, 0 ], 2), s = u[0], a = u[1];
-        return new C(Number(s), Number(a));
+    LRUMap.prototype.set = function (key, value) {
+        var entry = this._keymap.get(key);
+        if (entry) {
+            // update existing
+            entry.value = value;
+            this._markEntryAsUsed(entry);
+            return this;
+        }
+        // new entry
+        this._keymap.set(key, (entry = new Entry(key, value)));
+        if (this.newest) {
+            // link previous tail to the new tail (entry)
+            this.newest[NEWER] = entry;
+            entry[OLDER] = this.newest;
+        }
+        else {
+            // we're first in -- yay
+            this.oldest = entry;
+        }
+        // add new entry to the end of the linked list -- it's now the freshest entry.
+        this.newest = entry;
+        ++this.size;
+        if (this.size > this.limit) {
+            // we hit the limit -- remove the head
+            this.shift();
+        }
+        return this;
+    };
+    LRUMap.prototype.shift = function () {
+        // todo: handle special case when limit == 1
+        var entry = this.oldest;
+        if (entry) {
+            if (this.oldest[NEWER]) {
+                // advance the list
+                this.oldest = this.oldest[NEWER];
+                this.oldest[OLDER] = undefined;
+            }
+            else {
+                // the cache is exhausted
+                this.oldest = undefined;
+                this.newest = undefined;
+            }
+            // Remove last strong reference to <entry> and remove links from the purged
+            // entry being returned:
+            entry[NEWER] = entry[OLDER] = undefined;
+            this._keymap.delete(entry.key);
+            --this.size;
+            return [entry.key, entry.value];
+        }
+    };
+    LRUMap.prototype.find = function (key) {
+        var e = this._keymap.get(key);
+        return e ? e.value : undefined;
+    };
+    LRUMap.prototype.has = function (key) {
+        return this._keymap.has(key);
+    };
+    LRUMap.prototype.delete = function (key) {
+        var entry = this._keymap.get(key);
+        if (!entry) {
+            return;
+        }
+        this._keymap.delete(entry.key);
+        if (entry[NEWER] && entry[OLDER]) {
+            // relink the older entry with the newer entry
+            entry[OLDER][NEWER] = entry[NEWER];
+            entry[NEWER][OLDER] = entry[OLDER];
+        }
+        else if (entry[NEWER]) {
+            // remove the link to us
+            entry[NEWER][OLDER] = undefined;
+            // link the newer entry to head
+            this.oldest = entry[NEWER];
+        }
+        else if (entry[OLDER]) {
+            // remove the link to us
+            entry[OLDER][NEWER] = undefined;
+            // link the newer entry to head
+            this.newest = entry[OLDER];
+        }
+        else {
+            // if(entry[OLDER] === undefined && entry.newer === undefined) {
+            this.oldest = this.newest = undefined;
+        }
+        this.size--;
+        return entry.value;
+    };
+    LRUMap.prototype.clear = function () {
+        // Not clearing links should be safe, as we don't expose live links to user
+        this.oldest = this.newest = undefined;
+        this.size = 0;
+        this._keymap.clear();
+    };
+    LRUMap.prototype.keys = function () {
+        return new KeyIterator(this.oldest);
+    };
+    LRUMap.prototype.values = function () {
+        return new ValueIterator(this.oldest);
+    };
+    LRUMap.prototype.entries = function () { };
+    LRUMap.prototype.forEach = function (fun, thisObj) {
+        if (typeof thisObj !== 'object') {
+            thisObj = this;
+        }
+        var entry = this.oldest;
+        while (entry) {
+            fun.call(thisObj, entry.value, entry.key, this);
+            entry = entry[NEWER];
+        }
+    };
+    LRUMap.prototype.toJSON = function () {
+        var s = new Array(this.size);
+        var i = 0;
+        var entry = this.oldest;
+        while (entry) {
+            s[i++] = { key: entry.key, value: entry.value };
+            entry = entry[NEWER];
+        }
+        return s;
+    };
+    LRUMap.prototype.toString = function () {
+        var s = '';
+        var entry = this.oldest;
+        while (entry) {
+            s += String(entry.key) + ':' + entry.value;
+            entry = entry[NEWER];
+            if (entry) {
+                s += ' < ';
+            }
+        }
+        return s;
+    };
+    LRUMap.prototype[Symbol.iterator] = function () {
+        return new EntryIterator(this.oldest);
+    };
+    return LRUMap;
+}());
+var EntryIterator = /** @class */ (function () {
+    function EntryIterator(oldestEntry) {
+        this.entry = oldestEntry;
     }
-    return new C(Number(t.offsetLeft), Number(t.offsetTop));
-}, Wt = function(t) {
-    var e, n, r, i = null === (e = null == t ? void 0 : t.style) || void 0 === e ? void 0 : e.transform;
-    return i ? Number(null !== (r = null === (n = i.match(/rotate\(\s*([-\d.]+)/)) || void 0 === n ? void 0 : n[1]) && void 0 !== r ? r : 0) : 0;
-}, Vt = function(t) {
-    var e, n, r, i = null === (e = null == t ? void 0 : t.style) || void 0 === e ? void 0 : e.transform;
-    return i ? Number(null !== (r = null === (n = i.match(/scale\(\s*([-\d.]+)/)) || void 0 === n ? void 0 : n[1]) && void 0 !== r ? r : 0) : 0;
-}, Ht = function(t) {
-    void 0 === t && (t = function() {});
-    var e = this;
-    this.connected = !1, this.observe = function(t) {
-        e.resizeObserver.observe(t), e.performanceObserver.observe({
-            entryTypes: [ "paint", "element", "layout-shift", "event" ]
-        }), e.mutationObserver.observe(t, {
-            attributeFilter: [ "style" ],
-            attributes: !0
-        }), e.connected = !0;
-    }, this.disconnect = function() {
-        e.connected && (e.resizeObserver.disconnect(), e.performanceObserver.disconnect(), 
-        e.mutationObserver.disconnect()), e.connected = !1;
-    }, this.resizeObserver = new ResizeObserver((function() {
-        return t();
-    })), this.performanceObserver = new PerformanceObserver((function() {
-        t();
-    })), this.mutationObserver = new MutationObserver((function() {
-        return t();
-    }));
+    EntryIterator.prototype[Symbol.iterator] = function () {
+        return this;
+    };
+    EntryIterator.prototype.next = function () {
+        var ent = this.entry;
+        if (ent) {
+            this.entry = ent[NEWER];
+            return { done: false, value: [ent.key, ent.value] };
+        }
+        else {
+            return { done: true, value: undefined };
+        }
+    };
+    return EntryIterator;
+}());
+var KeyIterator = /** @class */ (function () {
+    function KeyIterator(oldestEntry) {
+        this.entry = oldestEntry;
+    }
+    KeyIterator.prototype[Symbol.iterator] = function () {
+        return this;
+    };
+    KeyIterator.prototype.next = function () {
+        var ent = this.entry;
+        if (ent) {
+            this.entry = ent[NEWER];
+            return { done: false, value: ent.key };
+        }
+        else {
+            return { done: true, value: undefined };
+        }
+    };
+    return KeyIterator;
+}());
+var ValueIterator = /** @class */ (function () {
+    function ValueIterator(oldestEntry) {
+        this.entry = oldestEntry;
+    }
+    ValueIterator.prototype[Symbol.iterator] = function () {
+        return this;
+    };
+    ValueIterator.prototype.next = function () {
+        var ent = this.entry;
+        if (ent) {
+            this.entry = ent[NEWER];
+            return { done: false, value: ent.value };
+        }
+        else {
+            return { done: true, value: undefined };
+        }
+    };
+    return ValueIterator;
+}());
+
+var compose = function () {
+    var fns = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        fns[_i] = arguments[_i];
+    }
+    return function (payload) {
+        return fns.reduce(function (buf, fn) {
+            return fn(buf);
+        }, payload);
+    };
 };
 
-export { k as Event, T as EventDriver, Pt as KeyCode, mt as LRUMap, Ht as LayoutObserver, j as LineSegment, C as Point, U as Rect, D as RectQuadrant, g as Subscribable, N as calcAutoScrollBasicInfo, X as calcBoundingRect, ut as calcClosestEdges, ot as calcCombineSnapLineSegment, q as calcDistanceOfPointToRect, it as calcDistanceOfSnapLineToEdges, J as calcDistancePointToEdge, $ as calcEdgeLinesOfRect, jt as calcElementLayout, Ut as calcElementOuterWidth, Wt as calcElementRotate, Vt as calcElementScale, zt as calcElementTranslate, nt as calcExtendsLineSegmentOfRect, rt as calcOffsetOfSnapLineSegmentToEdge, G as calcQuadrantOfPointToRect, Z as calcRectByStartEndPoint, tt as calcRectOfAxisLineSegment, Q as calcRelativeOfPointToRect, et as calcSpaceBlockOfRect, L as calcSpeedFactor, Dt as cancelIdle, yt as clone, St as compose, F as createUniformSpeedAnimation, Mt as each, Tt as every, Lt as find, Ft as findIndex, It as flat, Rt as getKeyCodeFromEvent, V as getRectPoints, o as getType, w as globalThisPolyfill, Nt as includes, _t as includesWith, ct as instOf, h as isArr, f as isBool, Y as isCrossRectInRect, W as isEqualRect, u as isFn, a as isHTMLElement, B as isLineSegment, K as isNearAfter, d as isNum, y as isObj, c as isPlainObj, R as isPoint, z as isPointInRect, I as isRect, H as isRectInRect, v as isRegExp, l as isStr, p as isValid, b as isValidNumber, s as isWindow, Ot as map, At as reduce, Bt as requestIdle, P as scrollAnimate, dt as shallowClone, kt as some, Et as toArr, ht as uid, _ as updateScrollValue };
+var toArr = function (val) { return (isArr(val) ? val : val ? [val] : []); };
+function each(val, iterator, revert) {
+    if (isArr(val) || isStr(val)) {
+        if (revert) {
+            for (var i = val.length - 1; i >= 0; i--) {
+                if (iterator(val[i], i) === false) {
+                    return;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < val.length; i++) {
+                if (iterator(val[i], i) === false) {
+                    return;
+                }
+            }
+        }
+    }
+    else if (isObj(val)) {
+        var key = void 0;
+        for (key in val) {
+            if (Object.hasOwnProperty.call(val, key)) {
+                if (iterator(val[key], key) === false) {
+                    return;
+                }
+            }
+        }
+    }
+}
+function map(val, iterator, revert) {
+    var res = isArr(val) || isStr(val) ? [] : {};
+    each(val, function (item, key) {
+        var value = iterator(item, key);
+        if (isArr(res)) {
+            res.push(value);
+        }
+        else {
+            res[key] = value;
+        }
+    }, revert);
+    return res;
+}
+function reduce(val, iterator, accumulator, revert) {
+    var result = accumulator;
+    each(val, function (item, key) {
+        result = iterator(result, item, key);
+    }, revert);
+    return result;
+}
+function every(val, iterator, revert) {
+    var res = true;
+    each(val, function (item, key) {
+        if (!iterator(item, key)) {
+            res = false;
+            return false;
+        }
+    }, revert);
+    return res;
+}
+function some(val, iterator, revert) {
+    var res = false;
+    each(val, function (item, key) {
+        if (iterator(item, key)) {
+            res = true;
+            return false;
+        }
+    }, revert);
+    return res;
+}
+function findIndex(val, iterator, revert) {
+    var res = -1;
+    each(val, function (item, key) {
+        if (iterator(item, key)) {
+            res = key;
+            return false;
+        }
+    }, revert);
+    return res;
+}
+function find(val, iterator, revert) {
+    var res;
+    each(val, function (item, key) {
+        if (iterator(item, key)) {
+            res = item;
+            return false;
+        }
+    }, revert);
+    return res;
+}
+function includes(val, searchElement, revert) {
+    if (isStr(val))
+        return val.includes(searchElement);
+    return some(val, function (item) { return item === searchElement; }, revert);
+}
+function includesWith(val, search) {
+    if (isArr(val)) {
+        return val.some(function (item) { return search(item); });
+    }
+    else {
+        return false;
+    }
+}
+var flat = function (array) {
+    return toArr(array).reduce(function (buf, item) {
+        if (isArr(item))
+            return buf.concat(flat(item));
+        return buf.concat(item);
+    }, []);
+};
+
+var KeyCode;
+(function (KeyCode) {
+    KeyCode["Backspace"] = "Backspace";
+    KeyCode["Tab"] = "Tab";
+    KeyCode["Enter"] = "Enter";
+    KeyCode["Shift"] = "Shift";
+    KeyCode["Control"] = "Control";
+    KeyCode["Alt"] = "Alt";
+    KeyCode["CapsLock"] = "CapsLock";
+    KeyCode["Escape"] = "Escape";
+    KeyCode["Space"] = " ";
+    KeyCode["PageUp"] = "PageUp";
+    KeyCode["PageDown"] = "PageDown";
+    KeyCode["End"] = "End";
+    KeyCode["Home"] = "Home";
+    KeyCode["ArrowLeft"] = "ArrowLeft";
+    KeyCode["ArrowUp"] = "ArrowUp";
+    KeyCode["ArrowRight"] = "ArrowRight";
+    KeyCode["ArrowDown"] = "ArrowDown";
+    KeyCode["Left"] = "Left";
+    KeyCode["Up"] = "Up";
+    KeyCode["Right"] = "Right";
+    KeyCode["Down"] = "Down";
+    KeyCode["Insert"] = "Insert";
+    KeyCode["Delete"] = "Delete";
+    KeyCode["Zero"] = "0";
+    KeyCode["ClosedParen"] = ")";
+    KeyCode["One"] = "1";
+    KeyCode["ExclamationMark"] = "!";
+    KeyCode["Two"] = "2";
+    KeyCode["AtSign"] = "@";
+    KeyCode["Three"] = "3";
+    KeyCode["PoundSign"] = "\u00A3";
+    KeyCode["Hash"] = "#";
+    KeyCode["Four"] = "4";
+    KeyCode["DollarSign"] = "$";
+    KeyCode["Five"] = "5";
+    KeyCode["PercentSign"] = "%";
+    KeyCode["Six"] = "6";
+    KeyCode["Caret"] = "^";
+    KeyCode["Hat"] = "^";
+    KeyCode["Seven"] = "7";
+    KeyCode["Ampersand"] = "&";
+    KeyCode["Eight"] = "8";
+    KeyCode["Star"] = "*";
+    KeyCode["Asterisk"] = "*";
+    KeyCode["Nine"] = "9";
+    KeyCode["OpenParen"] = "(";
+    KeyCode["a"] = "a";
+    KeyCode["b"] = "b";
+    KeyCode["c"] = "c";
+    KeyCode["d"] = "d";
+    KeyCode["e"] = "e";
+    KeyCode["f"] = "f";
+    KeyCode["g"] = "g";
+    KeyCode["h"] = "h";
+    KeyCode["i"] = "i";
+    KeyCode["j"] = "j";
+    KeyCode["k"] = "k";
+    KeyCode["l"] = "l";
+    KeyCode["m"] = "m";
+    KeyCode["n"] = "n";
+    KeyCode["o"] = "o";
+    KeyCode["p"] = "p";
+    KeyCode["q"] = "q";
+    KeyCode["r"] = "r";
+    KeyCode["s"] = "s";
+    KeyCode["t"] = "t";
+    KeyCode["u"] = "u";
+    KeyCode["v"] = "v";
+    KeyCode["w"] = "w";
+    KeyCode["x"] = "x";
+    KeyCode["y"] = "y";
+    KeyCode["z"] = "z";
+    KeyCode["A"] = "A";
+    KeyCode["B"] = "B";
+    KeyCode["C"] = "C";
+    KeyCode["D"] = "D";
+    KeyCode["E"] = "E";
+    KeyCode["F"] = "F";
+    KeyCode["G"] = "G";
+    KeyCode["H"] = "H";
+    KeyCode["I"] = "I";
+    KeyCode["J"] = "J";
+    KeyCode["K"] = "K";
+    KeyCode["L"] = "L";
+    KeyCode["M"] = "M";
+    KeyCode["N"] = "N";
+    KeyCode["O"] = "O";
+    KeyCode["P"] = "P";
+    KeyCode["Q"] = "Q";
+    KeyCode["R"] = "R";
+    KeyCode["S"] = "S";
+    KeyCode["T"] = "T";
+    KeyCode["U"] = "U";
+    KeyCode["V"] = "V";
+    KeyCode["W"] = "W";
+    KeyCode["X"] = "X";
+    KeyCode["Y"] = "Y";
+    KeyCode["Z"] = "Z";
+    KeyCode["Meta"] = "Meta";
+    KeyCode["LeftWindowKey"] = "Meta";
+    KeyCode["RightWindowKey"] = "Meta";
+    KeyCode["Numpad0"] = "0";
+    KeyCode["Numpad1"] = "1";
+    KeyCode["Numpad2"] = "2";
+    KeyCode["Numpad3"] = "3";
+    KeyCode["Numpad4"] = "4";
+    KeyCode["Numpad5"] = "5";
+    KeyCode["Numpad6"] = "6";
+    KeyCode["Numpad7"] = "7";
+    KeyCode["Numpad8"] = "8";
+    KeyCode["Numpad9"] = "9";
+    KeyCode["Multiply"] = "*";
+    KeyCode["Add"] = "+";
+    KeyCode["Subtract"] = "-";
+    KeyCode["DecimalPoint"] = ".";
+    KeyCode["MSDecimalPoint"] = "Decimal";
+    KeyCode["Divide"] = "/";
+    KeyCode["F1"] = "F1";
+    KeyCode["F2"] = "F2";
+    KeyCode["F3"] = "F3";
+    KeyCode["F4"] = "F4";
+    KeyCode["F5"] = "F5";
+    KeyCode["F6"] = "F6";
+    KeyCode["F7"] = "F7";
+    KeyCode["F8"] = "F8";
+    KeyCode["F9"] = "F9";
+    KeyCode["F10"] = "F10";
+    KeyCode["F11"] = "F11";
+    KeyCode["F12"] = "F12";
+    KeyCode["NumLock"] = "NumLock";
+    KeyCode["ScrollLock"] = "ScrollLock";
+    KeyCode["SemiColon"] = ";";
+    KeyCode["Equals"] = "=";
+    KeyCode["Comma"] = ",";
+    KeyCode["Dash"] = "-";
+    KeyCode["Period"] = ".";
+    KeyCode["UnderScore"] = "_";
+    KeyCode["PlusSign"] = "+";
+    KeyCode["ForwardSlash"] = "/";
+    KeyCode["Tilde"] = "~";
+    KeyCode["GraveAccent"] = "`";
+    KeyCode["OpenBracket"] = "[";
+    KeyCode["ClosedBracket"] = "]";
+    KeyCode["Quote"] = "'";
+})(KeyCode || (KeyCode = {}));
+var getKeyCodeFromEvent = function (event) {
+    return event.key;
+};
+
+//import 'requestidlecallback'
+var requestIdle = function (callback, options) {
+    return globalThisPolyfill['requestIdleCallback'](callback, options);
+};
+var cancelIdle = function (id) {
+    globalThisPolyfill['cancelIdleCallback'](id);
+};
+
+var InlineLayoutTagNames = new Set([
+    'A',
+    'ABBR',
+    'ACRONYM',
+    'AUDIO',
+    'B',
+    'BDI',
+    'BDO',
+    'BIG',
+    'BR',
+    'BUTTON',
+    'CANVAS',
+    'CITE',
+    'CODE',
+    'DATA',
+    'DATALIST',
+    'DEL',
+    'DFN',
+    'EM',
+    'EMBED',
+    'I',
+    'IFRAME',
+    'IMG',
+    'INS',
+    'KBD',
+    'LABEL',
+    'MAP',
+    'MARK',
+    'METER',
+    'NOSCRIPT',
+    'OBJECT',
+    'OUTPUT',
+    'PICTURE',
+    'PROGRESS',
+    'Q',
+    'RUBY',
+    'S',
+    'SAMP',
+    'SELECT',
+    'SLOT',
+    'SMALL',
+    'STRONG',
+    'SUB',
+    'SUP',
+    'SVG',
+    'TEMPLATE',
+    'TEXTAREA',
+    'TIME',
+    'U',
+    'TT',
+    'VAR',
+    'VIDEO',
+    'WBR',
+    'INPUT',
+    'SPAN',
+]);
+var calcElementOuterWidth = function (innerWidth, style) {
+    return (innerWidth +
+        parseFloat(style.marginLeft) +
+        parseFloat(style.marginRight) +
+        parseFloat(style.paddingLeft) +
+        parseFloat(style.paddingRight) +
+        parseFloat(style.borderLeftWidth) +
+        parseFloat(style.borderRightWidth));
+};
+var calcElementLayout = function (element) {
+    if (!element)
+        return 'vertical';
+    var parent = element.parentElement;
+    if (!parent)
+        return 'vertical';
+    var tagName = element.tagName;
+    var parentTagName = parent.tagName;
+    var style = getComputedStyle(element);
+    var parentStyle = getComputedStyle(parent);
+    var isNotFullWidth = function () {
+        var innerWidth = element.getBoundingClientRect().width;
+        var outerWidth = calcElementOuterWidth(innerWidth, style);
+        var parentInnerWidth = parent.getBoundingClientRect().width;
+        return outerWidth.toFixed(0) < parentInnerWidth.toFixed(0);
+    };
+    if (tagName === 'TH' || tagName === 'TD') {
+        if (parentTagName === 'TR')
+            return 'horizontal';
+    }
+    if (parentStyle.display === 'flex' && parentStyle.flexDirection === 'row')
+        return 'horizontal';
+    if (parentStyle.display === 'grid') {
+        if (isNotFullWidth()) {
+            return 'horizontal';
+        }
+    }
+    if (InlineLayoutTagNames.has(tagName)) {
+        if (style.display === 'block') {
+            if (style.float === 'left' || style.float === 'right') {
+                if (isNotFullWidth()) {
+                    return 'horizontal';
+                }
+            }
+            return 'vertical';
+        }
+        return 'horizontal';
+    }
+};
+var calcElementTranslate = function (element) {
+    var _a, _b, _c;
+    var transform = (_a = element === null || element === void 0 ? void 0 : element.style) === null || _a === void 0 ? void 0 : _a.transform;
+    if (transform) {
+        var _d = __read((_c = (_b = transform
+            .match(/translate(?:3d)?\(\s*([-\d.]+)[a-z]+?[\s,]+([-\d.]+)[a-z]+?(?:[\s,]+([-\d.]+))?[a-z]+?\s*\)/)) === null || _b === void 0 ? void 0 : _b.slice(1, 3)) !== null && _c !== void 0 ? _c : [0, 0], 2), x = _d[0], y = _d[1];
+        return new Point(Number(x), Number(y));
+    }
+    else {
+        return new Point(Number(element.offsetLeft), Number(element.offsetTop));
+    }
+};
+var calcElementRotate = function (element) {
+    var _a, _b, _c;
+    var transform = (_a = element === null || element === void 0 ? void 0 : element.style) === null || _a === void 0 ? void 0 : _a.transform;
+    if (transform) {
+        return Number((_c = (_b = transform.match(/rotate\(\s*([-\d.]+)/)) === null || _b === void 0 ? void 0 : _b[1]) !== null && _c !== void 0 ? _c : 0);
+    }
+    else {
+        return 0;
+    }
+};
+var calcElementScale = function (element) {
+    var _a, _b, _c;
+    var transform = (_a = element === null || element === void 0 ? void 0 : element.style) === null || _a === void 0 ? void 0 : _a.transform;
+    if (transform) {
+        return Number((_c = (_b = transform.match(/scale\(\s*([-\d.]+)/)) === null || _b === void 0 ? void 0 : _b[1]) !== null && _c !== void 0 ? _c : 0);
+    }
+    else {
+        return 0;
+    }
+};
+
+var LayoutObserver = /** @class */ (function () {
+    function LayoutObserver(observer) {
+        if (observer === void 0) { observer = function () { }; }
+        var _this = this;
+        this.connected = false;
+        this.observe = function (target) {
+            _this.resizeObserver.observe(target);
+            _this.performanceObserver.observe({
+                entryTypes: ['paint', 'element', 'layout-shift', 'event'],
+            });
+            _this.mutationObserver.observe(target, {
+                attributeFilter: ['style'],
+                attributes: true,
+            });
+            _this.connected = true;
+        };
+        this.disconnect = function () {
+            if (_this.connected) {
+                _this.resizeObserver.disconnect();
+                _this.performanceObserver.disconnect();
+                _this.mutationObserver.disconnect();
+            }
+            _this.connected = false;
+        };
+        this.resizeObserver = new ResizeObserver(function () { return observer(); });
+        this.performanceObserver = new PerformanceObserver(function () {
+            observer();
+        });
+        this.mutationObserver = new MutationObserver(function () { return observer(); });
+    }
+    return LayoutObserver;
+}());
+
+export { Event, EventDriver, KeyCode, LRUMap, LayoutObserver, LineSegment, Point, Rect, RectQuadrant, Subscribable, calcAutoScrollBasicInfo, calcBoundingRect, calcClosestEdges, calcCombineSnapLineSegment, calcDistanceOfPointToRect, calcDistanceOfSnapLineToEdges, calcDistancePointToEdge, calcEdgeLinesOfRect, calcElementLayout, calcElementOuterWidth, calcElementRotate, calcElementScale, calcElementTranslate, calcExtendsLineSegmentOfRect, calcOffsetOfSnapLineSegmentToEdge, calcQuadrantOfPointToRect, calcRectByStartEndPoint, calcRectOfAxisLineSegment, calcRelativeOfPointToRect, calcSpaceBlockOfRect, calcSpeedFactor, cancelIdle, clone, compose, createUniformSpeedAnimation, each, every, find, findIndex, flat, getKeyCodeFromEvent, getRectPoints, getType, globalThisPolyfill, includes, includesWith, instOf, isArr, isBool, isCrossRectInRect, isEqualRect, isFn, isHTMLElement, isLineSegment, isNearAfter, isNum, isObj, isPlainObj, isPoint, isPointInRect, isRect, isRectInRect, isRegExp, isStr, isValid, isValidNumber, isWindow, map, reduce, requestIdle, scrollAnimate, shallowClone, some, toArr, uid, updateScrollValue };
