@@ -30,7 +30,7 @@ const config = {
         '@form-created/react-settings-form': 'FormCreated.SettingsForm'
       },
       plugins: [
-        terser(),
+        //terser(),
       ],
     },
   ],

@@ -19,6 +19,12 @@ export interface ICompositePanelItemProps {
     onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     extra?: React.ReactNode;
 }
+/**
+ * 左侧功能面板 组件、大纲、历史记录...
+ * 可以根据业务，自行扩展
+ * @param props
+ * @returns
+ */
 export declare const CompositePanel: React.FC<ICompositePanelProps> & {
     Item: React.FC<ICompositePanelItemProps>;
 };

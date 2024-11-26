@@ -67,6 +67,12 @@ export declare class EventDriver<Engine extends Event = Event, Context = any> im
     attach(container: EventDriverContainer): void;
     detach(container: EventDriverContainer): void;
     eventTarget(type: string): Window | EventDriverContainer;
+    /**
+     * 添加事件监听器 和原生的addEventListener作用一致
+     * @param type  事件名称，例如 'mousedown'
+     * @param listener 回调函数
+     * @param options
+     */
     addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventOptions): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventOptions): void;
     removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventOptions): void;

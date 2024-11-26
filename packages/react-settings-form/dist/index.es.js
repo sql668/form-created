@@ -4,7 +4,7 @@ import t from "@monaco-editor/loader";
 
 import n, { useRef as r, useState as a, useEffect as o, createContext as l, useContext as i, useLayoutEffect as c, Fragment as u, useMemo as s } from "react";
 
-import { Input as d, Popover as m, Upload as p, Button as f, InputNumber as g, Tooltip as v, Select as h, theme as y, Radio as x, Slider as b, Empty as E } from "antd";
+import { Input as d, Popover as m, Upload as p, Button as f, InputNumber as v, Tooltip as g, Select as h, theme as y, Radio as x, Slider as b, Empty as E } from "antd";
 
 import { usePrefix as S, useCssInJs as k, IconWidget as w, useTheme as I, TextWidget as C, useTreeNode as N, useWorkbench as F, useOperation as R, useSelectedNode as T, useSelected as B, NodePathWidget as P } from "@form-created/react";
 
@@ -16,21 +16,21 @@ import z, { loader as L } from "@monaco-editor/react";
 
 import { parse as j, parseExpression as M } from "@babel/parser";
 
-import { uid as V, isStr as W, cancelIdle as O, requestIdle as G } from "@form-created/shared";
+import { uid as V, isStr as W, cancelIdle as O, requestIdle as G, globalThisPolyfill as _ } from "@form-created/shared";
 
-import { createPortal as _ } from "react-dom";
+import { createPortal as J } from "react-dom";
 
-import { observer as J, useField as q, Field as H, createSchemaField as U } from "@formily/react";
+import { observer as q, useField as H, Field as U, createSchemaField as X } from "@formily/react";
 
-import { FormLayout as X, FormItem as Y, Select as K, Input as Z, NumberPicker as $, Radio as Q, DatePicker as ee, TimePicker as te, Switch as ne, Space as re, ArrayItems as ae, ArrayTable as oe, FormCollapse as le, FormGrid as ie, FormTab as ce, Form as ue } from "@formily/antd-v5";
+import { FormLayout as Y, FormItem as K, Select as Z, Input as $, NumberPicker as Q, Radio as ee, DatePicker as te, TimePicker as ne, Switch as re, Space as ae, ArrayItems as oe, ArrayTable as le, FormCollapse as ie, FormGrid as ce, FormTab as ue, Form as se } from "@formily/antd-v5";
 
-import { observable as se } from "@formily/reactive";
+import { observable as de } from "@formily/reactive";
 
-import { camelCase as de } from "@formily/shared";
+import { camelCase as me } from "@formily/shared";
 
-import { onFieldReact as me, isVoidField as pe, onFieldInputValueChange as fe, createForm as ge } from "@formily/core";
+import { onFieldReact as pe, isVoidField as fe, onFieldInputValueChange as ve, createForm as ge } from "@formily/core";
 
-import { Keyframes as ve } from "@ant-design/cssinjs";
+import { Keyframes as he } from "@ant-design/cssinjs";
 
 e.registerDesignerLocales({
     "zh-CN": {
@@ -67,17 +67,17 @@ e.registerDesignerLocales({
     }
 });
 
-var he = {
+var ye = {
     cdn: "//cdn.jsdelivr.net/npm"
-}, ye = function(e) {
-    he.cdn = e, t.config({
+}, xe = function(e) {
+    ye.cdn = e, t.config({
         paths: {
             vs: "".concat(e, "/monaco-editor@0.30.1/min/vs")
         }
     });
-}, xe = function() {
-    return String(he.cdn).replace(/\/$/, "");
-}, be = function(e, t) {
+}, be = function() {
+    return String(ye.cdn).replace(/\/$/, "");
+}, Ee = function(e, t) {
     var n, r;
     return [ (n = {}, n[".".concat(e)] = (r = {
         width: "100%"
@@ -91,10 +91,10 @@ var he = {
         border: "1px solid ".concat(t.colorBorder),
         cursor: "pointer"
     }, r), n) ];
-}, Ee = function(e) {
+}, Se = function(e) {
     var t = r(null), a = S("color-input"), o = e.value, l = k({
         prefix: a,
-        styleFun: be
+        styleFun: Ee
     }).hashId;
     return n.createElement("div", {
         ref: t,
@@ -129,15 +129,15 @@ var he = {
             }
         }))
     }));
-}, Se = function() {
-    return Se = Object.assign || function(e) {
+}, ke = function() {
+    return ke = Object.assign || function(e) {
         for (var t, n = 1, r = arguments.length; n < r; n++) for (var a in t = arguments[n], 
         t) Object.prototype.hasOwnProperty.call(t, a) && (e[a] = t[a]);
         return e;
-    }, Se.apply(this, arguments);
+    }, ke.apply(this, arguments);
 };
 
-function ke(e, t) {
+function we(e, t) {
     var n = {};
     for (var r in e) Object.prototype.hasOwnProperty.call(e, r) && t.indexOf(r) < 0 && (n[r] = e[r]);
     if (null != e && "function" == typeof Object.getOwnPropertySymbols) {
@@ -147,7 +147,7 @@ function ke(e, t) {
     return n;
 }
 
-function we(e, t, n, r) {
+function Ie(e, t, n, r) {
     return new (n || (n = Promise))((function(a, o) {
         function l(e) {
             try {
@@ -173,7 +173,7 @@ function we(e, t, n, r) {
     }));
 }
 
-function Ie(e, t) {
+function Ce(e, t) {
     var n, r, a, o, l = {
         label: 0,
         sent: function() {
@@ -254,7 +254,7 @@ function Ie(e, t) {
     }
 }
 
-function Ce(e, t) {
+function Ne(e, t) {
     var n = "function" == typeof Symbol && e[Symbol.iterator];
     if (!n) return e;
     var r, a, o = n.call(e), l = [];
@@ -276,7 +276,7 @@ function Ce(e, t) {
 
 "function" == typeof SuppressedError && SuppressedError;
 
-var Ne = function(e, t) {
+var Fe = function(e, t) {
     var n, r, a;
     return [ (n = {}, n[".".concat(e)] = (r = {
         display: "flex"
@@ -299,11 +299,11 @@ var Ne = function(e, t) {
     }, a["&.active"] = {
         background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2))"
     }, a), r), n) ];
-}, Fe = function(e) {
+}, Re = function(e) {
     var t = S("corner-input"), r = k({
         prefix: t,
-        styleFun: Ne
-    }), l = r.hashId, i = r.wrapSSR, c = Ce(a(e.value), 2), u = c[0], s = c[1];
+        styleFun: Fe
+    }), l = r.hashId, i = r.wrapSSR, c = Ne(a(e.value), 2), u = c[0], s = c[1];
     o((function() {
         e.value || s("all");
     }), [ e.value ]);
@@ -323,25 +323,25 @@ var Ne = function(e, t) {
         style: e.style
     }, n.createElement("div", {
         className: A(t + "-column", l)
-    }, n.createElement("div", Se({}, d("topLeft")), "┏"), n.createElement("div", Se({}, d("bottomLeft")), "┗")), n.createElement("div", {
+    }, n.createElement("div", ke({}, d("topLeft")), "┏"), n.createElement("div", ke({}, d("bottomLeft")), "┗")), n.createElement("div", {
         className: A(t + "-column", l)
-    }, n.createElement("div", Se({}, d("all")), "╋")), n.createElement("div", {
+    }, n.createElement("div", ke({}, d("all")), "╋")), n.createElement("div", {
         className: A(t + "-column", l)
-    }, n.createElement("div", Se({}, d("topRight")), "┓"), n.createElement("div", Se({}, d("bottomRight")), "┛"))));
-}, Re = l(null), Te = function(e, t) {
+    }, n.createElement("div", ke({}, d("topRight")), "┓"), n.createElement("div", ke({}, d("bottomRight")), "┛"))));
+}, Te = l(null), Be = function(e, t) {
     var n;
     return [ (n = {}, n[".".concat(e)] = {
         width: "100%"
     }, n) ];
-}, Be = function(e) {
-    var t = e.className, r = e.style, a = ke(e, [ "className", "style" ]), o = S("image-input"), l = k({
+}, Pe = function(e) {
+    var t = e.className, r = e.style, a = we(e, [ "className", "style" ]), o = S("image-input"), l = k({
         prefix: o,
-        styleFun: Te
-    }), c = l.hashId, u = l.wrapSSR, s = i(Re);
+        styleFun: Be
+    }), c = l.hashId, u = l.wrapSSR, s = i(Te);
     return u(n.createElement("div", {
         className: A(o, t, c),
         style: r
-    }, n.createElement(d, Se({}, a, {
+    }, n.createElement(d, ke({}, a, {
         onChange: function(e) {
             var t, n;
             null === (t = a.onChange) || void 0 === t || t.call(a, null === (n = null == e ? void 0 : e.target) || void 0 === n ? void 0 : n["value"]);
@@ -363,18 +363,18 @@ var Ne = function(e, t) {
             }
         }))
     }))));
-}, Pe = function(e) {
+}, De = function(e) {
     var t, r, a = function(e) {
         return /url\([^)]+\)/.test(e) ? e : "url(".concat(e, ")");
     };
-    return n.createElement(Be, {
+    return n.createElement(Pe, {
         value: (t = e.value, r = String(t).match(/url\(\s*([^)]+)\s*\)/), (null == r ? void 0 : r[1]) ? null == r ? void 0 : r[1] : t),
         onChange: function(t) {
             var n;
             null === (n = e.onChange) || void 0 === n || n.call(e, a(t));
         }
     });
-}, De = function(e, t) {
+}, Ae = function(e, t) {
     var n, r;
     return [ (n = {}, n[".".concat(e)] = (r = {
         display: "flex",
@@ -394,8 +394,8 @@ var Ne = function(e, t) {
         margin: "5px",
         color: t.colorText
     }, r), n) ];
-}, Ae = function(e) {
-    var t = S("position-input"), r = Ce(a(e.value), 2), l = r[0], i = r[1];
+}, ze = function(e) {
+    var t = S("position-input"), r = Ne(a(e.value), 2), l = r[0], i = r[1];
     o((function() {
         e.value || i("center");
     }), [ e.value ]);
@@ -411,19 +411,19 @@ var Ne = function(e, t) {
         };
     }, u = k({
         prefix: t,
-        styleFun: De
+        styleFun: Ae
     }).hashId;
     return n.createElement("div", {
         className: A(t, e.className, u),
         style: e.style
     }, n.createElement("div", {
         className: A(t + "-row", u)
-    }, n.createElement("div", Se({}, c("top")), "┳")), n.createElement("div", {
+    }, n.createElement("div", ke({}, c("top")), "┳")), n.createElement("div", {
         className: A(t + "-row", u)
-    }, n.createElement("div", Se({}, c("left")), "┣"), n.createElement("div", Se({}, c("center")), "╋"), n.createElement("div", Se({}, c("right")), "┫")), n.createElement("div", {
+    }, n.createElement("div", ke({}, c("left")), "┣"), n.createElement("div", ke({}, c("center")), "╋"), n.createElement("div", ke({}, c("right")), "┫")), n.createElement("div", {
         className: A(t + "-row", u)
-    }, n.createElement("div", Se({}, c("bottom")), "┻")));
-}, ze = function(e, t) {
+    }, n.createElement("div", ke({}, c("bottom")), "┻")));
+}, Le = function(e, t) {
     var n, r, a;
     return [ (n = {}, n[".".concat(e)] = (r = {
         display: "flex",
@@ -446,25 +446,25 @@ var Ne = function(e, t) {
         justifyContent: "center",
         flexGrow: 0
     }, r), n) ];
-}, Le = function(e) {
-    return null != e;
 }, je = function(e) {
-    return (null == e ? void 0 : e.target) ? Le(e.target.value) ? e.target.value : Le(e.target.checked) ? e.target.checked : void 0 : e;
-}, Me = function(e, t, n) {
+    return null != e;
+}, Me = function(e) {
+    return (null == e ? void 0 : e.target) ? je(e.target.value) ? e.target.value : je(e.target.checked) ? e.target.checked : void 0 : e;
+}, Ve = function(e, t, n) {
     return e.filter((function(e) {
         var r = e.type;
         return Array.isArray(n) && n.length ? n.includes(r) : !Array.isArray(t) || !t.length || !t.includes(r);
     }));
 };
 
-function Ve(e) {
+function We(e) {
     return void 0 === e && (e = []), function(t) {
-        var l, i = t.className, c = t.style, u = t.value, s = t.onChange, d = t.exclude, m = t.include, p = ke(t, [ "className", "style", "value", "onChange", "exclude", "include" ]), g = S("poly-input"), v = Me(e, d, m), h = Ce(a(null === (l = v[0]) || void 0 === l ? void 0 : l.type), 2), y = h[0], x = h[1], b = null == v ? void 0 : v.find((function(e) {
+        var l, i = t.className, c = t.style, u = t.value, s = t.onChange, d = t.exclude, m = t.include, p = we(t, [ "className", "style", "value", "onChange", "exclude", "include" ]), v = S("poly-input"), g = Ve(e, d, m), h = Ne(a(null === (l = g[0]) || void 0 === l ? void 0 : l.type), 2), y = h[0], x = h[1], b = null == g ? void 0 : g.find((function(e) {
             var t = e.type;
             return t === y;
         })), E = null == b ? void 0 : b.component, I = r({});
         o((function() {
-            null == v || v.forEach((function(e) {
+            null == g || g.forEach((function(e) {
                 var t = e.checker, n = e.type;
                 t(u) && x(n);
             }));
@@ -472,31 +472,31 @@ function Ve(e) {
         var C = function(e, t) {
             return (null == t ? void 0 : t.toChangeValue) ? null == t ? void 0 : t.toChangeValue(e) : e;
         }, N = k({
-            prefix: g,
-            styleFun: ze
+            prefix: v,
+            styleFun: Le
         }).hashId;
         return n.createElement("div", {
-            className: A(g, i, N),
+            className: A(v, i, N),
             style: c
         }, E && n.createElement("div", {
-            className: A(g + "-content", N)
-        }, n.createElement(E, Se(Se({}, p), {
+            className: A(v + "-content", N)
+        }, n.createElement(E, ke(ke({}, p), {
             value: (null == b ? void 0 : b.toInputValue) ? null == b ? void 0 : b.toInputValue(u) : u,
             onChange: function(e) {
-                var t = je(e);
+                var t = Me(e);
                 I.current[null == b ? void 0 : b.type] = t, null == s || s(C(t, b));
             }
         }))), n.createElement(f, {
-            className: A(g + "-controller", N),
+            className: A(v + "-controller", N),
             style: {
                 width: E ? "auto" : "100%"
             },
             block: !0,
             onClick: function() {
-                var e, t, n = (e = null == v ? void 0 : v.findIndex((function(e) {
+                var e, t, n = (e = null == g ? void 0 : g.findIndex((function(e) {
                     var t = e.type;
                     return t === y;
-                })), t = e + 1 > (null == v ? void 0 : v.length) - 1 ? 0 : e + 1, v[t]);
+                })), t = e + 1 > (null == g ? void 0 : g.length) - 1 ? 0 : e + 1, g[t]);
                 n !== b && (x(null == n ? void 0 : n.type), null == s || s(C(I.current[null == n ? void 0 : n.type], n)));
             }
         }, (null == b ? void 0 : b.icon) ? n.createElement(w, {
@@ -505,24 +505,24 @@ function Ve(e) {
     };
 }
 
-var We = function(e) {
+var Oe = function(e) {
     var t = String(e).trim().replace(/[^\d\.]+/, "");
     if ("" !== t) return Number(t);
-}, Oe = function(e) {
+}, Ge = function(e) {
     return {
         type: e,
-        component: g,
+        component: v,
         checker: function(t) {
             return String(t).includes(e);
         },
         toInputValue: function(e) {
-            return We(e);
+            return Oe(e);
         },
         toChangeValue: function(t) {
             return "".concat(t || 0).concat(e);
         }
     };
-}, Ge = function(e) {
+}, _e = function(e) {
     return {
         type: e,
         checker: function(t) {
@@ -532,13 +532,13 @@ var We = function(e) {
             return e;
         }
     };
-}, _e = [ Ge("inherit"), Ge("auto"), Oe("px"), Oe("%"), Oe("vh"), Oe("em") ], Je = Ve(_e), qe = Ve([ Ge("cover"), Ge("contain"), Oe("px"), Oe("%"), Oe("vh"), Oe("em") ]), He = {
+}, Je = [ _e("inherit"), _e("auto"), Ge("px"), Ge("%"), Ge("vh"), Ge("em") ], qe = We(Je), He = We([ _e("cover"), _e("contain"), Ge("px"), Ge("%"), Ge("vh"), Ge("em") ]), Ue = {
     prettier: null
-}, Ue = function(e, t) {
-    return we(void 0, void 0, void 0, (function() {
-        return Ie(this, (function(n) {
-            return He.prettier = He.prettier || new Function('return import("'.concat(xe(), '/prettier@2.x/esm/standalone.mjs")'))(), 
-            [ 2, He.prettier.then((function(n) {
+}, Xe = function(e, t) {
+    return Ie(void 0, void 0, void 0, (function() {
+        return Ce(this, (function(n) {
+            return Ue.prettier = Ue.prettier || new Function('return import("'.concat(be(), '/prettier@2.x/esm/standalone.mjs")'))(), 
+            [ 2, Ue.prettier.then((function(n) {
                 return "javascript.expression" === e || "typescript.expression" === e ? t : /(?:javascript|typescript)/gi.test(e) ? n.default.format(t, {
                     semi: !1,
                     parser: function(e) {
@@ -551,7 +551,7 @@ var We = function(e) {
             })) ];
         }));
     }));
-}, Xe = {
+}, Ye = {
     base: "vs",
     inherit: !0,
     rules: [ {
@@ -633,7 +633,7 @@ var We = function(e) {
         "editorCursor.foreground": "#000000",
         "editorWhitespace.foreground": "#B3B3B3F4"
     }
-}, Ye = {
+}, Ke = {
     base: "vs-dark",
     inherit: !0,
     rules: [ {
@@ -742,7 +742,7 @@ var We = function(e) {
         "editorIndentGuide.activeBackground": "#9D550FB0",
         "editor.selectionHighlightBorder": "#222218"
     }
-}, Ke = !1, Ze = function(e, t) {
+}, Ze = !1, $e = function(e, t) {
     var n, r;
     return [ (n = {}, n[".".concat(e)] = (r = {
         position: "relative",
@@ -769,14 +769,14 @@ var We = function(e) {
         borderRadius: "100% !important",
         transform: "translate(35px, 5px) !important"
     }, r), n) ];
-}, $e = function(e) {
-    var t = e.className, l = e.language, i = e.defaultLanguage, c = e.width, u = e.helpLink, s = e.helpCode, d = e.helpCodeViewWidth, m = e.height, p = e.onMount, f = e.onChange, g = ke(e, [ "className", "language", "defaultLanguage", "width", "helpLink", "helpCode", "helpCodeViewWidth", "height", "onMount", "onChange" ]), h = Ce(a(!1), 2), y = h[0], x = h[1], b = I(), E = r(""), N = r(null), F = r(null), R = r([]), T = r(null), B = r(), P = r(), D = r(l || i), W = r(""), O = r(!1), G = r(!1), _ = r(V()), J = S("monaco-input"), q = k({
+}, Qe = function(e) {
+    var t = e.className, l = e.language, i = e.defaultLanguage, c = e.width, u = e.helpLink, s = e.helpCode, d = e.helpCodeViewWidth, m = e.height, p = e.onMount, f = e.onChange, v = we(e, [ "className", "language", "defaultLanguage", "width", "helpLink", "helpCode", "helpCodeViewWidth", "height", "onMount", "onChange" ]), h = Ne(a(!1), 2), y = h[0], x = h[1], b = I(), E = r(""), N = r(null), F = r(null), R = r([]), T = r(null), B = r(), P = r(), D = r(l || i), W = r(""), O = r(!1), G = r(!1), _ = r(V()), J = S("monaco-input"), q = k({
         prefix: J,
-        styleFun: Ze
-    }), H = q.hashId, U = q.wrapSSR, X = g.value || g.defaultValue;
+        styleFun: $e
+    }), H = q.hashId, U = q.wrapSSR, X = v.value || v.defaultValue;
     o((function() {
-        return O.current = !1, Ke || L.init().then((function(e) {
-            e.editor.defineTheme("monokai", Ye), e.editor.defineTheme("chrome-devtools", Xe), 
+        return O.current = !1, Ze || L.init().then((function(e) {
+            e.editor.defineTheme("monokai", Ke), e.editor.defineTheme("chrome-devtools", Ye), 
             e.languages.typescript.typescriptDefaults.setCompilerOptions({
                 target: e.languages.typescript.ScriptTarget.Latest,
                 allowNonTsExtensions: !0,
@@ -792,12 +792,12 @@ var We = function(e) {
                 noSyntaxValidation: !0
             }), e.languages.registerDocumentFormattingEditProvider("typescript", {
                 provideDocumentFormattingEdits: function(e) {
-                    return we(this, void 0, void 0, (function() {
+                    return Ie(this, void 0, void 0, (function() {
                         var t, n;
-                        return Ie(this, (function(r) {
+                        return Ce(this, (function(r) {
                             switch (r.label) {
                               case 0:
-                                return t = {}, [ 4, Ue((null === (n = e["getDesignerLanguage"]) || void 0 === n ? void 0 : n.call(e)) || "typescript", e.getValue()) ];
+                                return t = {}, [ 4, Xe((null === (n = e["getDesignerLanguage"]) || void 0 === n ? void 0 : n.call(e)) || "typescript", e.getValue()) ];
 
                               case 1:
                                 return [ 2, [ (t.text = r.sent(), t.range = e.getFullModelRange(), t) ] ];
@@ -805,15 +805,15 @@ var We = function(e) {
                         }));
                     }));
                 }
-            }), Ke = !0;
+            }), Ze = !0;
         })), function() {
             T.current && T.current.dispose(), O.current = !0;
         };
     }), []), o((function() {
-        B.current && g.extraLib && Y();
-    }), [ g.extraLib ]);
+        B.current && v.extraLib && Y();
+    }), [ v.extraLib ]);
     var Y = function() {
-        T.current && T.current.dispose(), T.current = B.current.languages.typescript.typescriptDefaults.addExtraLib(g.extraLib, "".concat(_.current, ".d.ts"));
+        T.current && T.current.dispose(), T.current = B.current.languages.typescript.typescriptDefaults.addExtraLib(v.extraLib, "".concat(_.current, ".d.ts"));
     }, K = function() {
         var e = D.current;
         return "javascript" === e || "typescript" === e;
@@ -871,7 +871,7 @@ var We = function(e) {
     }, function() {
         if (!1 === u) return null;
         var e = "string" == typeof u ? u : K() ? "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" : Z() ? "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators" : void 0;
-        return e && n.createElement(v, {
+        return e && n.createElement(g, {
             title: n.createElement(C, {
                 token: "SettingComponents.MonacoInput.helpDocument"
             })
@@ -886,13 +886,13 @@ var We = function(e) {
         }))));
     }(), n.createElement("div", {
         className: A(J + "-view", H)
-    }, n.createElement(z, Se({}, g, {
+    }, n.createElement(z, ke({}, v, {
         theme: "dark" === b ? "monokai" : "chrome-devtools",
         defaultLanguage: W.current,
         language: W.current,
-        options: Se(Se({
+        options: ke(ke({
             glyphMargin: !0
-        }, g.options), {
+        }, v.options), {
             tabSize: 2,
             smoothScrolling: !0,
             scrollbar: {
@@ -909,11 +909,11 @@ var We = function(e) {
             var n = e.getModel(), r = e.getValue();
             n["getDesignerLanguage"] = function() {
                 return D.current;
-            }, r ? Ue(D.current, r).then((function(t) {
+            }, r ? Xe(D.current, r).then((function(t) {
                 e.setValue(t), x(!0);
             })).catch((function() {
                 x(!0);
-            })) : x(!0), g.extraLib && Y(), e.onDidChangeModelContent((function() {
+            })) : x(!0), v.extraLib && Y(), e.onDidChangeModelContent((function() {
                 Q(e.getValue());
             }));
         }
@@ -927,7 +927,7 @@ var We = function(e) {
         theme: "dark" === b ? "monokai" : "chrome-devtools",
         defaultLanguage: W.current,
         language: W.current,
-        options: Se(Se({}, g.options), {
+        options: ke(ke({}, v.options), {
             lineNumbers: "off",
             readOnly: !0,
             glyphMargin: !1,
@@ -950,21 +950,21 @@ var We = function(e) {
     })) : null));
 };
 
-$e.loader = L;
+Qe.loader = L;
 
-var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/, et = /^\{\{([\s\S]*)\}\}$/, tt = function(e) {
-    return "string" == typeof e && et.test(e);
-}, nt = function(e) {
-    return "string" == typeof e && Qe.test(e);
+var et = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/, tt = /^\{\{([\s\S]*)\}\}$/, nt = function(e) {
+    return "string" == typeof e && tt.test(e);
 }, rt = function(e) {
+    return "string" == typeof e && et.test(e);
+}, at = function(e) {
     var t = String(e).replace(/[^\d\.]+/, "");
     if ("" !== t) return Number(t);
-}, at = Ve([ {
+}, ot = We([ {
     type: "TEXT",
     icon: "Text",
     component: d,
     checker: function(e) {
-        return "string" == typeof e && !tt(e) && !nt(e);
+        return "string" == typeof e && !nt(e) && !rt(e);
     }
 }, {
     type: "EXPRESSION",
@@ -979,7 +979,7 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
                     marginRight: -16,
                     marginBottom: -12
                 }
-            }, n.createElement($e, Se({}, e, {
+            }, n.createElement(Qe, ke({}, e, {
                 language: "javascript.expression"
             }))),
             trigger: "click"
@@ -989,16 +989,16 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
             token: "SettingComponents.ValueInput.expression"
         })));
     },
-    checker: tt,
+    checker: nt,
     toInputValue: function(e) {
         if (e && "{{}}" !== e) {
-            var t = String(e).match(et);
+            var t = String(e).match(tt);
             return (null == t ? void 0 : t[1]) || e || "";
         }
     },
     toChangeValue: function(e) {
         if (e && "{{}}" !== e) {
-            var t = String(e).match(et);
+            var t = String(e).match(tt);
             return "{{".concat((null == t ? void 0 : t[1]) || e || "", "}}");
         }
     }
@@ -1006,7 +1006,7 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
     type: "BOOLEAN",
     icon: "Boolean",
     component: function(e) {
-        return n.createElement(h, Se({}, e, {
+        return n.createElement(h, ke({}, e, {
             options: [ {
                 label: "True",
                 value: !0
@@ -1028,29 +1028,29 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
 }, {
     type: "NUMBER",
     icon: "Number",
-    component: g,
+    component: v,
     checker: function(e) {
         return "number" == typeof e;
     },
-    toInputValue: rt,
-    toChangeValue: rt
-} ]), ot = J((function(e) {
-    var t = N(), r = q(), o = Ce(a(!1), 2), l = o[0], i = o[1], s = Ce(a(!1), 2), d = s[0], m = s[1], p = Ce(a(), 2), g = p[0], v = p[1], h = S("drawer-setter"), y = S("settings-form-wrapper");
+    toInputValue: at,
+    toChangeValue: at
+} ]), lt = q((function(e) {
+    var t = N(), r = H(), o = Ne(a(!1), 2), l = o[0], i = o[1], s = Ne(a(!1), 2), d = s[0], m = s[1], p = Ne(a(), 2), v = p[0], g = p[1], h = S("drawer-setter"), y = S("settings-form-wrapper");
     c((function() {
         var e = document.querySelector("." + y);
-        e && v(e);
+        e && g(e);
     }), [ t ]);
     var x = function() {
         m(!0), setTimeout((function() {
             i(!1), m(!1);
         }), 150);
     };
-    return n.createElement(u, null, n.createElement(f, Se({
+    return n.createElement(u, null, n.createElement(f, ke({
         block: !0,
         onClick: function() {
             i(!0);
         }
-    }, e.triggerProps), e.text || r.title), g && l ? _(n.createElement("div", {
+    }, e.triggerProps), e.text || r.title), v && l ? J(n.createElement("div", {
         className: A(h, "animate__animated animate__slideInRight", {
             animate__slideOutRight: d
         })
@@ -1064,15 +1064,15 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
         className: h + "-header-text"
     }, e.text || r.title)), n.createElement("div", {
         className: h + "-body"
-    }, n.createElement(X, {
+    }, n.createElement(Y, {
         colon: !1,
         labelWidth: 120,
         labelAlign: "left",
         wrapperAlign: "right",
         feedbackLayout: "none",
         tooltipLayout: "text"
-    }, e.children))), g) : null);
-})), lt = function(e, t) {
+    }, e.children))), v) : null);
+})), it = function(e, t) {
     var n, r, a, o, l;
     return [ (n = {}, n[".".concat(e)] = (r = {}, r[".ant-formily-item-label-content"] = {
         overflow: "visible"
@@ -1097,11 +1097,11 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
         padding: "10px 10px 0 10px",
         backgroundColor: t.colorBgLayout
     }, r), n) ];
-}, it = new Map, ct = J((function(e) {
+}, ct = new Map, ut = q((function(e) {
     var t = e.className;
     e.style;
-    var a = e.children, o = ke(e, [ "className", "style", "children" ]), l = S("fold-item"), i = q(), c = s((function() {
-        return se.ref(it.get(i.address.toString()));
+    var a = e.children, o = we(e, [ "className", "style", "children" ]), l = S("fold-item"), i = H(), c = s((function() {
+        return de.ref(ct.get(i.address.toString()));
     }), []), u = r({
         base: null,
         extra: null
@@ -1113,16 +1113,16 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
     }));
     var d = k({
         prefix: l,
-        styleFun: lt
+        styleFun: it
     }), m = d.hashId, p = d.wrapSSR;
     return p(n.createElement("div", {
         className: A(l, t, m)
     }, n.createElement("div", {
         className: A(l + "-base", m),
         onClick: function() {
-            c.value = !c.value, it.set(i.address.toString(), c.value);
+            c.value = !c.value, ct.set(i.address.toString(), c.value);
         }
-    }, n.createElement(Y.BaseItem, Se({}, o, {
+    }, n.createElement(K.BaseItem, ke({}, o, {
         label: n.createElement("span", {
             className: A(l + "-title", {
                 expand: c.value
@@ -1141,19 +1141,19 @@ var Qe = /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"
     }, u.current.base))), c.value && u.current.extra && n.createElement("div", {
         className: A(l + "-extra", m)
     }, u.current.extra)));
-})), ut = function() {
+})), st = function() {
     return n.createElement(u, null);
 };
 
-ut.displayName = "FoldItem.Base";
+st.displayName = "FoldItem.Base";
 
-var st = function() {
+var dt = function() {
     return n.createElement(u, null);
 };
 
-st.displayName = "FoldItem.Extra", ct.Base = ut, ct.Extra = st;
+dt.displayName = "FoldItem.Extra", ut.Base = st, ut.Extra = dt;
 
-var dt = function(e, t) {
+var mt = function(e, t) {
     var n, r, a, o, l, i;
     return [ (n = {}, n[".".concat(e)] = (r = {
         display: "flex",
@@ -1187,15 +1187,15 @@ var dt = function(e, t) {
     }, i[".dn-input-items-item-controller"] = {
         width: "100%"
     }, i), a), r), n) ];
-}, mt = function(e, t) {
+}, pt = function(e, t) {
     var n;
     return [ (n = {}, n[".".concat(e)] = {}, n) ];
-}, pt = n.createContext(null), ft = function(e) {
+}, ft = n.createContext(null), vt = function(e) {
     var t = S("input-items"), r = k({
         prefix: t,
-        styleFun: dt
+        styleFun: mt
     }).hashId;
-    return n.createElement(pt.Provider, {
+    return n.createElement(ft.Provider, {
         value: e
     }, n.createElement("div", {
         className: A(t, e.className, r),
@@ -1203,16 +1203,16 @@ var dt = function(e, t) {
     }, e.children));
 };
 
-ft.Item = function(e) {
-    var t = e.width, r = void 0 === t ? "100%" : t, a = S("input-items-item"), o = i(pt), l = k({
+vt.Item = function(e) {
+    var t = e.width, r = void 0 === t ? "100%" : t, a = S("input-items-item"), o = i(ft), l = k({
         prefix: a,
-        styleFun: mt
+        styleFun: pt
     }), c = l.hashId, u = l.wrapSSR;
     return u(n.createElement("div", {
         className: A(a, e.className, {
             vertical: e.vertical || o.vertical
         }, c),
-        style: Se({
+        style: ke({
             width: r || o.width
         }, e.style)
     }, e.icon && n.createElement("div", {
@@ -1227,13 +1227,13 @@ ft.Item = function(e) {
     }, e.children)));
 };
 
-var gt, vt = {
+var gt, ht = {
     top: 1,
     right: 2,
     bottom: 3,
     left: 4,
     all: 1
-}, ht = /([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+))?)?)?/, yt = J((function(e) {
+}, yt = /([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+))?)?)?/, xt = q((function(e) {
     var t = e.labels, r = void 0 === t ? [ n.createElement(w, {
         infer: "Top",
         size: 16,
@@ -1250,42 +1250,42 @@ var gt, vt = {
         infer: "Left",
         size: 16,
         key: "4"
-    }) ] : t, a = q(), o = S("box-style-setter"), l = function(e, t) {
-        var n = String(t.value).match(ht) || [], r = n[vt[e]], a = n[1], o = n[2], l = n[3], i = n[4], c = a === o && o === l && l === i;
-        return Se(Se({}, t), {
+    }) ] : t, a = H(), o = S("box-style-setter"), l = function(e, t) {
+        var n = String(t.value).match(yt) || [], r = n[ht[e]], a = n[1], o = n[2], l = n[3], i = n[4], c = a === o && o === l && l === i;
+        return ke(ke({}, t), {
             value: "all" === e ? c ? a : void 0 : r,
             onChange: function(r) {
                 var a, o;
-                "all" === e ? null === (a = t.onChange) || void 0 === a || a.call(t, "".concat(r || "0px", " ").concat(r || "0px", " ").concat(r || "0px", " ").concat(r || "0px")) : (n[vt[e]] = r, 
+                "all" === e ? null === (a = t.onChange) || void 0 === a || a.call(t, "".concat(r || "0px", " ").concat(r || "0px", " ").concat(r || "0px", " ").concat(r || "0px")) : (n[ht[e]] = r, 
                 null === (o = t.onChange) || void 0 === o || o.call(t, "".concat(n[1] || "0px", " ").concat(n[2] || "0px", " ").concat(n[3] || "0px", " ").concat(n[4] || "0px")));
             }
         });
     };
-    return n.createElement(ct, {
+    return n.createElement(ut, {
         className: A(o, e.className),
         label: a.title
-    }, n.createElement(ct.Base, null, n.createElement(Je, Se({}, l("all", e), {
+    }, n.createElement(ut.Base, null, n.createElement(qe, ke({}, l("all", e), {
         exclude: [ "inherit", "auto" ]
-    }))), n.createElement(ct.Extra, null, n.createElement(ft, {
+    }))), n.createElement(ut.Extra, null, n.createElement(vt, {
         width: "50%"
-    }, n.createElement(ft.Item, {
+    }, n.createElement(vt.Item, {
         icon: r[0]
-    }, n.createElement(Je, Se({}, l("top", e), {
+    }, n.createElement(qe, ke({}, l("top", e), {
         exclude: [ "inherit", "auto" ]
-    }))), n.createElement(ft.Item, {
+    }))), n.createElement(vt.Item, {
         icon: r[1]
-    }, n.createElement(Je, Se({}, l("right", e), {
+    }, n.createElement(qe, ke({}, l("right", e), {
         exclude: [ "inherit", "auto" ]
-    }))), n.createElement(ft.Item, {
+    }))), n.createElement(vt.Item, {
         icon: r[2]
-    }, n.createElement(Je, Se({}, l("bottom", e), {
+    }, n.createElement(qe, ke({}, l("bottom", e), {
         exclude: [ "inherit", "auto" ]
-    }))), n.createElement(ft.Item, {
+    }))), n.createElement(vt.Item, {
         icon: r[3]
-    }, n.createElement(Je, Se({}, l("left", e), {
+    }, n.createElement(qe, ke({}, l("left", e), {
         exclude: [ "inherit", "auto" ]
     }))))));
-})), xt = function(e, t) {
+})), bt = function(e, t) {
     var n, r, a, o, l;
     return [ (n = {}, n[".".concat(e)] = (r = {
         display: "flex"
@@ -1343,7 +1343,7 @@ var gt, vt = {
         borderTop: "2px dotted currentColor",
         transform: "translateY(-50%)"
     }, l), n) ];
-}, bt = [ "center", "top", "right", "bottom", "left" ], Et = function(e) {
+}, Et = [ "center", "top", "right", "bottom", "left" ], St = function(e) {
     return [ {
         label: "None",
         value: "none"
@@ -1363,19 +1363,19 @@ var gt, vt = {
         }),
         value: "dotted"
     } ];
-}, St = function(e, t) {
+}, kt = function(e, t) {
     var n = "center" === e ? "" : "-".concat(e);
-    return de("border".concat(n, "-").concat(t));
-}, kt = function(e) {
-    for (var t = e.address.parent(), n = 0; n < bt.length; n++) {
-        var r = bt[n], a = "".concat(t, ".").concat(St(r, "style")), o = "".concat(t, ".").concat(St(r, "width")), l = "".concat(t, ".").concat(St(r, "color"));
+    return me("border".concat(n, "-").concat(t));
+}, wt = function(e) {
+    for (var t = e.address.parent(), n = 0; n < Et.length; n++) {
+        var r = Et[n], a = "".concat(t, ".").concat(kt(r, "style")), o = "".concat(t, ".").concat(kt(r, "width")), l = "".concat(t, ".").concat(kt(r, "color"));
         if (e.query(a).value() || e.query(o).value() || e.query(l).value()) return r;
     }
     return "center";
-}, wt = J((function(e) {
-    var t = e.className, r = e.style, a = q(), o = s((function() {
-        return se({
-            value: kt(a)
+}, It = q((function(e) {
+    var t = e.className, r = e.style, a = H(), o = s((function() {
+        return de({
+            value: wt(a)
         });
     }), [ a.value ]), l = S("border-style-setter"), i = function(e) {
         return function(t) {
@@ -1386,49 +1386,49 @@ var gt, vt = {
         };
     }, c = k({
         prefix: l,
-        styleFun: xt
+        styleFun: bt
     }).hashId;
-    return n.createElement(ct, {
+    return n.createElement(ut, {
         label: a.title
-    }, n.createElement(ct.Extra, null, n.createElement("div", {
+    }, n.createElement(ut.Extra, null, n.createElement("div", {
         className: A(l, t, c),
         style: r
     }, n.createElement("div", {
         className: A(l + "-position", c)
-    }, n.createElement(Ae, {
+    }, n.createElement(ze, {
         value: o.value,
         onChange: function(e) {
             o.value = e;
         }
     })), n.createElement("div", {
         className: A(l + "-input", c)
-    }, bt.map((function(e, t) {
+    }, Et.map((function(e, t) {
         return n.createElement(u, {
             key: t
-        }, n.createElement(H, {
-            name: St(e, "style"),
+        }, n.createElement(U, {
+            name: kt(e, "style"),
             basePath: a.address.parent(),
-            dataSource: Et(c),
+            dataSource: St(c),
             reactions: i(e),
-            component: [ K, {
+            component: [ Z, {
                 placeholder: "Please Select"
             } ]
-        }), n.createElement(H, {
-            name: St(e, "width"),
+        }), n.createElement(U, {
+            name: kt(e, "width"),
             basePath: a.address.parent(),
             reactions: i(e),
-            component: [ Je, {
+            component: [ qe, {
                 exclude: [ "auto" ]
             } ]
-        }), n.createElement(H, {
-            name: St(e, "color"),
+        }), n.createElement(U, {
+            name: kt(e, "color"),
             basePath: a.address.parent(),
             reactions: i(e),
-            component: [ Ee ]
+            component: [ Se ]
         }));
     }))))));
-})), It = function(e) {
-    return n.createElement(yt, Se({}, e, {
+})), Ct = function(e) {
+    return n.createElement(xt, ke({}, e, {
         labels: [ n.createElement(w, {
             infer: "TopLeft",
             size: 16,
@@ -1447,35 +1447,35 @@ var gt, vt = {
             key: "4"
         }) ]
     }));
-}, Ct = y.useToken, Nt = J((function(e) {
-    var t = q(), r = S("background-style-setter"), a = Ct().hashId;
-    return n.createElement(ct, {
+}, Nt = y.useToken, Ft = q((function(e) {
+    var t = H(), r = S("background-style-setter"), a = Nt().hashId;
+    return n.createElement(ut, {
         className: A(r, e.className, a),
         label: t.title
-    }, n.createElement(ct.Base, null, n.createElement(H, {
+    }, n.createElement(ut.Base, null, n.createElement(U, {
         name: "backgroundColor",
         basePath: t.address.parent(),
-        component: [ Ee ]
-    })), n.createElement(ct.Extra, null, n.createElement(ft, null, n.createElement(ft.Item, {
+        component: [ Se ]
+    })), n.createElement(ut.Extra, null, n.createElement(vt, null, n.createElement(vt.Item, {
         icon: "Image"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "backgroundImage",
         basePath: t.address.parent(),
-        component: [ Pe ]
-    })), n.createElement(ft.Item, {
+        component: [ De ]
+    })), n.createElement(vt.Item, {
         icon: "ImageSize",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "backgroundSize",
         basePath: t.address.parent(),
-        component: [ qe ]
-    })), n.createElement(ft.Item, {
+        component: [ He ]
+    })), n.createElement(vt.Item, {
         icon: "Repeat",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "backgroundRepeat",
         basePath: t.address.parent(),
-        component: [ K, {
+        component: [ Z, {
             style: {
                 width: "100%"
             },
@@ -1500,17 +1500,17 @@ var gt, vt = {
             label: "Round",
             value: "round"
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "Position"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "backgroundPosition",
         basePath: t.address.parent(),
-        component: [ Z, {
+        component: [ $, {
             placeholder: "center center"
         } ]
     })))));
-})), Ft = J((function(e) {
-    var t = q(), r = S("shadow-style-setter"), a = function(t) {
+})), Rt = q((function(e) {
+    var t = H(), r = S("shadow-style-setter"), a = function(t) {
         var n = String(e.value || "").trim().split(" ");
         return {
             value: n[t],
@@ -1520,30 +1520,30 @@ var gt, vt = {
             }
         };
     };
-    return n.createElement(ct, {
+    return n.createElement(ut, {
         className: A(r, e.className),
         style: e.style,
         label: t.title
-    }, n.createElement(ct.Base, null, n.createElement(Ee, Se({}, a(4)))), n.createElement(ct.Extra, null, n.createElement(ft, {
+    }, n.createElement(ut.Base, null, n.createElement(Se, ke({}, a(4)))), n.createElement(ut.Extra, null, n.createElement(vt, {
         width: "50%"
-    }, n.createElement(ft.Item, {
+    }, n.createElement(vt.Item, {
         icon: "AxisX"
-    }, n.createElement(Je, Se({
+    }, n.createElement(qe, ke({
         exclude: [ "inherit", "auto" ]
-    }, a(0)))), n.createElement(ft.Item, {
+    }, a(0)))), n.createElement(vt.Item, {
         icon: "AxisY"
-    }, n.createElement(Je, Se({
+    }, n.createElement(qe, ke({
         exclude: [ "inherit", "auto" ]
-    }, a(1)))), n.createElement(ft.Item, {
+    }, a(1)))), n.createElement(vt.Item, {
         icon: "Blur"
-    }, n.createElement(Je, Se({
+    }, n.createElement(qe, ke({
         exclude: [ "inherit", "auto" ]
-    }, a(2)))), n.createElement(ft.Item, {
+    }, a(2)))), n.createElement(vt.Item, {
         icon: "Shadow"
-    }, n.createElement(Je, Se({
+    }, n.createElement(qe, ke({
         exclude: [ "inherit", "auto" ]
     }, a(3)))))));
-})), Rt = (gt = [ "宋体=SimSun", "微软雅黑=Microsoft Yahei", "苹方=PingFang SC", "Andale Mono=andale mono,monospace", "Arial=arial,helvetica,sans-serif", "Arial Black=arial black,sans-serif", "Book Antiqua=book antiqua,palatino,serif", "Comic Sans MS=comic sans ms,sans-serif", "Courier New=courier new,courier,monospace", "Georgia=georgia,palatino,serif", "Helvetica Neue=Helvetica Neue", "Helvetica=helvetica,arial,sans-serif", "Impact=impact,sans-serif", "Symbol=symbol", "Tahoma=tahoma,arial,helvetica,sans-serif", "Terminal=terminal,monaco,monospace", "Times New Roman=times new roman,times,serif", "Trebuchet MS=trebuchet ms,geneva,sans-serif", "Verdana=verdana,geneva,sans-serif" ], 
+})), Tt = (gt = [ "宋体=SimSun", "微软雅黑=Microsoft Yahei", "苹方=PingFang SC", "Andale Mono=andale mono,monospace", "Arial=arial,helvetica,sans-serif", "Arial Black=arial black,sans-serif", "Book Antiqua=book antiqua,palatino,serif", "Comic Sans MS=comic sans ms,sans-serif", "Courier New=courier new,courier,monospace", "Georgia=georgia,palatino,serif", "Helvetica Neue=Helvetica Neue", "Helvetica=helvetica,arial,sans-serif", "Impact=impact,sans-serif", "Symbol=symbol", "Tahoma=tahoma,arial,helvetica,sans-serif", "Terminal=terminal,monaco,monospace", "Times New Roman=times new roman,times,serif", "Trebuchet MS=trebuchet ms,geneva,sans-serif", "Verdana=verdana,geneva,sans-serif" ], 
 gt.map((function(e) {
     var t = e.split("="), r = null == t ? void 0 : t[0], a = null == t ? void 0 : t[1];
     return {
@@ -1554,35 +1554,35 @@ gt.map((function(e) {
         }, r),
         value: a
     };
-}))), Tt = J((function(e) {
-    var t = q(), r = S("font-style-setter");
-    return n.createElement(ct, {
+}))), Bt = q((function(e) {
+    var t = H(), r = S("font-style-setter");
+    return n.createElement(ut, {
         label: t.title,
         className: A(r, e.className),
         style: e.style
-    }, n.createElement(ct.Base, null, n.createElement(H, {
+    }, n.createElement(ut.Base, null, n.createElement(U, {
         name: "fontFamily",
         basePath: t.address.parent(),
-        component: [ K, {
+        component: [ Z, {
             style: {
                 width: "100%"
             },
             placeholder: "Helvetica Neue"
         } ],
-        dataSource: Rt
-    })), n.createElement(ct.Extra, null, n.createElement(ft, null, n.createElement(ft.Item, {
+        dataSource: Tt
+    })), n.createElement(ut.Extra, null, n.createElement(vt, null, n.createElement(vt.Item, {
         icon: "FontWeight",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "fontWeight",
         basePath: t.address.parent(),
-        component: [ $, {
+        component: [ Q, {
             placeholder: "400"
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "FontStyle",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "fontStyle",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1596,37 +1596,37 @@ gt.map((function(e) {
             }),
             value: "italic"
         } ],
-        component: [ Q.Group, {
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "FontColor",
         width: "100%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "color",
         basePath: t.address.parent(),
-        component: [ Ee ]
-    })), n.createElement(ft.Item, {
+        component: [ Se ]
+    })), n.createElement(vt.Item, {
         icon: "FontSize",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "fontSize",
         basePath: t.address.parent(),
-        component: [ Je, {
+        component: [ qe, {
             exclude: [ "auto" ]
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "LineHeight",
         width: "50%"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "lineHeight",
         basePath: t.address.parent(),
-        component: [ Je, {
+        component: [ qe, {
             exclude: [ "auto" ]
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "TextAlign"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "textAlign",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1650,12 +1650,12 @@ gt.map((function(e) {
             }),
             value: "justify"
         } ],
-        component: [ Q.Group, {
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    })), n.createElement(ft.Item, {
+    })), n.createElement(vt.Item, {
         icon: "TextDecoration"
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "textDecoration",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1672,24 +1672,24 @@ gt.map((function(e) {
             }),
             value: "line-through"
         } ],
-        component: [ Q.Group, {
+        component: [ ee.Group, {
             optionType: "button"
         } ]
     })))));
-})), Bt = function(e, t) {
+})), Pt = function(e, t) {
     var n, r;
     return [ (n = {}, n[".".concat(e)] = (r = {}, r[".dn-input-items"] = {}, r), n) ];
-}, Pt = J((function(e) {
-    var t = q(), r = S("flex-style-setter"), a = k({
+}, Dt = q((function(e) {
+    var t = H(), r = S("flex-style-setter"), a = k({
         prefix: r,
-        styleFun: Bt
+        styleFun: Pt
     }).hashId;
     return n.createElement("div", {
         className: A(r, e.className, a),
         style: e.style
-    }, n.createElement(ft, {
+    }, n.createElement(vt, {
         vertical: !0
-    }, n.createElement(H, {
+    }, n.createElement(U, {
         name: "flexDirection",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1706,11 +1706,11 @@ gt.map((function(e) {
         reactions: function(e) {
             e.decorator[1].title = "Flex Direction : ".concat(e.value || "");
         },
-        decorator: [ ft.Item ],
-        component: [ Q.Group, {
+        decorator: [ vt.Item ],
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    }), n.createElement(H, {
+    }), n.createElement(U, {
         name: "flexWrap",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1727,11 +1727,11 @@ gt.map((function(e) {
         reactions: function(e) {
             e.decorator[1].title = "Flex Wrap : ".concat(e.value || "");
         },
-        decorator: [ ft.Item ],
-        component: [ Q.Group, {
+        decorator: [ vt.Item ],
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    }), n.createElement(H, {
+    }), n.createElement(U, {
         name: "alignContent",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1768,11 +1768,11 @@ gt.map((function(e) {
         reactions: function(e) {
             e.decorator[1].title = "Align Content : ".concat(e.value || "");
         },
-        decorator: [ ft.Item ],
-        component: [ Q.Group, {
+        decorator: [ vt.Item ],
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    }), n.createElement(H, {
+    }), n.createElement(U, {
         name: "justifyContent",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1809,11 +1809,11 @@ gt.map((function(e) {
         reactions: function(e) {
             e.decorator[1].title = "Justify Content : ".concat(e.value || "");
         },
-        decorator: [ ft.Item ],
-        component: [ Q.Group, {
+        decorator: [ vt.Item ],
+        component: [ ee.Group, {
             optionType: "button"
         } ]
-    }), n.createElement(H, {
+    }), n.createElement(U, {
         name: "alignItems",
         basePath: t.address.parent(),
         dataSource: [ {
@@ -1845,12 +1845,12 @@ gt.map((function(e) {
         reactions: function(e) {
             e.decorator[1].title = "Align Items : ".concat(e.value || "");
         },
-        decorator: [ ft.Item ],
-        component: [ Q.Group, {
+        decorator: [ vt.Item ],
+        component: [ ee.Group, {
             optionType: "button"
         } ]
     })));
-})), Dt = function(e, t) {
+})), At = function(e, t) {
     var n, r, a;
     return [ (n = {}, n[".".concat(e)] = (r = {}, r["&-radio"] = (a = {
         display: "flex !important",
@@ -1862,12 +1862,12 @@ gt.map((function(e) {
         alignItems: "center",
         padding: 0
     }, a), r), n) ];
-}, At = J((function(e) {
-    var t = q(), r = S("display-style-setter"), a = k({
+}, zt = q((function(e) {
+    var t = H(), r = S("display-style-setter"), a = k({
         prefix: r,
-        styleFun: Dt
+        styleFun: At
     }), o = a.hashId, l = a.wrapSSR;
-    return l(n.createElement(n.Fragment, null, n.createElement(Y.BaseItem, {
+    return l(n.createElement(n.Fragment, null, n.createElement(K.BaseItem, {
         label: t.title,
         className: A(r, e.className, o),
         style: e.style
@@ -1904,16 +1904,16 @@ gt.map((function(e) {
             null === (n = e.onChange) || void 0 === n || n.call(e, t.target.value);
         },
         optionType: "button"
-    })), n.createElement(H, {
+    })), n.createElement(U, {
         name: "flex",
         basePath: t.address.parent(),
         visible: !1,
         reactions: function(e) {
             e.visible = "flex" === t.value;
         },
-        component: [ Pt ]
+        component: [ Dt ]
     })));
-})), zt = function(e, t) {
+})), Lt = function(e, t) {
     var n, r, a, o, l;
     return [ (n = {}, n[".".concat(e)] = (r = {
         flexWrap: "wrap"
@@ -1946,11 +1946,11 @@ gt.map((function(e) {
     }, l[".dn-collapse-item-header-expand"] = {
         transform: "rotate(0)"
     }, l), r), n) ];
-}, Lt = J((function(e) {
+}, jt = q((function(e) {
     var t, r = S("collapse-item"), o = k({
         prefix: r,
-        styleFun: zt
-    }), l = o.hashId, i = o.wrapSSR, c = q(), u = Ce(a(null === (t = e.defaultExpand) || void 0 === t || t), 2), s = u[0], d = u[1];
+        styleFun: Lt
+    }), l = o.hashId, i = o.wrapSSR, c = H(), u = Ne(a(null === (t = e.defaultExpand) || void 0 === t || t), 2), s = u[0], d = u[1];
     return i(n.createElement("div", {
         className: A(r, e.className, {
             expand: s
@@ -1971,52 +1971,52 @@ gt.map((function(e) {
     }, c.title)), n.createElement("div", {
         className: A(r + "-content", l)
     }, e.children)));
-})), jt = U({
+})), Mt = X({
     components: {
-        FormItem: Y,
-        CollapseItem: Lt,
-        Input: Z,
-        ValueInput: at,
-        SizeInput: Je,
-        ColorInput: Ee,
-        ImageInput: Be,
-        MonacoInput: $e,
-        PositionInput: Ae,
-        CornerInput: Fe,
-        BackgroundImageInput: Pe,
-        BackgroundStyleSetter: Nt,
-        BoxStyleSetter: yt,
-        BorderStyleSetter: wt,
-        BorderRadiusStyleSetter: It,
-        DisplayStyleSetter: At,
-        BoxShadowStyleSetter: Ft,
-        FlexStyleSetter: Pt,
-        FontStyleSetter: Tt,
-        DrawerSetter: ot,
-        NumberPicker: $,
-        DatePicker: ee,
-        TimePicker: te,
-        Select: K,
-        Radio: Q,
+        FormItem: K,
+        CollapseItem: jt,
+        Input: $,
+        ValueInput: ot,
+        SizeInput: qe,
+        ColorInput: Se,
+        ImageInput: Pe,
+        MonacoInput: Qe,
+        PositionInput: ze,
+        CornerInput: Re,
+        BackgroundImageInput: De,
+        BackgroundStyleSetter: Ft,
+        BoxStyleSetter: xt,
+        BorderStyleSetter: It,
+        BorderRadiusStyleSetter: Ct,
+        DisplayStyleSetter: zt,
+        BoxShadowStyleSetter: Rt,
+        FlexStyleSetter: Dt,
+        FontStyleSetter: Bt,
+        DrawerSetter: lt,
+        NumberPicker: Q,
+        DatePicker: te,
+        TimePicker: ne,
+        Select: Z,
+        Radio: ee,
         Slider: b,
-        Switch: ne,
-        Space: re,
-        ArrayItems: ae,
-        ArrayTable: oe,
-        FormCollapse: le,
-        FormGrid: ie,
-        FormLayout: X,
-        FormTab: ce
+        Switch: re,
+        Space: ae,
+        ArrayItems: oe,
+        ArrayTable: le,
+        FormCollapse: ie,
+        FormGrid: ce,
+        FormLayout: Y,
+        FormTab: ue
     }
-}), Mt = function(e) {
+}), Vt = function(e) {
     if (W(e)) {
         var t = e.match(/@([^:\s]+)(?:\s*\:\s*([\s\S]+))?/);
         return t ? [ t[1], t[2] ] : void 0;
     }
-}, Vt = function(e) {
+}, Wt = function(e) {
     return function(t, r) {
-        var a, o, l, i = e[r] || e[t.value] || t.label, c = Mt(i);
-        return Se(Se({}, t), {
+        var a, o, l, i = e[r] || e[t.value] || t.label, c = Vt(i);
+        return ke(ke({}, t), {
             value: null !== (a = null == t ? void 0 : t.value) && void 0 !== a ? a : null,
             label: c ? n.createElement(w, {
                 infer: c[0],
@@ -2024,44 +2024,44 @@ gt.map((function(e) {
             }) : null !== (l = null !== (o = null == i ? void 0 : i.label) && void 0 !== o ? o : i) && void 0 !== l ? l : "Unknow"
         });
     };
-}, Wt = function(t) {
-    me("*", (function(n) {
+}, Ot = function(t) {
+    pe("*", (function(n) {
         var r, a, o = n.path.toString().replace(/\.[\d+]/g, ""), l = function(n) {
             var r = "settings.".concat(o).concat(n ? ".".concat(n) : "");
             return t.getMessage(r) || e.getDesignerMessage(r);
         }, i = l("title") || l(), c = l("description"), u = l("tooltip"), s = l("dataSource"), d = l("placeholder");
         i && (n.title = i), c && (n.description = c), u && (n.decorator[1] = n.decorator[1] || [], 
         n.decorator[1].tooltip = u), d && (n.component[1] = n.component[1] || [], n.component[1].placeholder = d), 
-        pe(n) || ((null == s ? void 0 : s.length) ? (null === (r = n.dataSource) || void 0 === r ? void 0 : r.length) ? n.dataSource = n.dataSource.map(Vt(s)) : n.dataSource = s.slice() : n.dataSource = null === (a = n.dataSource) || void 0 === a ? void 0 : a.filter(Boolean));
+        fe(n) || ((null == s ? void 0 : s.length) ? (null === (r = n.dataSource) || void 0 === r ? void 0 : r.length) ? n.dataSource = n.dataSource.map(Wt(s)) : n.dataSource = s.slice() : n.dataSource = null === (a = n.dataSource) || void 0 === a ? void 0 : a.filter(Boolean));
     }));
-}, Ot = null, Gt = function(e) {
-    fe("*", (function() {
-        clearTimeout(Ot), Ot = setTimeout((function() {
+}, Gt = null, _t = function(e) {
+    ve("*", (function() {
+        clearTimeout(Gt), Gt = setTimeout((function() {
             e.snapshot("update:node:props");
         }), 1e3);
     }));
-}, _t = new ve("fadeIn", {
+}, Jt = new he("fadeIn", {
     "0%": {
         opacity: 0
     },
     "100%": {
         opacity: 1
     }
-}), Jt = new ve("slideInRight", {
+}), qt = new he("slideInRight", {
     "0%": {
         transform: "translateX(100%)"
     },
     "100%": {
         transform: "translateX(0)"
     }
-}), qt = new ve("slideOutRight", {
+}), Ht = new he("slideOutRight", {
     "0%": {
         transform: "translateX(0)"
     },
     "100%": {
         transform: "translateX(100%)"
     }
-}), Ht = function(e, t) {
+}), Ut = function(e, t) {
     var n, r, a, o, l, i, c;
     return [ (n = {}, n[".".concat(e)] = (r = {
         padding: "0 20px"
@@ -2110,19 +2110,19 @@ gt.map((function(e) {
         height: "100%",
         color: "#888"
     }, r), n), (c = {}, c[".animate__fadeInUp"] = {
-        animationName: _t
-    }, c[".animate__slideInRight"] = {
         animationName: Jt
-    }, c[".animate__slideOutRight"] = {
+    }, c[".animate__slideInRight"] = {
         animationName: qt
+    }, c[".animate__slideOutRight"] = {
+        animationName: Ht
     }, c[".animate__animated"] = {
         animationDelay: "0ms",
         animationDuration: "0.25s",
         animationFillMode: "forwards"
-    }, c), _t, Jt, qt ];
-}, Ut = {
+    }, c), Jt, qt, Ht ];
+}, Xt = {
     idleRequest: null
-}, Xt = J((function(e) {
+}, Yt = q((function(e) {
     var t, r, a = F(), o = (null == a ? void 0 : a.activeWorkspace) || (null == a ? void 0 : a.currentWorkspace), l = null == o ? void 0 : o.id, i = R(l), c = T(l), u = B(l), d = S("settings-form"), m = null === (t = null == c ? void 0 : c.designerProps) || void 0 === t ? void 0 : t.propsSchema, p = !(c && (null === (r = c.designerProps) || void 0 === r ? void 0 : r.propsSchema) && 1 === u.length), f = s((function() {
         var t;
         return ge({
@@ -2130,30 +2130,30 @@ gt.map((function(e) {
             values: null == c ? void 0 : c.props,
             effects: function(t) {
                 var n;
-                Wt(c), Gt(i), null === (n = e.effects) || void 0 === n || n.call(e, t);
+                Ot(c), _t(i), null === (n = e.effects) || void 0 === n || n.call(e, t);
             }
         });
-    }), [ c, null == c ? void 0 : c.props, m, i, p ]), g = k({
+    }), [ c, null == c ? void 0 : c.props, m, i, p ]), v = k({
         prefix: d,
-        styleFun: Ht
-    }), v = g.hashId, h = g.wrapSSR;
+        styleFun: Ut
+    }), g = v.hashId, h = v.wrapSSR;
     return h(n.createElement(w.Provider, {
         tooltip: !0
     }, n.createElement("div", {
-        className: A(d + "-wrapper", v)
+        className: A(d + "-wrapper", g)
     }, !p && n.createElement(P, {
         workspaceId: l
     }), n.createElement("div", {
-        className: A(d + "-content", v)
+        className: A(d + "-content", g)
     }, p ? n.createElement("div", {
         className: d + "-empty"
     }, n.createElement(E, null)) : n.createElement("div", {
-        className: A(d, e.className, v),
+        className: A(d, e.className, g),
         style: e.style,
         key: c.id
-    }, n.createElement(Re.Provider, {
+    }, n.createElement(Te.Provider, {
         value: e
-    }, n.createElement(ue, {
+    }, n.createElement(se, {
         form: f,
         colon: !1,
         labelWidth: 120,
@@ -2161,19 +2161,39 @@ gt.map((function(e) {
         wrapperAlign: "right",
         feedbackLayout: "none",
         tooltipLayout: "text"
-    }, n.createElement(jt, {
+    }, n.createElement(Mt, {
         schema: m,
         components: e.components,
-        scope: Se({
+        scope: ke({
             $node: c
         }, e.scope)
     }))))))));
 }), {
     scheduler: function(e) {
-        O(Ut.idleRequest), Ut.idleRequest = G(e, {
+        O(Xt.idleRequest), Xt.idleRequest = G(e, {
             timeout: 500
         });
     }
-});
+}), Kt = function(e) {
+    return Ie(void 0, void 0, void 0, (function() {
+        var t, n;
+        return Ce(this, (function(r) {
+            return t = ke({
+                base: be()
+            }, e), _[e.root] ? [ 2, _[t.root] ] : (n = "".concat(t.base, "/").concat(t.package, "/").concat(t.entry), 
+            [ 2, new Promise((function(e, r) {
+                var a = document.createElement("script");
+                a.type = "text/javascript", a.async = !1, a.src = n, a.onload = function() {
+                    var n = _[t.root];
+                    _["define"] = o, e(n), a.remove();
+                }, a.onerror = function(e) {
+                    r(e);
+                };
+                var o = _["define"];
+                _["define"] = void 0, document.body.appendChild(a);
+            })) ]);
+        }));
+    }));
+};
 
-export { Pe as BackgroundImageInput, qe as BackgroundSizeInput, Nt as BackgroundStyleSetter, It as BorderRadiusStyleSetter, wt as BorderStyleSetter, Ft as BoxShadowStyleSetter, yt as BoxStyleSetter, Lt as CollapseItem, Ee as ColorInput, Fe as CornerInput, At as DisplayStyleSetter, ot as DrawerSetter, Pt as FlexStyleSetter, ct as FoldItem, Tt as FontStyleSetter, Be as ImageInput, ft as InputItems, $e as MonacoInput, Ae as PositionInput, jt as SchemaField, Xt as SettingsForm, Je as SizeInput, at as ValueInput, Ve as createPolyInput, Wt as effectLocales, Gt as effectSnapshot, xe as getNpmCDNRegistry, ye as setNpmCDNRegistry };
+export { De as BackgroundImageInput, He as BackgroundSizeInput, Ft as BackgroundStyleSetter, Ct as BorderRadiusStyleSetter, It as BorderStyleSetter, Rt as BoxShadowStyleSetter, xt as BoxStyleSetter, jt as CollapseItem, Se as ColorInput, Re as CornerInput, zt as DisplayStyleSetter, lt as DrawerSetter, Dt as FlexStyleSetter, ut as FoldItem, Bt as FontStyleSetter, Pe as ImageInput, vt as InputItems, Qe as MonacoInput, ze as PositionInput, Mt as SchemaField, Yt as SettingsForm, Te as SettingsFormContext, qe as SizeInput, ot as ValueInput, We as createPolyInput, Ot as effectLocales, _t as effectSnapshot, be as getNpmCDNRegistry, Kt as loadScript, xe as setNpmCDNRegistry };
