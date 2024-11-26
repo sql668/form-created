@@ -45937,6 +45937,7 @@
   // };
   var SettingsForm = react$1.observer(function (props) {
       var _a, _b;
+      console.log("SettingsForm rebder");
       var workbench = react.useWorkbench();
       var currentWorkspace = (workbench === null || workbench === void 0 ? void 0 : workbench.activeWorkspace) || (workbench === null || workbench === void 0 ? void 0 : workbench.currentWorkspace);
       var currentWorkspaceId = currentWorkspace === null || currentWorkspace === void 0 ? void 0 : currentWorkspace.id;
