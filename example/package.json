@@ -25,13 +25,13 @@
     "@formily/react": "^2.3.2",
     "@formily/antd-v5": "^1.1.0",
     "hoist-non-react-statics": "^3.3.2",
-    "@form-created/core": "workspace:^",
-    "@form-created/react": "workspace:^",
-    "@form-created/react-settings-form": "workspace:^",
-    "@form-created/shared": "workspace:^",
-    "@form-created/formily-transformer": "workspace:^",
-    "@form-created/formily-setters": "workspace:^",
-    "@form-created/formily-antd": "workspace:^"
+    "@form-created/core": "^0.0.1-beta.5",
+    "@form-created/react": "^0.0.1-beta.5",
+    "@form-created/react-settings-form": "^0.0.1-beta.5",
+    "@form-created/shared": "^0.0.1-beta.5",
+    "@form-created/formily-transformer": "^0.0.1-beta.5",
+    "@form-created/formily-setters": "^0.0.1-beta.5",
+    "@form-created/formily-antd": "^0.0.1-beta.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
