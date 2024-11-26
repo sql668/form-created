@@ -1,1768 +1,2962 @@
-import { globalThisPolyfill as t, getKeyCodeFromEvent as e, EventDriver as n, isPlainObj as r, each as o, isFn as i, uid as s, cancelIdle as a, requestIdle as c, isHTMLElement as u, isPointInRect as l, isRectInRect as d, Rect as h, calcBoundingRect as p, calcElementLayout as f, isStr as v, isArr as g, calcOffsetOfSnapLineSegmentToEdge as y, calcRectOfAxisLineSegment as m, calcExtendsLineSegmentOfRect as w, LineSegment as b, calcDistanceOfSnapLineToEdges as E, isValidNumber as N, calcElementTranslate as S, calcEdgeLinesOfRect as k, isEqualRect as R, calcSpaceBlockOfRect as C, isLineSegment as P, Point as O, calcClosestEdges as A, calcCombineSnapLineSegment as D, isNearAfter as x, calcDistancePointToEdge as I, calcDistanceOfPointToRect as T, KeyCode as W, Event as M, calcRectByStartEndPoint as L, isCrossRectInRect as B, calcAutoScrollBasicInfo as j, scrollAnimate as X } from "@form-created/shared";
+import { globalThisPolyfill, getKeyCodeFromEvent, EventDriver, isPlainObj, each, isFn, uid, cancelIdle, requestIdle, isHTMLElement, isPointInRect, isRectInRect, Rect, calcBoundingRect, calcElementLayout, isStr, isArr, calcOffsetOfSnapLineSegmentToEdge, calcRectOfAxisLineSegment, calcExtendsLineSegmentOfRect, LineSegment, calcDistanceOfSnapLineToEdges, isValidNumber, calcElementTranslate, calcEdgeLinesOfRect, isEqualRect, calcSpaceBlockOfRect, isLineSegment, Point, calcClosestEdges, calcCombineSnapLineSegment, isNearAfter, calcDistancePointToEdge, calcDistanceOfPointToRect, KeyCode, Event, calcRectByStartEndPoint, isCrossRectInRect, calcAutoScrollBasicInfo, scrollAnimate } from '@form-created/shared';
+export { KeyCode } from '@form-created/shared';
+import { observable, define, action, toJS, untracked } from '@formily/reactive';
+import { ResizeObserver } from '@juggle/resize-observer';
+import { Path } from '@formily/path';
+import { createForm } from '@formily/core';
 
-export { KeyCode } from "@form-created/shared";
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
 
-import { observable as Y, define as V, action as z, toJS as F, untracked as q } from "@formily/reactive";
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-import { ResizeObserver as H } from "@juggle/resize-observer";
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol */
 
-import { Path as U } from "@formily/path";
-
-import { createForm as K } from "@formily/core";
-
-var _ = function(t, e) {
-    return _ = Object.setPrototypeOf || {
-        __proto__: []
-    } instanceof Array && function(t, e) {
-        t.__proto__ = e;
-    } || function(t, e) {
-        for (var n in e) Object.prototype.hasOwnProperty.call(e, n) && (t[n] = e[n]);
-    }, _(t, e);
+var extendStatics = function(d, b) {
+  extendStatics = Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+      function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+  return extendStatics(d, b);
 };
 
-function $(t, e) {
-    if ("function" != typeof e && null !== e) throw new TypeError("Class extends value " + String(e) + " is not a constructor or null");
-    function n() {
-        this.constructor = t;
-    }
-    _(t, e), t.prototype = null === e ? Object.create(e) : (n.prototype = e.prototype, 
-    new n);
+function __extends(d, b) {
+  if (typeof b !== "function" && b !== null)
+      throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+  extendStatics(d, b);
+  function __() { this.constructor = d; }
+  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-var G = function() {
-    return G = Object.assign || function(t) {
-        for (var e, n = 1, r = arguments.length; n < r; n++) for (var o in e = arguments[n], 
-        e) Object.prototype.hasOwnProperty.call(e, o) && (t[o] = e[o]);
-        return t;
-    }, G.apply(this, arguments);
+var __assign = function() {
+  __assign = Object.assign || function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+      return t;
+  };
+  return __assign.apply(this, arguments);
 };
 
-function Z(t, e) {
-    var n = {};
-    for (var r in t) Object.prototype.hasOwnProperty.call(t, r) && e.indexOf(r) < 0 && (n[r] = t[r]);
-    if (null != t && "function" == typeof Object.getOwnPropertySymbols) {
-        var o = 0;
-        for (r = Object.getOwnPropertySymbols(t); o < r.length; o++) e.indexOf(r[o]) < 0 && Object.prototype.propertyIsEnumerable.call(t, r[o]) && (n[r[o]] = t[r[o]]);
-    }
-    return n;
+function __rest(s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+      t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function")
+      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+              t[p[i]] = s[p[i]];
+      }
+  return t;
 }
 
-function J(t) {
-    var e = "function" == typeof Symbol && Symbol.iterator, n = e && t[e], r = 0;
-    if (n) return n.call(t);
-    if (t && "number" == typeof t.length) return {
-        next: function() {
-            return t && r >= t.length && (t = void 0), {
-                value: t && t[r++],
-                done: !t
-            };
-        }
-    };
-    throw new TypeError(e ? "Object is not iterable." : "Symbol.iterator is not defined.");
+function __values(o) {
+  var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+  if (m) return m.call(o);
+  if (o && typeof o.length === "number") return {
+      next: function () {
+          if (o && i >= o.length) o = void 0;
+          return { value: o && o[i++], done: !o };
+      }
+  };
+  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
-function Q(t, e) {
-    var n = "function" == typeof Symbol && t[Symbol.iterator];
-    if (!n) return t;
-    var r, o, i = n.call(t), s = [];
-    try {
-        for (;(void 0 === e || e-- > 0) && !(r = i.next()).done; ) s.push(r.value);
-    } catch (a) {
-        o = {
-            error: a
-        };
-    } finally {
-        try {
-            r && !r.done && (n = i["return"]) && n.call(i);
-        } finally {
-            if (o) throw o.error;
-        }
-    }
-    return s;
+function __read(o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o), r, ar = [], e;
+  try {
+      while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+  }
+  catch (error) { e = { error: error }; }
+  finally {
+      try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+      }
+      finally { if (e) throw e.error; }
+  }
+  return ar;
 }
 
-function tt(t, e, n) {
-    if (n || 2 === arguments.length) for (var r, o = 0, i = e.length; o < i; o++) !r && o in e || (r || (r = Array.prototype.slice.call(e, 0, o)), 
-    r[o] = e[o]);
-    return t.concat(r || Array.prototype.slice.call(e));
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+      if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+      }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
 }
 
-"function" == typeof SuppressedError && SuppressedError;
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+  var e = new Error(message);
+  return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
 
-var et = function() {
-    function e(e) {
-        this.data = e || {
+var AbstractCursorEvent = /** @class */ (function () {
+    function AbstractCursorEvent(data) {
+        this.data = data || {
             clientX: 0,
             clientY: 0,
             pageX: 0,
             pageY: 0,
             target: null,
-            view: t
-        }, this.transformCoordinates();
+            view: globalThisPolyfill,
+        };
+        this.transformCoordinates();
     }
-    return e.prototype.transformCoordinates = function() {
-        var e, n = ((null === (e = this.data) || void 0 === e ? void 0 : e.view) || {}).frameElement;
-        if (n && this.data.view !== t) {
-            var r = n.getBoundingClientRect(), o = r.width / n["offsetWidth"];
-            this.data.topClientX = this.data.clientX * o + r.x, this.data.topClientY = this.data.clientY * o + r.y, 
-            this.data.topPageX = this.data.pageX + r.x - this.data.view.scrollX, this.data.topPageY = this.data.pageY + r.y - this.data.view.scrollY;
-            var i = document.elementFromPoint(this.data.topPageX, this.data.topClientY);
-            i !== n && (this.data.target = i);
-        } else this.data.topClientX = this.data.clientX, this.data.topClientY = this.data.clientY, 
-        this.data.topPageX = this.data.pageX, this.data.topPageY = this.data.pageY;
-    }, e;
-}(), nt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "drag:move", e;
+    AbstractCursorEvent.prototype.transformCoordinates = function () {
+        var _a;
+        var frameElement = (((_a = this.data) === null || _a === void 0 ? void 0 : _a.view) || {}).frameElement;
+        if (frameElement && this.data.view !== globalThisPolyfill) {
+            var frameRect = frameElement.getBoundingClientRect();
+            var scale = frameRect.width / frameElement['offsetWidth'];
+            this.data.topClientX = this.data.clientX * scale + frameRect.x;
+            this.data.topClientY = this.data.clientY * scale + frameRect.y;
+            this.data.topPageX =
+                this.data.pageX + frameRect.x - this.data.view.scrollX;
+            this.data.topPageY =
+                this.data.pageY + frameRect.y - this.data.view.scrollY;
+            var topElement = document.elementFromPoint(this.data.topPageX, this.data.topClientY);
+            if (topElement !== frameElement) {
+                this.data.target = topElement;
+            }
+        }
+        else {
+            this.data.topClientX = this.data.clientX;
+            this.data.topClientY = this.data.clientY;
+            this.data.topPageX = this.data.pageX;
+            this.data.topPageY = this.data.pageY;
+        }
+    };
+    return AbstractCursorEvent;
+}());
+
+var DragMoveEvent = /** @class */ (function (_super) {
+    __extends(DragMoveEvent, _super);
+    function DragMoveEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'drag:move';
+        return _this;
     }
-    return $(e, t), e;
-}(et), rt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "drag:start", e;
+    return DragMoveEvent;
+}(AbstractCursorEvent));
+
+var DragStartEvent = /** @class */ (function (_super) {
+    __extends(DragStartEvent, _super);
+    function DragStartEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'drag:start';
+        return _this;
     }
-    return $(e, t), e;
-}(et), ot = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "drag:stop", e;
+    return DragStartEvent;
+}(AbstractCursorEvent));
+
+var DragStopEvent = /** @class */ (function (_super) {
+    __extends(DragStopEvent, _super);
+    function DragStopEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'drag:stop';
+        return _this;
     }
-    return $(e, t), e;
-}(et), it = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "mouse:click", e;
+    return DragStopEvent;
+}(AbstractCursorEvent));
+
+var MouseClickEvent = /** @class */ (function (_super) {
+    __extends(MouseClickEvent, _super);
+    function MouseClickEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'mouse:click';
+        return _this;
     }
-    return $(e, t), e;
-}(et), st = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "mouse:dblclick", e;
+    return MouseClickEvent;
+}(AbstractCursorEvent));
+var MouseDoubleClickEvent = /** @class */ (function (_super) {
+    __extends(MouseDoubleClickEvent, _super);
+    function MouseDoubleClickEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'mouse:dblclick';
+        return _this;
     }
-    return $(e, t), e;
-}(et), at = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "mouse:move", e;
+    return MouseDoubleClickEvent;
+}(AbstractCursorEvent));
+
+var MouseMoveEvent = /** @class */ (function (_super) {
+    __extends(MouseMoveEvent, _super);
+    function MouseMoveEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'mouse:move';
+        return _this;
     }
-    return $(e, t), e;
-}(et), ct = function() {
-    function t(t) {
-        this.data = e(t), this.originEvent = t;
+    return MouseMoveEvent;
+}(AbstractCursorEvent));
+
+var AbstractKeyboardEvent = /** @class */ (function () {
+    function AbstractKeyboardEvent(e) {
+        this.data = getKeyCodeFromEvent(e);
+        this.originEvent = e;
     }
-    return Object.defineProperty(t.prototype, "eventType", {
-        get: function() {
+    Object.defineProperty(AbstractKeyboardEvent.prototype, "eventType", {
+        get: function () {
             return this.originEvent.type;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "ctrlKey", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AbstractKeyboardEvent.prototype, "ctrlKey", {
+        get: function () {
             return this.originEvent.ctrlKey;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "shiftKey", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AbstractKeyboardEvent.prototype, "shiftKey", {
+        get: function () {
             return this.originEvent.shiftKey;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "metaKey", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AbstractKeyboardEvent.prototype, "metaKey", {
+        get: function () {
             return this.originEvent.metaKey;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "altkey", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AbstractKeyboardEvent.prototype, "altkey", {
+        get: function () {
             return this.originEvent.altKey;
         },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.preventDefault = function() {
-        this.originEvent.preventDefault ? this.originEvent.preventDefault() : this.originEvent.returnValue = !1;
-    }, t.prototype.stopPropagation = function() {
-        var t;
-        (null === (t = this.originEvent) || void 0 === t ? void 0 : t.stopPropagation) ? this.originEvent.stopPropagation() : this.originEvent.cancelBubble = !0;
-    }, t;
-}(), ut = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "key:down", e;
-    }
-    return $(e, t), e;
-}(ct), lt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "key:up", e;
-    }
-    return $(e, t), e;
-}(ct), dt = function(t) {
-    this.data = t;
-}, ht = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "drag:node", e;
-    }
-    return $(e, t), e;
-}(dt), pt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "drop:node", e;
-    }
-    return $(e, t), e;
-}(dt), ft = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "hover:node", e;
-    }
-    return $(e, t), e;
-}(dt), vt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "insert:after", e;
-    }
-    return $(e, t), e;
-}(dt), gt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "insert:before", e;
-    }
-    return $(e, t), e;
-}(dt), yt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "insert:children", e;
-    }
-    return $(e, t), e;
-}(dt), mt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "prepend:node", e;
-    }
-    return $(e, t), e;
-}(dt), wt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "remove:node", e;
-    }
-    return $(e, t), e;
-}(dt), bt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "select:node", e;
-    }
-    return $(e, t), e;
-}(dt), Et = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "unselect:node", e;
-    }
-    return $(e, t), e;
-}(dt), Nt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "update:children", e;
-    }
-    return $(e, t), e;
-}(dt), St = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "update:node:props", e;
-    }
-    return $(e, t), e;
-}(dt), kt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "wrap:node", e;
-    }
-    return $(e, t), e;
-}(dt), Rt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "clone:node", e;
-    }
-    return $(e, t), e;
-}(dt), Ct = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "append:node", e;
-    }
-    return $(e, t), e;
-}(dt), Pt = function(t) {
-    this.type = "from:node", this.data = t;
-}, Ot = function(e) {
-    this.data = e || {
-        scrollX: t.scrollX,
-        scrollY: t.scrollY,
-        width: t.innerWidth,
-        height: t.innerHeight,
-        innerWidth: t.innerWidth,
-        innerHeight: t.innerHeight,
-        view: t,
-        target: t
+        enumerable: false,
+        configurable: true
+    });
+    AbstractKeyboardEvent.prototype.preventDefault = function () {
+        if (this.originEvent.preventDefault) {
+            this.originEvent.preventDefault();
+        }
+        else {
+            this.originEvent.returnValue = false;
+        }
     };
-}, At = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "viewport:resize", e;
+    AbstractKeyboardEvent.prototype.stopPropagation = function () {
+        var _a;
+        if ((_a = this.originEvent) === null || _a === void 0 ? void 0 : _a.stopPropagation) {
+            this.originEvent.stopPropagation();
+        }
+        else {
+            this.originEvent.cancelBubble = true;
+        }
+    };
+    return AbstractKeyboardEvent;
+}());
+
+var KeyDownEvent = /** @class */ (function (_super) {
+    __extends(KeyDownEvent, _super);
+    function KeyDownEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'key:down';
+        return _this;
     }
-    return $(e, t), e;
-}(Ot), Dt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "viewport:scroll", e;
+    return KeyDownEvent;
+}(AbstractKeyboardEvent));
+
+var KeyUpEvent = /** @class */ (function (_super) {
+    __extends(KeyUpEvent, _super);
+    function KeyUpEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'key:up';
+        return _this;
     }
-    return $(e, t), e;
-}(Ot), xt = function(t) {
-    this.data = t;
-}, It = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "add:workspace", e;
+    return KeyUpEvent;
+}(AbstractKeyboardEvent));
+
+var AbstractMutationNodeEvent = /** @class */ (function () {
+    function AbstractMutationNodeEvent(data) {
+        this.data = data;
     }
-    return $(e, t), e;
-}(xt), Tt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "remove:workspace", e;
+    return AbstractMutationNodeEvent;
+}());
+
+var DragNodeEvent = /** @class */ (function (_super) {
+    __extends(DragNodeEvent, _super);
+    function DragNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'drag:node';
+        return _this;
     }
-    return $(e, t), e;
-}(xt), Wt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "switch:workspace", e;
+    return DragNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var DropNodeEvent = /** @class */ (function (_super) {
+    __extends(DropNodeEvent, _super);
+    function DropNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'drop:node';
+        return _this;
     }
-    return $(e, t), e;
-}(xt), Mt = function(t) {
-    this.data = t;
-}, Lt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "history:undo", e;
+    return DropNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var HoverNodeEvent = /** @class */ (function (_super) {
+    __extends(HoverNodeEvent, _super);
+    function HoverNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'hover:node';
+        return _this;
     }
-    return $(e, t), e;
-}(Mt), Bt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "history:redo", e;
+    return HoverNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var InsertAfterEvent = /** @class */ (function (_super) {
+    __extends(InsertAfterEvent, _super);
+    function InsertAfterEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'insert:after';
+        return _this;
     }
-    return $(e, t), e;
-}(Mt), jt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "history:goto", e;
+    return InsertAfterEvent;
+}(AbstractMutationNodeEvent));
+
+var InsertBeforeEvent = /** @class */ (function (_super) {
+    __extends(InsertBeforeEvent, _super);
+    function InsertBeforeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'insert:before';
+        return _this;
     }
-    return $(e, t), e;
-}(Mt), Xt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.type = "history:push", e;
+    return InsertBeforeEvent;
+}(AbstractMutationNodeEvent));
+
+var InsertChildrenEvent = /** @class */ (function (_super) {
+    __extends(InsertChildrenEvent, _super);
+    function InsertChildrenEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'insert:children';
+        return _this;
     }
-    return $(e, t), e;
-}(Mt), Yt = {
-    dragging: !1,
+    return InsertChildrenEvent;
+}(AbstractMutationNodeEvent));
+
+var PrependNodeEvent = /** @class */ (function (_super) {
+    __extends(PrependNodeEvent, _super);
+    function PrependNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'prepend:node';
+        return _this;
+    }
+    return PrependNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var RemoveNodeEvent = /** @class */ (function (_super) {
+    __extends(RemoveNodeEvent, _super);
+    function RemoveNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'remove:node';
+        return _this;
+    }
+    return RemoveNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var SelectNodeEvent = /** @class */ (function (_super) {
+    __extends(SelectNodeEvent, _super);
+    function SelectNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'select:node';
+        return _this;
+    }
+    return SelectNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var UnSelectNodeEvent = /** @class */ (function (_super) {
+    __extends(UnSelectNodeEvent, _super);
+    function UnSelectNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'unselect:node';
+        return _this;
+    }
+    return UnSelectNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var UpdateChildrenEvent = /** @class */ (function (_super) {
+    __extends(UpdateChildrenEvent, _super);
+    function UpdateChildrenEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'update:children';
+        return _this;
+    }
+    return UpdateChildrenEvent;
+}(AbstractMutationNodeEvent));
+
+var UpdateNodePropsEvent = /** @class */ (function (_super) {
+    __extends(UpdateNodePropsEvent, _super);
+    function UpdateNodePropsEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'update:node:props';
+        return _this;
+    }
+    return UpdateNodePropsEvent;
+}(AbstractMutationNodeEvent));
+
+var WrapNodeEvent = /** @class */ (function (_super) {
+    __extends(WrapNodeEvent, _super);
+    function WrapNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'wrap:node';
+        return _this;
+    }
+    return WrapNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var CloneNodeEvent = /** @class */ (function (_super) {
+    __extends(CloneNodeEvent, _super);
+    function CloneNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'clone:node';
+        return _this;
+    }
+    return CloneNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var AppendNodeEvent = /** @class */ (function (_super) {
+    __extends(AppendNodeEvent, _super);
+    function AppendNodeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'append:node';
+        return _this;
+    }
+    return AppendNodeEvent;
+}(AbstractMutationNodeEvent));
+
+var FromNodeEvent = /** @class */ (function () {
+    function FromNodeEvent(data) {
+        this.type = 'from:node';
+        this.data = data;
+    }
+    return FromNodeEvent;
+}());
+
+var AbstractViewportEvent = /** @class */ (function () {
+    function AbstractViewportEvent(data) {
+        this.data = data || {
+            scrollX: globalThisPolyfill.scrollX,
+            scrollY: globalThisPolyfill.scrollY,
+            width: globalThisPolyfill.innerWidth,
+            height: globalThisPolyfill.innerHeight,
+            innerWidth: globalThisPolyfill.innerWidth,
+            innerHeight: globalThisPolyfill.innerHeight,
+            view: globalThisPolyfill,
+            target: globalThisPolyfill,
+        };
+    }
+    return AbstractViewportEvent;
+}());
+
+var ViewportResizeEvent = /** @class */ (function (_super) {
+    __extends(ViewportResizeEvent, _super);
+    function ViewportResizeEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'viewport:resize';
+        return _this;
+    }
+    return ViewportResizeEvent;
+}(AbstractViewportEvent));
+
+var ViewportScrollEvent = /** @class */ (function (_super) {
+    __extends(ViewportScrollEvent, _super);
+    function ViewportScrollEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'viewport:scroll';
+        return _this;
+    }
+    return ViewportScrollEvent;
+}(AbstractViewportEvent));
+
+var AbstractWorkspaceEvent = /** @class */ (function () {
+    function AbstractWorkspaceEvent(data) {
+        this.data = data;
+    }
+    return AbstractWorkspaceEvent;
+}());
+
+var AddWorkspaceEvent = /** @class */ (function (_super) {
+    __extends(AddWorkspaceEvent, _super);
+    function AddWorkspaceEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'add:workspace';
+        return _this;
+    }
+    return AddWorkspaceEvent;
+}(AbstractWorkspaceEvent));
+
+var RemoveWorkspaceEvent = /** @class */ (function (_super) {
+    __extends(RemoveWorkspaceEvent, _super);
+    function RemoveWorkspaceEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'remove:workspace';
+        return _this;
+    }
+    return RemoveWorkspaceEvent;
+}(AbstractWorkspaceEvent));
+
+var SwitchWorkspaceEvent = /** @class */ (function (_super) {
+    __extends(SwitchWorkspaceEvent, _super);
+    function SwitchWorkspaceEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'switch:workspace';
+        return _this;
+    }
+    return SwitchWorkspaceEvent;
+}(AbstractWorkspaceEvent));
+
+var AbstractHistoryEvent = /** @class */ (function () {
+    function AbstractHistoryEvent(data) {
+        this.data = data;
+    }
+    return AbstractHistoryEvent;
+}());
+
+var HistoryUndoEvent = /** @class */ (function (_super) {
+    __extends(HistoryUndoEvent, _super);
+    function HistoryUndoEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'history:undo';
+        return _this;
+    }
+    return HistoryUndoEvent;
+}(AbstractHistoryEvent));
+
+var HistoryRedoEvent = /** @class */ (function (_super) {
+    __extends(HistoryRedoEvent, _super);
+    function HistoryRedoEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'history:redo';
+        return _this;
+    }
+    return HistoryRedoEvent;
+}(AbstractHistoryEvent));
+
+var HistoryGotoEvent = /** @class */ (function (_super) {
+    __extends(HistoryGotoEvent, _super);
+    function HistoryGotoEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'history:goto';
+        return _this;
+    }
+    return HistoryGotoEvent;
+}(AbstractHistoryEvent));
+
+var HistoryPushEvent = /** @class */ (function (_super) {
+    __extends(HistoryPushEvent, _super);
+    function HistoryPushEvent() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.type = 'history:push';
+        return _this;
+    }
+    return HistoryPushEvent;
+}(AbstractHistoryEvent));
+
+var GlobalState = {
+    dragging: false,
     onMouseDownAt: 0,
     startEvent: null,
-    moveEvent: null
-}, Vt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.mouseDownTimer = null, e.onMouseDown = function(t) {
-            var n, r;
-            if (0 === t.button && !t.ctrlKey && !t.metaKey) return !(!t.target["isContentEditable"] && "true" !== t.target["contentEditable"]) || void ((null === (r = null === (n = t.target) || void 0 === n ? void 0 : n["closest"]) || void 0 === r ? void 0 : r.call(n, ".monaco-editor")) || (Yt.startEvent = t, 
-            Yt.dragging = !1, Yt.onMouseDownAt = Date.now(), e.batchAddEventListener("mouseup", e.onMouseUp), 
-            e.batchAddEventListener("dragend", e.onMouseUp), e.batchAddEventListener("dragstart", e.onStartDrag), 
-            e.batchAddEventListener("mousemove", e.onDistanceChange)));
-        }, e.onMouseUp = function(t) {
-            Yt.dragging && e.dispatch(new ot({
-                clientX: t.clientX,
-                clientY: t.clientY,
-                pageX: t.pageX,
-                pageY: t.pageY,
-                target: t.target,
-                view: t.view
-            })), e.batchRemoveEventListener("contextmenu", e.onContextMenuWhileDragging, !0), 
-            e.batchRemoveEventListener("mouseup", e.onMouseUp), e.batchRemoveEventListener("mousedown", e.onMouseDown), 
-            e.batchRemoveEventListener("dragover", e.onMouseMove), e.batchRemoveEventListener("mousemove", e.onMouseMove), 
-            e.batchRemoveEventListener("mousemove", e.onDistanceChange), Yt.dragging = !1;
-        }, e.onMouseMove = function(t) {
-            var n, r;
-            t.clientX === (null === (n = Yt.moveEvent) || void 0 === n ? void 0 : n.clientX) && t.clientY === (null === (r = Yt.moveEvent) || void 0 === r ? void 0 : r.clientY) || (e.dispatch(new nt({
-                clientX: t.clientX,
-                clientY: t.clientY,
-                pageX: t.pageX,
-                pageY: t.pageY,
-                target: t.target,
-                view: t.view
-            })), Yt.moveEvent = t);
-        }, e.onContextMenuWhileDragging = function(t) {
-            t.preventDefault();
-        }, e.onStartDrag = function(t) {
-            Yt.dragging || (Yt.startEvent = Yt.startEvent || t, e.batchAddEventListener("dragover", e.onMouseMove), 
-            e.batchAddEventListener("mousemove", e.onMouseMove), e.batchAddEventListener("contextmenu", e.onContextMenuWhileDragging, !0), 
-            e.dispatch(new rt({
-                clientX: Yt.startEvent.clientX,
-                clientY: Yt.startEvent.clientY,
-                pageX: Yt.startEvent.pageX,
-                pageY: Yt.startEvent.pageY,
-                target: Yt.startEvent.target,
-                view: Yt.startEvent.view
-            })), Yt.dragging = !0);
-        }, e.onDistanceChange = function(t) {
-            var n = Math.sqrt(Math.pow(t.pageX - Yt.startEvent.pageX, 2) + Math.pow(t.pageY - Yt.startEvent.pageY, 2)), r = Date.now() - Yt.onMouseDownAt;
-            r > 10 && t !== Yt.startEvent && n > 4 && (e.batchRemoveEventListener("mousemove", e.onDistanceChange), 
-            e.onStartDrag(t));
-        }, e;
-    }
-    return $(e, t), e.prototype.attach = function() {
-        this.batchAddEventListener("mousedown", this.onMouseDown, !0);
-    }, e.prototype.detach = function() {
-        Yt.dragging = !1, Yt.moveEvent = null, Yt.onMouseDownAt = null, Yt.startEvent = null, 
-        this.batchRemoveEventListener("mousedown", this.onMouseDown, !0), this.batchRemoveEventListener("dragstart", this.onStartDrag), 
-        this.batchRemoveEventListener("dragend", this.onMouseUp), this.batchRemoveEventListener("dragover", this.onMouseMove), 
-        this.batchRemoveEventListener("mouseup", this.onMouseUp), this.batchRemoveEventListener("mousemove", this.onMouseMove), 
-        this.batchRemoveEventListener("mousemove", this.onDistanceChange), this.batchRemoveEventListener("contextmenu", this.onContextMenuWhileDragging, !0);
-    }, e;
-}(n), zt = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.onMouseClick = function(t) {
-            var n = t.target;
-            (null == n ? void 0 : n.closest("*[".concat(e.engine.props.clickStopPropagationAttrName, "]"))) || e.dispatch(new it({
-                clientX: t.clientX,
-                clientY: t.clientY,
-                pageX: t.pageX,
-                pageY: t.pageY,
-                target: t.target,
-                view: t.view
-            }));
-        }, e.onMouseDoubleClick = function(t) {
-            var n = t.target;
-            (null == n ? void 0 : n.closest("*[".concat(e.engine.props.clickStopPropagationAttrName, "]"))) || e.dispatch(new st({
-                clientX: t.clientX,
-                clientY: t.clientY,
-                pageX: t.pageX,
-                pageY: t.pageY,
-                target: t.target,
-                view: t.view
-            }));
-        }, e;
-    }
-    return $(e, t), e.prototype.attach = function() {
-        this.addEventListener("click", this.onMouseClick, {
-            mode: "onlyChild"
-        }), this.addEventListener("dblclick", this.onMouseDoubleClick, {
-            mode: "onlyChild"
-        });
-    }, e.prototype.detach = function() {
-        this.removeEventListener("click", this.onMouseClick, {
-            mode: "onlyChild"
-        }), this.removeEventListener("dblclick", this.onMouseDoubleClick, {
-            mode: "onlyChild"
-        });
-    }, e;
-}(n), Ft = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.request = null, e.onMouseMove = function(t) {
-            e.request = requestAnimationFrame((function() {
-                cancelAnimationFrame(e.request), e.dispatch(new at({
-                    clientX: t.clientX,
-                    clientY: t.clientY,
-                    pageX: t.pageX,
-                    pageY: t.pageY,
-                    target: t.target,
-                    view: t.view
+    moveEvent: null,
+};
+var DragDropDriver = /** @class */ (function (_super) {
+    __extends(DragDropDriver, _super);
+    function DragDropDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.mouseDownTimer = null;
+        _this.onMouseDown = function (e) {
+            var _a, _b;
+            if (e.button !== 0 || e.ctrlKey || e.metaKey) {
+                return;
+            }
+            if (e.target['isContentEditable'] ||
+                e.target['contentEditable'] === 'true') {
+                return true;
+            }
+            if ((_b = (_a = e.target) === null || _a === void 0 ? void 0 : _a['closest']) === null || _b === void 0 ? void 0 : _b.call(_a, '.monaco-editor'))
+                return;
+            GlobalState.startEvent = e;
+            GlobalState.dragging = false;
+            GlobalState.onMouseDownAt = Date.now();
+            _this.batchAddEventListener('mouseup', _this.onMouseUp);
+            _this.batchAddEventListener('dragend', _this.onMouseUp);
+            _this.batchAddEventListener('dragstart', _this.onStartDrag);
+            _this.batchAddEventListener('mousemove', _this.onDistanceChange);
+        };
+        _this.onMouseUp = function (e) {
+            if (GlobalState.dragging) {
+                _this.dispatch(new DragStopEvent({
+                    clientX: e.clientX,
+                    clientY: e.clientY,
+                    pageX: e.pageX,
+                    pageY: e.pageY,
+                    target: e.target,
+                    view: e.view,
                 }));
+            }
+            _this.batchRemoveEventListener('contextmenu', _this.onContextMenuWhileDragging, true);
+            _this.batchRemoveEventListener('mouseup', _this.onMouseUp);
+            _this.batchRemoveEventListener('mousedown', _this.onMouseDown);
+            _this.batchRemoveEventListener('dragover', _this.onMouseMove);
+            _this.batchRemoveEventListener('mousemove', _this.onMouseMove);
+            _this.batchRemoveEventListener('mousemove', _this.onDistanceChange);
+            GlobalState.dragging = false;
+        };
+        _this.onMouseMove = function (e) {
+            var _a, _b;
+            if (e.clientX === ((_a = GlobalState.moveEvent) === null || _a === void 0 ? void 0 : _a.clientX) &&
+                e.clientY === ((_b = GlobalState.moveEvent) === null || _b === void 0 ? void 0 : _b.clientY))
+                return;
+            _this.dispatch(new DragMoveEvent({
+                clientX: e.clientX,
+                clientY: e.clientY,
+                pageX: e.pageX,
+                pageY: e.pageY,
+                target: e.target,
+                view: e.view,
             }));
-        }, e;
-    }
-    return $(e, t), e.prototype.attach = function() {
-        this.addEventListener("mousemove", this.onMouseMove, {
-            mode: "onlyOne"
-        });
-    }, e.prototype.detach = function() {
-        this.removeEventListener("mouseover", this.onMouseMove, {
-            mode: "onlyOne"
-        });
-    }, e;
-}(n), qt = function(e) {
-    function n() {
-        var t = e.apply(this, tt([], Q(arguments), !1)) || this;
-        return t.request = null, t.resizeObserver = null, t.onResize = function(e) {
-            e.preventDefault && e.preventDefault(), t.request = requestAnimationFrame((function() {
-                cancelAnimationFrame(t.request), t.dispatch(new At({
-                    scrollX: t.contentWindow.scrollX,
-                    scrollY: t.contentWindow.scrollY,
-                    width: t.contentWindow.innerWidth,
-                    height: t.contentWindow.innerHeight,
-                    innerHeight: t.contentWindow.innerHeight,
-                    innerWidth: t.contentWindow.innerWidth,
-                    view: t.contentWindow,
-                    target: e.target || t.container
-                }));
+            GlobalState.moveEvent = e;
+        };
+        _this.onContextMenuWhileDragging = function (e) {
+            e.preventDefault();
+        };
+        _this.onStartDrag = function (e) {
+            if (GlobalState.dragging)
+                return;
+            GlobalState.startEvent = GlobalState.startEvent || e;
+            _this.batchAddEventListener('dragover', _this.onMouseMove);
+            _this.batchAddEventListener('mousemove', _this.onMouseMove);
+            _this.batchAddEventListener('contextmenu', _this.onContextMenuWhileDragging, true);
+            _this.dispatch(new DragStartEvent({
+                clientX: GlobalState.startEvent.clientX,
+                clientY: GlobalState.startEvent.clientY,
+                pageX: GlobalState.startEvent.pageX,
+                pageY: GlobalState.startEvent.pageY,
+                target: GlobalState.startEvent.target,
+                view: GlobalState.startEvent.view,
             }));
-        }, t;
+            GlobalState.dragging = true;
+        };
+        _this.onDistanceChange = function (e) {
+            var distance = Math.sqrt(Math.pow(e.pageX - GlobalState.startEvent.pageX, 2) +
+                Math.pow(e.pageY - GlobalState.startEvent.pageY, 2));
+            var timeDelta = Date.now() - GlobalState.onMouseDownAt;
+            if (timeDelta > 10 && e !== GlobalState.startEvent && distance > 4) {
+                _this.batchRemoveEventListener('mousemove', _this.onDistanceChange);
+                _this.onStartDrag(e);
+            }
+        };
+        return _this;
     }
-    return $(n, e), n.prototype.attach = function() {
-        this.contentWindow && this.contentWindow !== t ? this.addEventListener("resize", this.onResize) : this.container && this.container !== document && (this.resizeObserver = new H(this.onResize), 
-        this.resizeObserver.observe(this.container));
-    }, n.prototype.detach = function() {
-        this.contentWindow && this.contentWindow !== t ? this.removeEventListener("resize", this.onResize) : this.resizeObserver && this.container && this.container !== document && (this.resizeObserver.unobserve(this.container), 
-        this.resizeObserver.disconnect());
-    }, n;
-}(n), Ht = function(e) {
-    function n() {
-        var n = e.apply(this, tt([], Q(arguments), !1)) || this;
-        return n.request = null, n.onScroll = function(e) {
-            e.preventDefault(), n.request = t.requestAnimationFrame((function() {
-                n.dispatch(new Dt({
-                    scrollX: n.contentWindow.scrollX,
-                    scrollY: n.contentWindow.scrollY,
-                    width: n.contentWindow.document.body.clientWidth,
-                    height: n.contentWindow.document.body.clientHeight,
-                    innerHeight: n.contentWindow.innerHeight,
-                    innerWidth: n.contentWindow.innerWidth,
-                    view: n.contentWindow,
-                    target: e.target
-                })), cancelAnimationFrame(n.request);
-            }));
-        }, n;
-    }
-    return $(n, e), n.prototype.attach = function() {
-        this.addEventListener("scroll", this.onScroll);
-    }, n.prototype.detach = function() {
-        this.removeEventListener("scroll", this.onScroll);
-    }, n;
-}(n);
+    DragDropDriver.prototype.attach = function () {
+        this.batchAddEventListener('mousedown', this.onMouseDown, true);
+    };
+    DragDropDriver.prototype.detach = function () {
+        GlobalState.dragging = false;
+        GlobalState.moveEvent = null;
+        GlobalState.onMouseDownAt = null;
+        GlobalState.startEvent = null;
+        this.batchRemoveEventListener('mousedown', this.onMouseDown, true);
+        this.batchRemoveEventListener('dragstart', this.onStartDrag);
+        this.batchRemoveEventListener('dragend', this.onMouseUp);
+        this.batchRemoveEventListener('dragover', this.onMouseMove);
+        this.batchRemoveEventListener('mouseup', this.onMouseUp);
+        this.batchRemoveEventListener('mousemove', this.onMouseMove);
+        this.batchRemoveEventListener('mousemove', this.onDistanceChange);
+        this.batchRemoveEventListener('contextmenu', this.onContextMenuWhileDragging, true);
+    };
+    return DragDropDriver;
+}(EventDriver));
 
-var Ut, Kt, _t, $t = function(t) {
-    function e() {
-        var e = t.apply(this, tt([], Q(arguments), !1)) || this;
-        return e.onKeyDown = function(t) {
-            var n, r, o, i;
-            (n = t, r = n.target, o = r.tagName, i = !0, (r["isContentEditable"] || ("INPUT" === o || "TEXTAREA" === o || "SELECT" === o || customElements.get(o.toLocaleLowerCase())) && !r.readOnly) && (i = !1), 
-            i) && e.dispatch(new ut(t));
-        }, e.onKeyUp = function(t) {
-            e.dispatch(new lt(t));
-        }, e;
-    }
-    return $(e, t), e.prototype.attach = function() {
-        this.addEventListener("keydown", this.onKeyDown, {
-            mode: "onlyParent"
-        }), this.addEventListener("keyup", this.onKeyUp, {
-            mode: "onlyParent"
-        });
-    }, e.prototype.detach = function() {
-        this.removeEventListener("keydown", this.onKeyDown, {
-            mode: "onlyParent"
-        }), this.removeEventListener("keyup", this.onKeyUp, {
-            mode: "onlyParent"
-        });
-    }, e;
-}(n), Gt = function(t) {
-    return String(t).replace(/\s+/g, "_").toLocaleLowerCase();
-}, Zt = function(t, e) {
-    if (r(t) && r(e)) return o(e, (function(e, n) {
-        var r = Gt(n), o = Zt(t[n] || t[r], e);
-        t[r] = o;
-    })), t;
-    if (r(e)) {
-        var n = Array.isArray(e) ? [] : {};
-        return o(e, (function(t, e) {
-            var r = Zt(void 0, t);
-            n[Gt(e)] = r;
-        })), n;
-    }
-    return e;
-}, Jt = function(t) {
-    var e = re.value, n = Gt(t);
-    return ne.value[n] ? n : (o(ne.value, (function(t, r) {
-        if (r.indexOf(n) > -1 || String(n).indexOf(r) > -1) return e = r, !1;
-    })), e);
-}, Qt = function(t, e) {
-    var n = function(e) {
-        return t.includes(e);
-    }, r = function(t) {
-        for (var n in e) for (var r = e[n].Behavior, o = 0; o < r.length; o++) if (r[o].name === t) return r[o];
-    };
-    o(e, (function(e) {
-        if (e && rn(e)) {
-            var i = e.Behavior;
-            o(i, (function(e) {
-                if (!n(e)) {
-                    var i = e.name;
-                    o(e.extends, (function(e) {
-                        var o = r(e);
-                        if (!o) throw new Error("No ".concat(e, " behavior that ").concat(i, " depends on"));
-                        n(o) || t.unshift(o);
-                    })), t.push(e);
-                }
+var MouseClickDriver = /** @class */ (function (_super) {
+    __extends(MouseClickDriver, _super);
+    function MouseClickDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.onMouseClick = function (e) {
+            var target = e.target;
+            if (target === null || target === void 0 ? void 0 : target.closest("*[".concat(_this.engine.props.clickStopPropagationAttrName, "]"))) {
+                return;
+            }
+            _this.dispatch(new MouseClickEvent({
+                clientX: e.clientX,
+                clientY: e.clientY,
+                pageX: e.pageX,
+                pageY: e.pageY,
+                target: e.target,
+                view: e.view,
             }));
-        }
-    }));
-}, te = Y.ref([]), ee = Y.ref({}), ne = Y.ref({}), re = Y.ref(function() {
-    var e;
-    return t.navigator && (t.navigator["browserlanguage"] || (null === (e = t.navigator) || void 0 === e ? void 0 : e.language)) || "en";
-}()), oe = {
-    setDesignerLanguage: function(t) {
-        re.value = t;
-    },
-    setDesignerBehaviors: function(t) {
-        te.value = t.reduce((function(t, e) {
-            return rn(e) ? t.concat(e.Behavior) : on(e) ? t.concat(e) : t;
-        }), []);
-    },
-    getDesignerBehaviors: function(t) {
-        return te.value.filter((function(e) {
-            return e.selector(t);
-        }));
-    },
-    getDesignerIcon: function(t) {
-        return ee[t];
-    },
-    getDesignerLanguage: function() {
-        return Jt(re.value);
-    },
-    getDesignerMessage: function(t, e) {
-        var n = Jt(re.value), r = e ? e[n] : ne.value[n];
-        if (r) return U.getIn(r, Gt(t));
-        for (var o in ne.value) {
-            var i = U.getIn(ne.value[o], Gt(t));
-            if (i) return i;
-        }
-    },
-    registerDesignerIcons: function(t) {
-        Object.assign(ee, t);
-    },
-    registerDesignerLocales: function() {
-        for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-        t.forEach((function(t) {
-            Zt(ne.value, t);
-        }));
-    },
-    registerDesignerBehaviors: function() {
-        for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-        var n = [];
-        t.forEach((function(t) {
-            Qt(n, t);
-        })), n.length && (te.value = n);
+        };
+        _this.onMouseDoubleClick = function (e) {
+            var target = e.target;
+            if (target === null || target === void 0 ? void 0 : target.closest("*[".concat(_this.engine.props.clickStopPropagationAttrName, "]"))) {
+                return;
+            }
+            _this.dispatch(new MouseDoubleClickEvent({
+                clientX: e.clientX,
+                clientY: e.clientY,
+                pageX: e.pageX,
+                pageY: e.pageY,
+                target: e.target,
+                view: e.view,
+            }));
+        };
+        return _this;
     }
-}, ie = oe, se = new Map, ae = new Map, ce = function(t) {
-    t.parent && (t.parent.children = t.parent.children.filter((function(e) {
-        return e !== t;
-    })));
-}, ue = function(t, e) {
-    var n = function(t) {
-        t.depth = t.parent ? t.parent.depth + 1 : 0, t.children.forEach(n);
-    }, r = function(t) {
-        t.parent = e, t.root = e.root, n(t);
-    }, o = function(t) {
-        r(t), ue(t.children, t);
-    };
-    return t.map((function(t) {
-        var i;
-        return t === e || (e.isSourceNode ? o(t) : t.isSourceNode ? (t = t.clone(e), n(t)) : !t.isRoot && t.isInOperation ? (null === (i = t.operation) || void 0 === i || i.selection.remove(t), 
-        ce(t), r(t)) : o(t), se.has(t.id) || (se.set(t.id, t), ae.set(t.componentName, t.designerProps))), 
-        t;
-    }));
-}, le = function(t, e) {
-    return ue([ t ], e)[0];
-}, de = function() {
-    function t(e, n) {
-        if (this.depth = 0, this.hidden = !1, this.componentName = "NO_NAME_COMPONENT", 
-        this.sourceName = "", this.props = {}, this.children = [], e instanceof t) return e;
-        this.id = e.id || s(), n ? (this.parent = n, this.depth = n.depth + 1, this.root = n.root, 
-        se.set(this.id, this)) : (this.root = this, this.rootOperation = e.operation, this.isSelfSourceNode = e.isSourceNode || !1, 
-        se.set(this.id, this)), e && this.from(e), this.makeObservable();
-    }
-    return t.prototype.makeObservable = function() {
-        V(this, {
-            componentName: Y.ref,
-            props: Y,
-            hidden: Y.ref,
-            children: Y.shallow,
-            designerProps: Y.computed,
-            designerLocales: Y.computed,
-            wrap: z,
-            prepend: z,
-            append: z,
-            insertAfter: z,
-            insertBefore: z,
-            remove: z,
-            setProps: z,
-            setChildren: z,
-            setComponentName: z
+    MouseClickDriver.prototype.attach = function () {
+        this.addEventListener('click', this.onMouseClick, {
+            mode: 'onlyChild',
         });
-    }, Object.defineProperty(t.prototype, "designerProps", {
-        get: function() {
-            var t = this, e = ie.getDesignerBehaviors(this), n = e.reduce((function(e, n) {
-                return n.designerProps ? (Object.assign(e, (r = t, o = n.designerProps, i(o) ? o(r) : o)), 
-                e) : e;
-                var r, o;
-            }), {});
-            return n;
+        this.addEventListener('dblclick', this.onMouseDoubleClick, {
+            mode: 'onlyChild',
+        });
+    };
+    MouseClickDriver.prototype.detach = function () {
+        this.removeEventListener('click', this.onMouseClick, {
+            mode: 'onlyChild',
+        });
+        this.removeEventListener('dblclick', this.onMouseDoubleClick, {
+            mode: 'onlyChild',
+        });
+    };
+    return MouseClickDriver;
+}(EventDriver));
+
+var MouseMoveDriver = /** @class */ (function (_super) {
+    __extends(MouseMoveDriver, _super);
+    function MouseMoveDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.request = null;
+        _this.onMouseMove = function (e) {
+            _this.request = requestAnimationFrame(function () {
+                cancelAnimationFrame(_this.request);
+                _this.dispatch(new MouseMoveEvent({
+                    clientX: e.clientX,
+                    clientY: e.clientY,
+                    pageX: e.pageX,
+                    pageY: e.pageY,
+                    target: e.target,
+                    view: e.view,
+                }));
+            });
+        };
+        return _this;
+    }
+    MouseMoveDriver.prototype.attach = function () {
+        this.addEventListener('mousemove', this.onMouseMove, {
+            mode: 'onlyOne',
+        });
+    };
+    MouseMoveDriver.prototype.detach = function () {
+        this.removeEventListener('mouseover', this.onMouseMove, {
+            mode: 'onlyOne',
+        });
+    };
+    return MouseMoveDriver;
+}(EventDriver));
+
+var ViewportResizeDriver = /** @class */ (function (_super) {
+    __extends(ViewportResizeDriver, _super);
+    function ViewportResizeDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.request = null;
+        _this.resizeObserver = null;
+        _this.onResize = function (e) {
+            if (e.preventDefault)
+                e.preventDefault();
+            _this.request = requestAnimationFrame(function () {
+                cancelAnimationFrame(_this.request);
+                _this.dispatch(new ViewportResizeEvent({
+                    scrollX: _this.contentWindow.scrollX,
+                    scrollY: _this.contentWindow.scrollY,
+                    width: _this.contentWindow.innerWidth,
+                    height: _this.contentWindow.innerHeight,
+                    innerHeight: _this.contentWindow.innerHeight,
+                    innerWidth: _this.contentWindow.innerWidth,
+                    view: _this.contentWindow,
+                    target: e.target || _this.container,
+                }));
+            });
+        };
+        return _this;
+    }
+    ViewportResizeDriver.prototype.attach = function () {
+        if (this.contentWindow && this.contentWindow !== globalThisPolyfill) {
+            this.addEventListener('resize', this.onResize);
+        }
+        else {
+            if (this.container && this.container !== document) {
+                this.resizeObserver = new ResizeObserver(this.onResize);
+                this.resizeObserver.observe(this.container);
+            }
+        }
+    };
+    ViewportResizeDriver.prototype.detach = function () {
+        if (this.contentWindow && this.contentWindow !== globalThisPolyfill) {
+            this.removeEventListener('resize', this.onResize);
+        }
+        else if (this.resizeObserver) {
+            if (this.container && this.container !== document) {
+                this.resizeObserver.unobserve(this.container);
+                this.resizeObserver.disconnect();
+            }
+        }
+    };
+    return ViewportResizeDriver;
+}(EventDriver));
+
+var ViewportScrollDriver = /** @class */ (function (_super) {
+    __extends(ViewportScrollDriver, _super);
+    function ViewportScrollDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.request = null;
+        _this.onScroll = function (e) {
+            e.preventDefault();
+            _this.request = globalThisPolyfill.requestAnimationFrame(function () {
+                _this.dispatch(new ViewportScrollEvent({
+                    scrollX: _this.contentWindow.scrollX,
+                    scrollY: _this.contentWindow.scrollY,
+                    width: _this.contentWindow.document.body.clientWidth,
+                    height: _this.contentWindow.document.body.clientHeight,
+                    innerHeight: _this.contentWindow.innerHeight,
+                    innerWidth: _this.contentWindow.innerWidth,
+                    view: _this.contentWindow,
+                    target: e.target,
+                }));
+                cancelAnimationFrame(_this.request);
+            });
+        };
+        return _this;
+    }
+    ViewportScrollDriver.prototype.attach = function () {
+        this.addEventListener('scroll', this.onScroll);
+    };
+    ViewportScrollDriver.prototype.detach = function () {
+        this.removeEventListener('scroll', this.onScroll);
+    };
+    return ViewportScrollDriver;
+}(EventDriver));
+
+function filter(event) {
+    var target = event.target;
+    var tagName = target.tagName;
+    var flag = true;
+    // ignore: isContentEditable === 'true', <input> and <textarea> when readOnly state is false, <select>、Web Components
+    if (target['isContentEditable'] ||
+        ((tagName === 'INPUT' ||
+            tagName === 'TEXTAREA' ||
+            tagName === 'SELECT' ||
+            customElements.get(tagName.toLocaleLowerCase())) &&
+            !target.readOnly)) {
+        flag = false;
+    }
+    return flag;
+}
+var KeyboardDriver = /** @class */ (function (_super) {
+    __extends(KeyboardDriver, _super);
+    function KeyboardDriver() {
+        var _this = _super.apply(this, __spreadArray([], __read(arguments), false)) || this;
+        _this.onKeyDown = function (e) {
+            if (!filter(e))
+                return;
+            _this.dispatch(new KeyDownEvent(e));
+        };
+        _this.onKeyUp = function (e) {
+            _this.dispatch(new KeyUpEvent(e));
+        };
+        return _this;
+    }
+    KeyboardDriver.prototype.attach = function () {
+        this.addEventListener('keydown', this.onKeyDown, {
+            mode: 'onlyParent',
+        });
+        this.addEventListener('keyup', this.onKeyUp, {
+            mode: 'onlyParent',
+        });
+    };
+    KeyboardDriver.prototype.detach = function () {
+        this.removeEventListener('keydown', this.onKeyDown, {
+            mode: 'onlyParent',
+        });
+        this.removeEventListener('keyup', this.onKeyUp, {
+            mode: 'onlyParent',
+        });
+    };
+    return KeyboardDriver;
+}(EventDriver));
+
+var lowerSnake = function (str) {
+    return String(str).replace(/\s+/g, '_').toLocaleLowerCase();
+};
+var mergeLocales = function (target, source) {
+    if (isPlainObj(target) && isPlainObj(source)) {
+        each(source, function (value, key) {
+            var token = lowerSnake(key);
+            var messages = mergeLocales(target[key] || target[token], value);
+            target[token] = messages;
+        });
+        return target;
+    }
+    else if (isPlainObj(source)) {
+        var result_1 = Array.isArray(source) ? [] : {};
+        each(source, function (value, key) {
+            var messages = mergeLocales(undefined, value);
+            result_1[lowerSnake(key)] = messages;
+        });
+        return result_1;
+    }
+    return source;
+};
+var getBrowserLanguage = function () {
+    var _a;
+    /* istanbul ignore next */
+    if (!globalThisPolyfill.navigator) {
+        return 'en';
+    }
+    return (globalThisPolyfill.navigator['browserlanguage'] ||
+        ((_a = globalThisPolyfill.navigator) === null || _a === void 0 ? void 0 : _a.language) ||
+        'en');
+};
+
+var getISOCode = function (language) {
+    var isoCode = DESIGNER_LANGUAGE_STORE.value;
+    var lang = lowerSnake(language);
+    if (DESIGNER_LOCALES_STORE.value[lang]) {
+        return lang;
+    }
+    each(DESIGNER_LOCALES_STORE.value, function (_, key) {
+        if (key.indexOf(lang) > -1 || String(lang).indexOf(key) > -1) {
+            isoCode = key;
+            return false;
+        }
+    });
+    return isoCode;
+};
+var reSortBehaviors = function (target, sources) {
+    var findTargetBehavior = function (behavior) { return target.includes(behavior); };
+    var findSourceBehavior = function (name) {
+        for (var key in sources) {
+            var Behavior = sources[key].Behavior;
+            for (var i = 0; i < Behavior.length; i++) {
+                if (Behavior[i].name === name)
+                    return Behavior[i];
+            }
+        }
+    };
+    each(sources, function (item) {
+        if (!item)
+            return;
+        if (!isBehaviorHost(item))
+            return;
+        var Behavior = item.Behavior;
+        each(Behavior, function (behavior) {
+            if (findTargetBehavior(behavior))
+                return;
+            var name = behavior.name;
+            each(behavior.extends, function (dep) {
+                var behavior = findSourceBehavior(dep);
+                if (!behavior)
+                    throw new Error("No ".concat(dep, " behavior that ").concat(name, " depends on"));
+                if (!findTargetBehavior(behavior)) {
+                    target.unshift(behavior);
+                }
+            });
+            target.push(behavior);
+        });
+    });
+};
+var DESIGNER_BEHAVIORS_STORE = observable.ref([]);
+var DESIGNER_ICONS_STORE = observable.ref({});
+var DESIGNER_LOCALES_STORE = observable.ref({});
+var DESIGNER_LANGUAGE_STORE = observable.ref(getBrowserLanguage());
+var DESIGNER_GlobalRegistry = {
+    setDesignerLanguage: function (lang) {
+        DESIGNER_LANGUAGE_STORE.value = lang;
+    },
+    setDesignerBehaviors: function (behaviors) {
+        DESIGNER_BEHAVIORS_STORE.value = behaviors.reduce(function (buf, behavior) {
+            if (isBehaviorHost(behavior)) {
+                return buf.concat(behavior.Behavior);
+            }
+            else if (isBehaviorList(behavior)) {
+                return buf.concat(behavior);
+            }
+            return buf;
+        }, []);
+    },
+    getDesignerBehaviors: function (node) {
+        return DESIGNER_BEHAVIORS_STORE.value.filter(function (pattern) {
+            return pattern.selector(node);
+        });
+    },
+    getDesignerIcon: function (name) {
+        return DESIGNER_ICONS_STORE[name];
+    },
+    getDesignerLanguage: function () {
+        return getISOCode(DESIGNER_LANGUAGE_STORE.value);
+    },
+    getDesignerMessage: function (token, locales) {
+        var lang = getISOCode(DESIGNER_LANGUAGE_STORE.value);
+        var locale = locales ? locales[lang] : DESIGNER_LOCALES_STORE.value[lang];
+        if (!locale) {
+            for (var key in DESIGNER_LOCALES_STORE.value) {
+                var message = Path.getIn(DESIGNER_LOCALES_STORE.value[key], lowerSnake(token));
+                if (message)
+                    return message;
+            }
+            return;
+        }
+        return Path.getIn(locale, lowerSnake(token));
+    },
+    registerDesignerIcons: function (map) {
+        Object.assign(DESIGNER_ICONS_STORE, map);
+    },
+    registerDesignerLocales: function () {
+        var packages = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            packages[_i] = arguments[_i];
+        }
+        packages.forEach(function (locales) {
+            mergeLocales(DESIGNER_LOCALES_STORE.value, locales);
+        });
+    },
+    registerDesignerBehaviors: function () {
+        var packages = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            packages[_i] = arguments[_i];
+        }
+        var results = [];
+        packages.forEach(function (sources) {
+            reSortBehaviors(results, sources);
+        });
+        if (results.length) {
+            DESIGNER_BEHAVIORS_STORE.value = results;
+        }
+    },
+};
+var GlobalRegistry = DESIGNER_GlobalRegistry;
+
+var TreeNodes = new Map();
+var CommonDesignerPropsMap = new Map();
+var removeNode = function (node) {
+    if (node.parent) {
+        node.parent.children = node.parent.children.filter(function (child) { return child !== node; });
+    }
+};
+var resetNodesParent = function (nodes, parent) {
+    var resetDepth = function (node) {
+        node.depth = node.parent ? node.parent.depth + 1 : 0;
+        node.children.forEach(resetDepth);
+    };
+    var shallowReset = function (node) {
+        node.parent = parent;
+        node.root = parent.root;
+        resetDepth(node);
+    };
+    var deepReset = function (node) {
+        shallowReset(node);
+        resetNodesParent(node.children, node);
+    };
+    return nodes.map(function (node) {
+        var _a;
+        if (node === parent)
+            return node;
+        if (!parent.isSourceNode) {
+            if (node.isSourceNode) {
+                node = node.clone(parent);
+                resetDepth(node);
+            }
+            else if (!node.isRoot && node.isInOperation) {
+                (_a = node.operation) === null || _a === void 0 ? void 0 : _a.selection.remove(node);
+                removeNode(node);
+                shallowReset(node);
+            }
+            else {
+                deepReset(node);
+            }
+        }
+        else {
+            deepReset(node);
+        }
+        if (!TreeNodes.has(node.id)) {
+            TreeNodes.set(node.id, node);
+            CommonDesignerPropsMap.set(node.componentName, node.designerProps);
+        }
+        return node;
+    });
+};
+var resetParent = function (node, parent) {
+    return resetNodesParent([node], parent)[0];
+};
+var resolveDesignerProps = function (node, props) {
+    if (isFn(props))
+        return props(node);
+    return props;
+};
+var TreeNode = /** @class */ (function () {
+    function TreeNode(node, parent) {
+        this.depth = 0;
+        this.hidden = false;
+        this.componentName = 'NO_NAME_COMPONENT';
+        this.sourceName = '';
+        this.props = {};
+        this.children = [];
+        if (node instanceof TreeNode) {
+            return node;
+        }
+        this.id = node.id || uid();
+        if (parent) {
+            this.parent = parent;
+            this.depth = parent.depth + 1;
+            this.root = parent.root;
+            TreeNodes.set(this.id, this);
+        }
+        else {
+            this.root = this;
+            this.rootOperation = node.operation;
+            this.isSelfSourceNode = node.isSourceNode || false;
+            TreeNodes.set(this.id, this);
+        }
+        if (node) {
+            this.from(node);
+        }
+        this.makeObservable();
+    }
+    TreeNode.prototype.makeObservable = function () {
+        define(this, {
+            componentName: observable.ref,
+            props: observable,
+            hidden: observable.ref,
+            children: observable.shallow,
+            designerProps: observable.computed,
+            designerLocales: observable.computed,
+            wrap: action,
+            prepend: action,
+            append: action,
+            insertAfter: action,
+            insertBefore: action,
+            remove: action,
+            setProps: action,
+            setChildren: action,
+            setComponentName: action,
+        });
+    };
+    Object.defineProperty(TreeNode.prototype, "designerProps", {
+        get: function () {
+            var _this = this;
+            var behaviors = GlobalRegistry.getDesignerBehaviors(this);
+            var designerProps = behaviors.reduce(function (buf, pattern) {
+                if (!pattern.designerProps)
+                    return buf;
+                Object.assign(buf, resolveDesignerProps(_this, pattern.designerProps));
+                return buf;
+            }, {});
+            return designerProps;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "designerLocales", {
-        get: function() {
-            var t = ie.getDesignerBehaviors(this), e = t.reduce((function(t, e) {
-                return e.designerLocales ? (Zt(t, e.designerLocales), t) : t;
-            }), {});
-            return e;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "designerLocales", {
+        get: function () {
+            var behaviors = GlobalRegistry.getDesignerBehaviors(this);
+            var designerLocales = behaviors.reduce(function (buf, pattern) {
+                if (!pattern.designerLocales)
+                    return buf;
+                mergeLocales(buf, pattern.designerLocales);
+                return buf;
+            }, {});
+            return designerLocales;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "previous", {
-        get: function() {
-            if (this.parent !== this && this.parent) return this.parent.children[this.index - 1];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "previous", {
+        get: function () {
+            if (this.parent === this || !this.parent)
+                return;
+            return this.parent.children[this.index - 1];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "next", {
-        get: function() {
-            if (this.parent !== this && this.parent) return this.parent.children[this.index + 1];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "next", {
+        get: function () {
+            if (this.parent === this || !this.parent)
+                return;
+            return this.parent.children[this.index + 1];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "siblings", {
-        get: function() {
-            var t = this;
-            return this.parent ? this.parent.children.filter((function(e) {
-                return e !== t;
-            })) : [];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "siblings", {
+        get: function () {
+            var _this = this;
+            if (this.parent) {
+                return this.parent.children.filter(function (node) { return node !== _this; });
+            }
+            return [];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "index", {
-        get: function() {
-            return this.parent !== this && this.parent ? this.parent.children.indexOf(this) : 0;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "index", {
+        get: function () {
+            if (this.parent === this || !this.parent)
+                return 0;
+            return this.parent.children.indexOf(this);
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "descendants", {
-        get: function() {
-            return this.children.reduce((function(t, e) {
-                return t.concat(e).concat(e.descendants);
-            }), []);
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "descendants", {
+        get: function () {
+            return this.children.reduce(function (buf, node) {
+                return buf.concat(node).concat(node.descendants);
+            }, []);
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "isRoot", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "isRoot", {
+        get: function () {
             return this === this.root;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "isInOperation", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "isInOperation", {
+        get: function () {
             return !!this.operation;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "lastChild", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "lastChild", {
+        get: function () {
             return this.children[this.children.length - 1];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "firstChild", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "firstChild", {
+        get: function () {
             return this.children[0];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "isSourceNode", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "isSourceNode", {
+        get: function () {
             return this.root.isSelfSourceNode;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "operation", {
-        get: function() {
-            var t;
-            return null === (t = this.root) || void 0 === t ? void 0 : t.rootOperation;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "operation", {
+        get: function () {
+            var _a;
+            return (_a = this.root) === null || _a === void 0 ? void 0 : _a.rootOperation;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "viewport", {
-        get: function() {
-            var t, e;
-            return null === (e = null === (t = this.operation) || void 0 === t ? void 0 : t.workspace) || void 0 === e ? void 0 : e.viewport;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "viewport", {
+        get: function () {
+            var _a, _b;
+            return (_b = (_a = this.operation) === null || _a === void 0 ? void 0 : _a.workspace) === null || _b === void 0 ? void 0 : _b.viewport;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "outline", {
-        get: function() {
-            var t, e;
-            return null === (e = null === (t = this.operation) || void 0 === t ? void 0 : t.workspace) || void 0 === e ? void 0 : e.outline;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "outline", {
+        get: function () {
+            var _a, _b;
+            return (_b = (_a = this.operation) === null || _a === void 0 ? void 0 : _a.workspace) === null || _b === void 0 ? void 0 : _b.outline;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "moveLayout", {
-        get: function() {
-            var t;
-            return null === (t = this.viewport) || void 0 === t ? void 0 : t.getValidNodeLayout(this);
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TreeNode.prototype, "moveLayout", {
+        get: function () {
+            var _a;
+            return (_a = this.viewport) === null || _a === void 0 ? void 0 : _a.getValidNodeLayout(this);
         },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.getElement = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.findElementById(this.id);
-    }, t.prototype.getValidElement = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.getValidNodeElement(this);
-    }, t.prototype.getElementRect = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.getElementRect(this.getElement(t));
-    }, t.prototype.getValidElementRect = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.getValidNodeRect(this);
-    }, t.prototype.getElementOffsetRect = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.getElementOffsetRect(this.getElement(t));
-    }, t.prototype.getValidElementOffsetRect = function(t) {
-        var e;
-        return void 0 === t && (t = "viewport"), null === (e = this[t]) || void 0 === e ? void 0 : e.getValidNodeOffsetRect(this);
-    }, t.prototype.getPrevious = function(t) {
-        return void 0 === t && (t = 1), this.parent.children[this.index - t];
-    }, t.prototype.getAfter = function(t) {
-        return void 0 === t && (t = 1), this.parent.children[this.index + t];
-    }, t.prototype.getSibling = function(t) {
-        return void 0 === t && (t = 0), this.parent.children[t];
-    }, t.prototype.getParents = function(t) {
-        var e = t || this;
-        return (null == e ? void 0 : e.parent) ? [ e.parent ].concat(this.getParents(e.parent)) : [];
-    }, t.prototype.getParentByDepth = function(t) {
-        void 0 === t && (t = 0);
-        var e = this.parent;
-        return (null == e ? void 0 : e.depth) === t ? e : null == e ? void 0 : e.getParentByDepth(t);
-    }, t.prototype.getMessage = function(t) {
-        return ie.getDesignerMessage(t, this.designerLocales);
-    }, t.prototype.isMyAncestor = function(t) {
-        return t !== this && this.parent !== t && t.contains(this);
-    }, t.prototype.isMyParent = function(t) {
-        return this.parent === t;
-    }, t.prototype.isMyParents = function(t) {
-        return t !== this && (this.isMyParent(t) || this.isMyAncestor(t));
-    }, t.prototype.isMyChild = function(t) {
-        return t.isMyParent(this);
-    }, t.prototype.isMyChildren = function(t) {
-        return t.isMyParents(this);
-    }, t.prototype.takeSnapshot = function(t) {
-        var e;
-        null === (e = this.operation) || void 0 === e || e.snapshot(t);
-    }, t.prototype.triggerMutation = function(t, e, n) {
+        enumerable: false,
+        configurable: true
+    });
+    TreeNode.prototype.getElement = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.findElementById(this.id);
+    };
+    TreeNode.prototype.getValidElement = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.getValidNodeElement(this);
+    };
+    TreeNode.prototype.getElementRect = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.getElementRect(this.getElement(area));
+    };
+    TreeNode.prototype.getValidElementRect = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.getValidNodeRect(this);
+    };
+    TreeNode.prototype.getElementOffsetRect = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.getElementOffsetRect(this.getElement(area));
+    };
+    TreeNode.prototype.getValidElementOffsetRect = function (area) {
+        var _a;
+        if (area === void 0) { area = 'viewport'; }
+        return (_a = this[area]) === null || _a === void 0 ? void 0 : _a.getValidNodeOffsetRect(this);
+    };
+    TreeNode.prototype.getPrevious = function (step) {
+        if (step === void 0) { step = 1; }
+        return this.parent.children[this.index - step];
+    };
+    TreeNode.prototype.getAfter = function (step) {
+        if (step === void 0) { step = 1; }
+        return this.parent.children[this.index + step];
+    };
+    TreeNode.prototype.getSibling = function (index) {
+        if (index === void 0) { index = 0; }
+        return this.parent.children[index];
+    };
+    TreeNode.prototype.getParents = function (node) {
+        var _node = node || this;
+        return (_node === null || _node === void 0 ? void 0 : _node.parent)
+            ? [_node.parent].concat(this.getParents(_node.parent))
+            : [];
+    };
+    TreeNode.prototype.getParentByDepth = function (depth) {
+        if (depth === void 0) { depth = 0; }
+        var parent = this.parent;
+        if ((parent === null || parent === void 0 ? void 0 : parent.depth) === depth) {
+            return parent;
+        }
+        else {
+            return parent === null || parent === void 0 ? void 0 : parent.getParentByDepth(depth);
+        }
+    };
+    TreeNode.prototype.getMessage = function (token) {
+        return GlobalRegistry.getDesignerMessage(token, this.designerLocales);
+    };
+    TreeNode.prototype.isMyAncestor = function (node) {
+        if (node === this || this.parent === node)
+            return false;
+        return node.contains(this);
+    };
+    TreeNode.prototype.isMyParent = function (node) {
+        return this.parent === node;
+    };
+    TreeNode.prototype.isMyParents = function (node) {
+        if (node === this)
+            return false;
+        return this.isMyParent(node) || this.isMyAncestor(node);
+    };
+    TreeNode.prototype.isMyChild = function (node) {
+        return node.isMyParent(this);
+    };
+    TreeNode.prototype.isMyChildren = function (node) {
+        return node.isMyParents(this);
+    };
+    TreeNode.prototype.takeSnapshot = function (type) {
+        var _a;
+        (_a = this.operation) === null || _a === void 0 ? void 0 : _a.snapshot(type);
+    };
+    TreeNode.prototype.triggerMutation = function (event, callback, defaults) {
         if (this.operation) {
-            var r = this.operation.dispatch(t, e) || n;
-            return this.takeSnapshot(null == t ? void 0 : t.type), r;
+            var result = (this.operation.dispatch(event, callback) || defaults);
+            this.takeSnapshot(event === null || event === void 0 ? void 0 : event.type);
+            return result;
         }
-        if (i(e)) return e();
-    }, t.prototype.find = function(t) {
-        if (t(this)) return this;
-        var e = void 0;
-        return this.eachChildren((function(n) {
-            if (t(n)) return e = n, !1;
-        })), e;
-    }, t.prototype.findAll = function(t) {
-        var e = [];
-        return t(this) && e.push(this), this.eachChildren((function(n) {
-            t(n) && e.push(n);
-        })), e;
-    }, t.prototype.distanceTo = function(t) {
-        return this.root !== t.root || this.parent !== t.parent ? 1 / 0 : Math.abs(this.index - t.index);
-    }, t.prototype.crossSiblings = function(t) {
-        if (this.parent !== t.parent) return [];
-        for (var e = Math.min(this.index, t.index), n = Math.max(this.index, t.index), r = [], o = e + 1; o < n; o++) r.push(this.parent.children[o]);
-        return r;
-    }, t.prototype.allowSibling = function(t) {
-        var e, n, r;
-        return !1 !== (null === (n = null === (e = this.designerProps) || void 0 === e ? void 0 : e.allowSiblings) || void 0 === n ? void 0 : n.call(e, this, t)) && (null === (r = this.parent) || void 0 === r ? void 0 : r.allowAppend(t));
-    }, t.prototype.allowDrop = function(t) {
-        return !i(this.designerProps.allowDrop) || this.designerProps.allowDrop(t);
-    }, t.prototype.allowAppend = function(t) {
-        var e, n, r, o = this;
-        return !!(null === (e = this.designerProps) || void 0 === e ? void 0 : e.droppable) && (!1 !== (null === (r = null === (n = this.designerProps) || void 0 === n ? void 0 : n.allowAppend) || void 0 === r ? void 0 : r.call(n, this, t)) && (!t.some((function(t) {
-            return !t.allowDrop(o);
-        })) && (this.root, !0)));
-    }, t.prototype.allowClone = function() {
-        var t;
-        return this !== this.root && (null === (t = this.designerProps.cloneable) || void 0 === t || t);
-    }, t.prototype.allowDrag = function() {
-        var t;
-        return !(this === this.root && !this.isSourceNode) && (null === (t = this.designerProps.draggable) || void 0 === t || t);
-    }, t.prototype.allowResize = function() {
-        if (this === this.root && !this.isSourceNode) return !1;
-        var t = this.designerProps.resizable;
-        return !!t && (t.width && t.height ? [ "x", "y" ] : t.width ? [ "x" ] : [ "y" ]);
-    }, t.prototype.allowRotate = function() {}, t.prototype.allowRound = function() {}, 
-    t.prototype.allowScale = function() {}, t.prototype.allowTranslate = function() {
-        if (this === this.root && !this.isSourceNode) return !1;
-        var t = this.designerProps.translatable;
-        return !(!(null == t ? void 0 : t.x) || !(null == t ? void 0 : t.y));
-    }, t.prototype.allowDelete = function() {
-        var t;
-        return this !== this.root && (null === (t = this.designerProps.deletable) || void 0 === t || t);
-    }, t.prototype.findById = function(t) {
-        var e;
-        if (t) return this.id === t ? this : (null === (e = this.children) || void 0 === e ? void 0 : e.length) > 0 ? se.get(t) : void 0;
-    }, t.prototype.contains = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        return e.every((function(e) {
-            return e === t || (null == e ? void 0 : e.parent) === t || (null == e ? void 0 : e.getParentByDepth(t.depth)) === t;
-        }));
-    }, t.prototype.eachTree = function(t) {
-        var e;
-        i(t) && (t(this.root), null === (e = this.root) || void 0 === e || e.eachChildren(t));
-    }, t.prototype.eachChildren = function(t) {
-        if (i(t)) for (var e = 0; e < this.children.length; e++) {
-            var n = this.children[e];
-            if (!1 === t(n)) return;
-            n.eachChildren(t);
+        else if (isFn(callback)) {
+            return callback();
         }
-    }, t.prototype.resetNodesParent = function(t, e) {
-        var n = this;
-        return ue(t.filter((function(t) {
-            return t !== n;
-        })), e);
-    }, t.prototype.setProps = function(t) {
-        var e = this;
-        return this.triggerMutation(new St({
+    };
+    TreeNode.prototype.find = function (finder) {
+        if (finder(this)) {
+            return this;
+        }
+        else {
+            var result_1 = undefined;
+            this.eachChildren(function (node) {
+                if (finder(node)) {
+                    result_1 = node;
+                    return false;
+                }
+            });
+            return result_1;
+        }
+    };
+    TreeNode.prototype.findAll = function (finder) {
+        var results = [];
+        if (finder(this)) {
+            results.push(this);
+        }
+        this.eachChildren(function (node) {
+            if (finder(node)) {
+                results.push(node);
+            }
+        });
+        return results;
+    };
+    TreeNode.prototype.distanceTo = function (node) {
+        if (this.root !== node.root) {
+            return Infinity;
+        }
+        if (this.parent !== node.parent) {
+            return Infinity;
+        }
+        return Math.abs(this.index - node.index);
+    };
+    TreeNode.prototype.crossSiblings = function (node) {
+        if (this.parent !== node.parent)
+            return [];
+        var minIndex = Math.min(this.index, node.index);
+        var maxIndex = Math.max(this.index, node.index);
+        var results = [];
+        for (var i = minIndex + 1; i < maxIndex; i++) {
+            results.push(this.parent.children[i]);
+        }
+        return results;
+    };
+    TreeNode.prototype.allowSibling = function (nodes) {
+        var _a, _b, _c;
+        if (((_b = (_a = this.designerProps) === null || _a === void 0 ? void 0 : _a.allowSiblings) === null || _b === void 0 ? void 0 : _b.call(_a, this, nodes)) === false)
+            return false;
+        return (_c = this.parent) === null || _c === void 0 ? void 0 : _c.allowAppend(nodes);
+    };
+    TreeNode.prototype.allowDrop = function (parent) {
+        if (!isFn(this.designerProps.allowDrop))
+            return true;
+        return this.designerProps.allowDrop(parent);
+    };
+    TreeNode.prototype.allowAppend = function (nodes) {
+        var _this = this;
+        var _a, _b, _c;
+        if (!((_a = this.designerProps) === null || _a === void 0 ? void 0 : _a.droppable))
+            return false;
+        if (((_c = (_b = this.designerProps) === null || _b === void 0 ? void 0 : _b.allowAppend) === null || _c === void 0 ? void 0 : _c.call(_b, this, nodes)) === false)
+            return false;
+        if (nodes.some(function (node) { return !node.allowDrop(_this); }))
+            return false;
+        if (this.root === this)
+            return true;
+        return true;
+    };
+    TreeNode.prototype.allowClone = function () {
+        var _a;
+        if (this === this.root)
+            return false;
+        return (_a = this.designerProps.cloneable) !== null && _a !== void 0 ? _a : true;
+    };
+    TreeNode.prototype.allowDrag = function () {
+        var _a;
+        if (this === this.root && !this.isSourceNode)
+            return false;
+        return (_a = this.designerProps.draggable) !== null && _a !== void 0 ? _a : true;
+    };
+    TreeNode.prototype.allowResize = function () {
+        if (this === this.root && !this.isSourceNode)
+            return false;
+        var resizable = this.designerProps.resizable;
+        if (!resizable)
+            return false;
+        if (resizable.width && resizable.height)
+            return ['x', 'y'];
+        if (resizable.width)
+            return ['x'];
+        return ['y'];
+    };
+    TreeNode.prototype.allowRotate = function () { };
+    TreeNode.prototype.allowRound = function () { };
+    TreeNode.prototype.allowScale = function () { };
+    TreeNode.prototype.allowTranslate = function () {
+        if (this === this.root && !this.isSourceNode)
+            return false;
+        var translatable = this.designerProps.translatable;
+        if ((translatable === null || translatable === void 0 ? void 0 : translatable.x) && (translatable === null || translatable === void 0 ? void 0 : translatable.y))
+            return true;
+        return false;
+    };
+    TreeNode.prototype.allowDelete = function () {
+        var _a;
+        if (this === this.root)
+            return false;
+        return (_a = this.designerProps.deletable) !== null && _a !== void 0 ? _a : true;
+    };
+    TreeNode.prototype.findById = function (id) {
+        var _a;
+        if (!id)
+            return;
+        if (this.id === id)
+            return this;
+        if (((_a = this.children) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+            return TreeNodes.get(id);
+        }
+    };
+    TreeNode.prototype.contains = function () {
+        var _this = this;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        return nodes.every(function (node) {
+            if (node === _this ||
+                (node === null || node === void 0 ? void 0 : node.parent) === _this ||
+                (node === null || node === void 0 ? void 0 : node.getParentByDepth(_this.depth)) === _this) {
+                return true;
+            }
+            return false;
+        });
+    };
+    TreeNode.prototype.eachTree = function (callback) {
+        var _a;
+        if (isFn(callback)) {
+            callback(this.root);
+            (_a = this.root) === null || _a === void 0 ? void 0 : _a.eachChildren(callback);
+        }
+    };
+    TreeNode.prototype.eachChildren = function (callback) {
+        if (isFn(callback)) {
+            for (var i = 0; i < this.children.length; i++) {
+                var node = this.children[i];
+                if (callback(node) === false)
+                    return;
+                node.eachChildren(callback);
+            }
+        }
+    };
+    TreeNode.prototype.resetNodesParent = function (nodes, parent) {
+        var _this = this;
+        return resetNodesParent(nodes.filter(function (node) { return node !== _this; }), parent);
+    };
+    TreeNode.prototype.setProps = function (props) {
+        var _this = this;
+        return this.triggerMutation(new UpdateNodePropsEvent({
             target: this,
-            source: null
-        }), (function() {
-            Object.assign(e.props, t);
-        }));
-    }, t.prototype.setComponentName = function(t) {
-        this.componentName = t;
-    }, t.prototype.prepend = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        if (e.some((function(e) {
-            return e.contains(t);
-        }))) return [];
-        var r = e.map((function(t) {
-            return t.parent;
-        })), o = this.resetNodesParent(e, this);
-        return o.length ? this.triggerMutation(new mt({
-            originSourceParents: r,
+            source: null,
+        }), function () {
+            Object.assign(_this.props, props);
+        });
+    };
+    TreeNode.prototype.setComponentName = function (componentName) {
+        this.componentName = componentName;
+    };
+    TreeNode.prototype.prepend = function () {
+        var _this = this;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        if (nodes.some(function (node) { return node.contains(_this); }))
+            return [];
+        var originSourceParents = nodes.map(function (node) { return node.parent; });
+        var newNodes = this.resetNodesParent(nodes, this);
+        if (!newNodes.length)
+            return [];
+        return this.triggerMutation(new PrependNodeEvent({
+            originSourceParents: originSourceParents,
             target: this,
-            source: o
-        }), (function() {
-            return t.children = o.concat(t.children), o;
-        }), []) : [];
-    }, t.prototype.append = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        if (e.some((function(e) {
-            return e.contains(t);
-        }))) return [];
-        var r = e.map((function(t) {
-            return t.parent;
-        })), o = this.resetNodesParent(e, this);
-        return o.length ? this.triggerMutation(new Ct({
-            originSourceParents: r,
+            source: newNodes,
+        }), function () {
+            _this.children = newNodes.concat(_this.children);
+            return newNodes;
+        }, []);
+    };
+    TreeNode.prototype.append = function () {
+        var _this = this;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        if (nodes.some(function (node) { return node.contains(_this); }))
+            return [];
+        var originSourceParents = nodes.map(function (node) { return node.parent; });
+        var newNodes = this.resetNodesParent(nodes, this);
+        if (!newNodes.length)
+            return [];
+        return this.triggerMutation(new AppendNodeEvent({
+            originSourceParents: originSourceParents,
             target: this,
-            source: o
-        }), (function() {
-            return t.children = t.children.concat(o), o;
-        }), []) : [];
-    }, t.prototype.wrap = function(t) {
-        var e = this;
-        if (t !== this) {
-            var n = this.parent;
-            return this.triggerMutation(new kt({
+            source: newNodes,
+        }), function () {
+            _this.children = _this.children.concat(newNodes);
+            return newNodes;
+        }, []);
+    };
+    TreeNode.prototype.wrap = function (wrapper) {
+        var _this = this;
+        if (wrapper === this)
+            return;
+        var parent = this.parent;
+        return this.triggerMutation(new WrapNodeEvent({
+            target: this,
+            source: wrapper,
+        }), function () {
+            resetParent(_this, wrapper);
+            resetParent(wrapper, parent);
+            return wrapper;
+        });
+    };
+    TreeNode.prototype.insertAfter = function () {
+        var _this = this;
+        var _a;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        var parent = this.parent;
+        if (nodes.some(function (node) { return node.contains(_this); }))
+            return [];
+        if ((_a = parent === null || parent === void 0 ? void 0 : parent.children) === null || _a === void 0 ? void 0 : _a.length) {
+            var originSourceParents = nodes.map(function (node) { return node.parent; });
+            var newNodes_1 = this.resetNodesParent(nodes, parent);
+            if (!newNodes_1.length)
+                return [];
+            return this.triggerMutation(new InsertAfterEvent({
+                originSourceParents: originSourceParents,
                 target: this,
-                source: t
-            }), (function() {
-                return le(e, t), le(t, n), t;
-            }));
-        }
-    }, t.prototype.insertAfter = function() {
-        for (var t, e = this, n = [], r = 0; r < arguments.length; r++) n[r] = arguments[r];
-        var o = this.parent;
-        if (n.some((function(t) {
-            return t.contains(e);
-        }))) return [];
-        if (null === (t = null == o ? void 0 : o.children) || void 0 === t ? void 0 : t.length) {
-            var i = n.map((function(t) {
-                return t.parent;
-            })), s = this.resetNodesParent(n, o);
-            return s.length ? this.triggerMutation(new vt({
-                originSourceParents: i,
-                target: this,
-                source: s
-            }), (function() {
-                return o.children = o.children.reduce((function(t, n) {
-                    return n === e ? t.concat([ n ]).concat(s) : t.concat([ n ]);
-                }), []), s;
-            }), []) : [];
+                source: newNodes_1,
+            }), function () {
+                parent.children = parent.children.reduce(function (buf, node) {
+                    if (node === _this) {
+                        return buf.concat([node]).concat(newNodes_1);
+                    }
+                    else {
+                        return buf.concat([node]);
+                    }
+                }, []);
+                return newNodes_1;
+            }, []);
         }
         return [];
-    }, t.prototype.insertBefore = function() {
-        for (var t, e = this, n = [], r = 0; r < arguments.length; r++) n[r] = arguments[r];
-        var o = this.parent;
-        if (n.some((function(t) {
-            return t.contains(e);
-        }))) return [];
-        if (null === (t = null == o ? void 0 : o.children) || void 0 === t ? void 0 : t.length) {
-            var i = n.map((function(t) {
-                return t.parent;
-            })), s = this.resetNodesParent(n, o);
-            return s.length ? this.triggerMutation(new gt({
-                originSourceParents: i,
+    };
+    TreeNode.prototype.insertBefore = function () {
+        var _this = this;
+        var _a;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        var parent = this.parent;
+        if (nodes.some(function (node) { return node.contains(_this); }))
+            return [];
+        if ((_a = parent === null || parent === void 0 ? void 0 : parent.children) === null || _a === void 0 ? void 0 : _a.length) {
+            var originSourceParents = nodes.map(function (node) { return node.parent; });
+            var newNodes_2 = this.resetNodesParent(nodes, parent);
+            if (!newNodes_2.length)
+                return [];
+            return this.triggerMutation(new InsertBeforeEvent({
+                originSourceParents: originSourceParents,
                 target: this,
-                source: s
-            }), (function() {
-                return o.children = o.children.reduce((function(t, n) {
-                    return n === e ? t.concat(s).concat([ n ]) : t.concat([ n ]);
-                }), []), s;
-            }), []) : [];
+                source: newNodes_2,
+            }), function () {
+                parent.children = parent.children.reduce(function (buf, node) {
+                    if (node === _this) {
+                        return buf.concat(newNodes_2).concat([node]);
+                    }
+                    else {
+                        return buf.concat([node]);
+                    }
+                }, []);
+                return newNodes_2;
+            }, []);
         }
         return [];
-    }, t.prototype.insertChildren = function(t) {
-        for (var e, n = this, r = [], o = 1; o < arguments.length; o++) r[o - 1] = arguments[o];
-        if (r.some((function(t) {
-            return t.contains(n);
-        }))) return [];
-        if (null === (e = this.children) || void 0 === e ? void 0 : e.length) {
-            var i = r.map((function(t) {
-                return t.parent;
-            })), s = this.resetNodesParent(r, this);
-            return s.length ? this.triggerMutation(new yt({
-                originSourceParents: i,
+    };
+    TreeNode.prototype.insertChildren = function (start) {
+        var _this = this;
+        var _a;
+        var nodes = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            nodes[_i - 1] = arguments[_i];
+        }
+        if (nodes.some(function (node) { return node.contains(_this); }))
+            return [];
+        if ((_a = this.children) === null || _a === void 0 ? void 0 : _a.length) {
+            var originSourceParents = nodes.map(function (node) { return node.parent; });
+            var newNodes_3 = this.resetNodesParent(nodes, this);
+            if (!newNodes_3.length)
+                return [];
+            return this.triggerMutation(new InsertChildrenEvent({
+                originSourceParents: originSourceParents,
                 target: this,
-                source: s
-            }), (function() {
-                return n.children = n.children.reduce((function(e, n, r) {
-                    return r === t ? e.concat(s).concat([ n ]) : e.concat([ n ]);
-                }), []), s;
-            }), []) : [];
+                source: newNodes_3,
+            }), function () {
+                _this.children = _this.children.reduce(function (buf, node, index) {
+                    if (index === start) {
+                        return buf.concat(newNodes_3).concat([node]);
+                    }
+                    return buf.concat([node]);
+                }, []);
+                return newNodes_3;
+            }, []);
         }
         return [];
-    }, t.prototype.setChildren = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        var r = e.map((function(t) {
-            return t.parent;
-        })), o = this.resetNodesParent(e, this);
-        return this.triggerMutation(new Nt({
-            originSourceParents: r,
+    };
+    TreeNode.prototype.setChildren = function () {
+        var _this = this;
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        var originSourceParents = nodes.map(function (node) { return node.parent; });
+        var newNodes = this.resetNodesParent(nodes, this);
+        return this.triggerMutation(new UpdateChildrenEvent({
+            originSourceParents: originSourceParents,
             target: this,
-            source: o
-        }), (function() {
-            return t.children = o, o;
-        }), []);
-    }, t.prototype.setNodeChildren = function() {
-        for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-        return this.setChildren.apply(this, tt([], Q(t), !1));
-    }, t.prototype.remove = function() {
-        var t = this;
-        return this.triggerMutation(new wt({
+            source: newNodes,
+        }), function () {
+            _this.children = newNodes;
+            return newNodes;
+        }, []);
+    };
+    /**
+     * @deprecated
+     * please use `setChildren`
+     */
+    TreeNode.prototype.setNodeChildren = function () {
+        var nodes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            nodes[_i] = arguments[_i];
+        }
+        return this.setChildren.apply(this, __spreadArray([], __read(nodes), false));
+    };
+    TreeNode.prototype.remove = function () {
+        var _this = this;
+        return this.triggerMutation(new RemoveNodeEvent({
             target: this,
-            source: null
-        }), (function() {
-            ce(t), se.delete(t.id);
-        }));
-    }, t.prototype.clone = function(e) {
-        var n = new t({
-            id: s(),
+            source: null,
+        }), function () {
+            removeNode(_this);
+            TreeNodes.delete(_this.id);
+        });
+    };
+    TreeNode.prototype.clone = function (parent) {
+        var newNode = new TreeNode({
+            id: uid(),
             componentName: this.componentName,
             sourceName: this.sourceName,
-            props: F(this.props),
-            children: []
-        }, e || this.parent);
-        return n.children = ue(this.children.map((function(t) {
-            return t.clone(n);
-        })), n), this.triggerMutation(new Rt({
+            props: toJS(this.props),
+            children: [],
+        }, parent ? parent : this.parent);
+        newNode.children = resetNodesParent(this.children.map(function (child) {
+            return child.clone(newNode);
+        }), newNode);
+        return this.triggerMutation(new CloneNodeEvent({
             target: this,
-            source: n
-        }), (function() {
-            return n;
-        }));
-    }, t.prototype.from = function(e) {
-        var n = this;
-        if (e) return this.triggerMutation(new Pt({
+            source: newNode,
+        }), function () { return newNode; });
+    };
+    TreeNode.prototype.from = function (node) {
+        var _this = this;
+        if (!node)
+            return;
+        return this.triggerMutation(new FromNodeEvent({
             target: this,
-            source: e
-        }), (function() {
-            var r, o, i;
-            e.id && e.id !== n.id && (se.delete(n.id), se.set(e.id, n), n.id = e.id), e.componentName && (n.componentName = e.componentName), 
-            n.props = null !== (r = e.props) && void 0 !== r ? r : {}, e.hidden && (n.hidden = e.hidden), 
-            e.children && (n.children = (null === (i = null === (o = e.children) || void 0 === o ? void 0 : o.map) || void 0 === i ? void 0 : i.call(o, (function(e) {
-                return new t(e, n);
-            }))) || []);
-        }));
-    }, t.prototype.serialize = function() {
+            source: node,
+        }), function () {
+            var _a, _b, _c;
+            if (node.id && node.id !== _this.id) {
+                TreeNodes.delete(_this.id);
+                TreeNodes.set(node.id, _this);
+                _this.id = node.id;
+            }
+            if (node.componentName) {
+                _this.componentName = node.componentName;
+            }
+            _this.props = (_a = node.props) !== null && _a !== void 0 ? _a : {};
+            if (node.hidden) {
+                _this.hidden = node.hidden;
+            }
+            if (node.children) {
+                _this.children =
+                    ((_c = (_b = node.children) === null || _b === void 0 ? void 0 : _b.map) === null || _c === void 0 ? void 0 : _c.call(_b, function (node) {
+                        return new TreeNode(node, _this);
+                    })) || [];
+            }
+        });
+    };
+    TreeNode.prototype.serialize = function () {
         return {
             id: this.id,
             componentName: this.componentName,
             sourceName: this.sourceName,
-            props: F(this.props),
+            props: toJS(this.props),
             hidden: this.hidden,
-            children: this.children.map((function(t) {
-                return t.serialize();
-            }))
+            children: this.children.map(function (treeNode) {
+                return treeNode.serialize();
+            }),
         };
-    }, t.getAllTreeNodes = function() {
-        return se;
-    }, t.create = function(e, n) {
-        return new t(e, n);
-    }, t.findById = function(t) {
-        return se.get(t);
-    }, t.remove = function(t) {
-        var e, n;
-        void 0 === t && (t = []);
-        for (var r = t.length - 1; r >= 0; r--) {
-            var o = t[r];
-            if (o.allowDelete()) {
-                var i = o.previous, s = o.next;
-                o.remove(), null === (e = o.operation) || void 0 === e || e.selection.select(i || (s || o.parent)), 
-                null === (n = o.operation) || void 0 === n || n.hover.clear();
+    };
+    TreeNode.getAllTreeNodes = function () {
+        return TreeNodes;
+    };
+    TreeNode.create = function (node, parent) {
+        return new TreeNode(node, parent);
+    };
+    TreeNode.findById = function (id) {
+        return TreeNodes.get(id);
+    };
+    TreeNode.remove = function (nodes) {
+        var _a, _b;
+        if (nodes === void 0) { nodes = []; }
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            var node = nodes[i];
+            if (node.allowDelete()) {
+                var previous = node.previous;
+                var next = node.next;
+                node.remove();
+                (_a = node.operation) === null || _a === void 0 ? void 0 : _a.selection.select(previous ? previous : next ? next : node.parent);
+                (_b = node.operation) === null || _b === void 0 ? void 0 : _b.hover.clear();
             }
         }
-    }, t.sort = function(t) {
-        return void 0 === t && (t = []), t.sort((function(t, e) {
-            return t.depth !== e.depth ? 0 : t.index - e.index >= 0 ? 1 : -1;
-        }));
-    }, t.clone = function(e) {
-        void 0 === e && (e = []);
-        var n = {}, r = {}, i = t.sort(e).filter((function(t) {
-            return !e.some((function(e) {
-                return t.isMyParents(e);
-            }));
-        }));
-        o(i, (function(t) {
-            var e, o, i, s, a, c, u;
-            t !== t.root && t.allowClone() && (null == t ? void 0 : t.operation) && (n[null === (e = null == t ? void 0 : t.parent) || void 0 === e ? void 0 : e.id] = n[null === (o = null == t ? void 0 : t.parent) || void 0 === o ? void 0 : o.id] || [], 
-            n[null === (i = null == t ? void 0 : t.parent) || void 0 === i ? void 0 : i.id].push(t), 
-            r[null === (s = null == t ? void 0 : t.parent) || void 0 === s ? void 0 : s.id] ? t.index > r[null === (a = null == t ? void 0 : t.parent) || void 0 === a ? void 0 : a.id].index && (r[null === (c = null == t ? void 0 : t.parent) || void 0 === c ? void 0 : c.id] = t) : r[null === (u = null == t ? void 0 : t.parent) || void 0 === u ? void 0 : u.id] = t);
-        }));
-        var s = new Map;
-        o(n, (function(t, e) {
-            var n = r[e], i = n;
-            o(t, (function(t) {
-                var e, n, r = t.clone();
-                if (r) if ((null === (e = t.operation) || void 0 === e ? void 0 : e.selection.has(t)) && i.parent.allowAppend([ r ])) i.insertAfter(r), 
-                i = i.next; else if (1 === t.operation.selection.length) {
-                    var o = null === (n = t.operation) || void 0 === n ? void 0 : n.tree.findById(t.operation.selection.first), a = s.get(o);
-                    a || (a = [], s.set(o, a)), o && o.allowAppend([ r ]) && a.push(r);
+    };
+    TreeNode.sort = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.sort(function (before, after) {
+            if (before.depth !== after.depth)
+                return 0;
+            return before.index - after.index >= 0 ? 1 : -1;
+        });
+    };
+    TreeNode.clone = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        var groups = {};
+        var lastGroupNode = {};
+        var filterNestedNode = TreeNode.sort(nodes).filter(function (node) {
+            return !nodes.some(function (parent) {
+                return node.isMyParents(parent);
+            });
+        });
+        each(filterNestedNode, function (node) {
+            var _a, _b, _c, _d, _e, _f, _g;
+            if (node === node.root)
+                return;
+            if (!node.allowClone())
+                return;
+            if (!(node === null || node === void 0 ? void 0 : node.operation))
+                return;
+            groups[(_a = node === null || node === void 0 ? void 0 : node.parent) === null || _a === void 0 ? void 0 : _a.id] = groups[(_b = node === null || node === void 0 ? void 0 : node.parent) === null || _b === void 0 ? void 0 : _b.id] || [];
+            groups[(_c = node === null || node === void 0 ? void 0 : node.parent) === null || _c === void 0 ? void 0 : _c.id].push(node);
+            if (lastGroupNode[(_d = node === null || node === void 0 ? void 0 : node.parent) === null || _d === void 0 ? void 0 : _d.id]) {
+                if (node.index > lastGroupNode[(_e = node === null || node === void 0 ? void 0 : node.parent) === null || _e === void 0 ? void 0 : _e.id].index) {
+                    lastGroupNode[(_f = node === null || node === void 0 ? void 0 : node.parent) === null || _f === void 0 ? void 0 : _f.id] = node;
                 }
-            }));
-        })), s.forEach((function(t, e) {
-            t.length && e.append.apply(e, tt([], Q(t), !1));
-        }));
-    }, t.filterResizable = function(t) {
-        return void 0 === t && (t = []), t.filter((function(t) {
-            return t.allowResize();
-        }));
-    }, t.filterRotatable = function(t) {
-        return void 0 === t && (t = []), t.filter((function(t) {
-            return t.allowRotate();
-        }));
-    }, t.filterScalable = function(t) {
-        return void 0 === t && (t = []), t.filter((function(t) {
-            return t.allowScale();
-        }));
-    }, t.filterRoundable = function(t) {
-        return void 0 === t && (t = []), t.filter((function(t) {
-            return t.allowRound();
-        }));
-    }, t.filterTranslatable = function(t) {
-        return void 0 === t && (t = []), t.filter((function(t) {
-            return t.allowTranslate();
-        }));
-    }, t.filterDraggable = function(t) {
-        return void 0 === t && (t = []), t.reduce((function(t, e) {
-            var n;
-            if (!e.allowDrag()) return t;
-            if (i(null === (n = null == e ? void 0 : e.designerProps) || void 0 === n ? void 0 : n.getDragNodes)) {
-                var r = e.designerProps.getDragNodes(e);
-                return r ? t.concat(r) : t;
             }
-            return "$$ResourceNode$$" === e.componentName ? t.concat(e.children) : t.concat([ e ]);
-        }), []);
-    }, t.filterDroppable = function(t, e) {
-        return void 0 === t && (t = []), t.reduce((function(t, n) {
-            var r;
-            if (!n.allowDrop(e)) return t;
-            if (i(null === (r = n.designerProps) || void 0 === r ? void 0 : r.getDropNodes)) {
-                var o = n.isSourceNode ? n.clone(n.parent) : n, s = n.designerProps.getDropNodes(o, e);
-                return s ? t.concat(s) : t;
+            else {
+                lastGroupNode[(_g = node === null || node === void 0 ? void 0 : node.parent) === null || _g === void 0 ? void 0 : _g.id] = node;
             }
-            return "$$ResourceNode$$" === n.componentName ? t.concat(n.children) : t.concat([ n ]);
-        }), []);
-    }, t;
-}(), he = function() {
-    function e(t) {
-        var e, n;
-        this.scrollX = 0, this.scrollY = 0, this.width = 0, this.height = 0, this.mounted = !1, 
-        this.nodeElementsStore = {}, this.workspace = t.workspace, this.engine = t.engine, 
-        this.moveSensitive = null !== (e = t.moveSensitive) && void 0 !== e && e, this.moveInsertionType = null !== (n = t.moveInsertionType) && void 0 !== n ? n : "all", 
-        this.viewportElement = t.viewportElement, this.contentWindow = t.contentWindow, 
-        this.nodeIdAttrName = t.nodeIdAttrName, this.digestViewport(), this.makeObservable(), 
+        });
+        var parents = new Map();
+        each(groups, function (nodes, parentId) {
+            var lastNode = lastGroupNode[parentId];
+            var insertPoint = lastNode;
+            each(nodes, function (node) {
+                var _a, _b;
+                var cloned = node.clone();
+                if (!cloned)
+                    return;
+                if (((_a = node.operation) === null || _a === void 0 ? void 0 : _a.selection.has(node)) &&
+                    insertPoint.parent.allowAppend([cloned])) {
+                    insertPoint.insertAfter(cloned);
+                    insertPoint = insertPoint.next;
+                }
+                else if (node.operation.selection.length === 1) {
+                    var targetNode = (_b = node.operation) === null || _b === void 0 ? void 0 : _b.tree.findById(node.operation.selection.first);
+                    var cloneNodes = parents.get(targetNode);
+                    if (!cloneNodes) {
+                        cloneNodes = [];
+                        parents.set(targetNode, cloneNodes);
+                    }
+                    if (targetNode && targetNode.allowAppend([cloned])) {
+                        cloneNodes.push(cloned);
+                    }
+                }
+            });
+        });
+        parents.forEach(function (nodes, target) {
+            if (!nodes.length)
+                return;
+            target.append.apply(target, __spreadArray([], __read(nodes), false));
+        });
+    };
+    TreeNode.filterResizable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.filter(function (node) { return node.allowResize(); });
+    };
+    TreeNode.filterRotatable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.filter(function (node) { return node.allowRotate(); });
+    };
+    TreeNode.filterScalable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.filter(function (node) { return node.allowScale(); });
+    };
+    TreeNode.filterRoundable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.filter(function (node) { return node.allowRound(); });
+    };
+    TreeNode.filterTranslatable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.filter(function (node) { return node.allowTranslate(); });
+    };
+    TreeNode.filterDraggable = function (nodes) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.reduce(function (buf, node) {
+            var _a;
+            if (!node.allowDrag())
+                return buf;
+            if (isFn((_a = node === null || node === void 0 ? void 0 : node.designerProps) === null || _a === void 0 ? void 0 : _a.getDragNodes)) {
+                var transformed = node.designerProps.getDragNodes(node);
+                return transformed ? buf.concat(transformed) : buf;
+            }
+            if (node.componentName === '$$ResourceNode$$')
+                return buf.concat(node.children);
+            return buf.concat([node]);
+        }, []);
+    };
+    TreeNode.filterDroppable = function (nodes, parent) {
+        if (nodes === void 0) { nodes = []; }
+        return nodes.reduce(function (buf, node) {
+            var _a;
+            if (!node.allowDrop(parent))
+                return buf;
+            if (isFn((_a = node.designerProps) === null || _a === void 0 ? void 0 : _a.getDropNodes)) {
+                var cloned = node.isSourceNode ? node.clone(node.parent) : node;
+                var transformed = node.designerProps.getDropNodes(cloned, parent);
+                return transformed ? buf.concat(transformed) : buf;
+            }
+            if (node.componentName === '$$ResourceNode$$')
+                return buf.concat(node.children);
+            return buf.concat([node]);
+        }, []);
+    };
+    return TreeNode;
+}());
+
+/**
+ * 视口模型
+ */
+var Viewport = /** @class */ (function () {
+    function Viewport(props) {
+        var _a, _b;
+        this.scrollX = 0;
+        this.scrollY = 0;
+        this.width = 0;
+        this.height = 0;
+        this.mounted = false;
+        this.nodeElementsStore = {};
+        this.workspace = props.workspace;
+        this.engine = props.engine;
+        this.moveSensitive = (_a = props.moveSensitive) !== null && _a !== void 0 ? _a : false;
+        this.moveInsertionType = (_b = props.moveInsertionType) !== null && _b !== void 0 ? _b : 'all';
+        this.viewportElement = props.viewportElement;
+        this.contentWindow = props.contentWindow;
+        this.nodeIdAttrName = props.nodeIdAttrName;
+        this.digestViewport();
+        this.makeObservable();
         this.attachEvents();
     }
-    return Object.defineProperty(e.prototype, "isScrollLeft", {
-        get: function() {
-            return 0 === this.scrollX;
+    Object.defineProperty(Viewport.prototype, "isScrollLeft", {
+        get: function () {
+            return this.scrollX === 0;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "isScrollTop", {
-        get: function() {
-            return 0 === this.scrollY;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "isScrollTop", {
+        get: function () {
+            return this.scrollY === 0;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "isScrollRight", {
-        get: function() {
-            var t, e, n;
-            return this.isIframe ? this.width + this.contentWindow.scrollX >= (null === (n = null === (e = null === (t = this.contentWindow) || void 0 === t ? void 0 : t.document) || void 0 === e ? void 0 : e.body) || void 0 === n ? void 0 : n.scrollWidth) : this.viewportElement ? this.viewportElement.offsetWidth + this.scrollX >= this.viewportElement.scrollWidth : void 0;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "isScrollRight", {
+        get: function () {
+            var _a, _b, _c;
+            if (this.isIframe) {
+                return (this.width + this.contentWindow.scrollX >=
+                    ((_c = (_b = (_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document) === null || _b === void 0 ? void 0 : _b.body) === null || _c === void 0 ? void 0 : _c.scrollWidth));
+            }
+            else if (this.viewportElement) {
+                return (this.viewportElement.offsetWidth + this.scrollX >=
+                    this.viewportElement.scrollWidth);
+            }
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "isScrollBottom", {
-        get: function() {
-            var t, e;
-            return this.isIframe ? !!(null === (e = null === (t = this.contentWindow) || void 0 === t ? void 0 : t.document) || void 0 === e ? void 0 : e.body) && this.height + this.contentWindow.scrollY >= this.contentWindow.document.body.scrollHeight : this.viewportElement ? !!this.viewportElement && this.viewportElement.offsetHeight + this.viewportElement.scrollTop >= this.viewportElement.scrollHeight : void 0;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "isScrollBottom", {
+        get: function () {
+            var _a, _b;
+            if (this.isIframe) {
+                if (!((_b = (_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document) === null || _b === void 0 ? void 0 : _b.body))
+                    return false;
+                return (this.height + this.contentWindow.scrollY >=
+                    this.contentWindow.document.body.scrollHeight);
+            }
+            else if (this.viewportElement) {
+                if (!this.viewportElement)
+                    return false;
+                return (this.viewportElement.offsetHeight + this.viewportElement.scrollTop >=
+                    this.viewportElement.scrollHeight);
+            }
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "viewportRoot", {
-        get: function() {
-            var t, e;
-            return this.isIframe ? null === (e = null === (t = this.contentWindow) || void 0 === t ? void 0 : t.document) || void 0 === e ? void 0 : e.body : this.viewportElement;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "viewportRoot", {
+        get: function () {
+            var _a, _b;
+            return this.isIframe
+                ? (_b = (_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document) === null || _b === void 0 ? void 0 : _b.body
+                : this.viewportElement;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "isMaster", {
-        get: function() {
-            return this.contentWindow === t;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "isMaster", {
+        get: function () {
+            return this.contentWindow === globalThisPolyfill;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "isIframe", {
-        get: function() {
-            var t;
-            return !!(null === (t = this.contentWindow) || void 0 === t ? void 0 : t.frameElement) && !this.isMaster;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "isIframe", {
+        get: function () {
+            var _a;
+            return !!((_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.frameElement) && !this.isMaster;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "scrollContainer", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "scrollContainer", {
+        get: function () {
             return this.isIframe ? this.contentWindow : this.viewportElement;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "rect", {
-        get: function() {
-            var t = this.viewportElement;
-            if (t) return t.getBoundingClientRect();
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "rect", {
+        get: function () {
+            var viewportElement = this.viewportElement;
+            if (viewportElement)
+                return viewportElement.getBoundingClientRect();
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "innerRect", {
-        get: function() {
-            var t = this.rect;
-            return new h(0, 0, null == t ? void 0 : t.width, null == t ? void 0 : t.height);
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "innerRect", {
+        get: function () {
+            var rect = this.rect;
+            return new Rect(0, 0, rect === null || rect === void 0 ? void 0 : rect.width, rect === null || rect === void 0 ? void 0 : rect.height);
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "offsetX", {
-        get: function() {
-            var t = this.rect;
-            return t ? t.x : 0;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "offsetX", {
+        get: function () {
+            var rect = this.rect;
+            if (!rect)
+                return 0;
+            return rect.x;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "offsetY", {
-        get: function() {
-            var t = this.rect;
-            return t ? t.y : 0;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "offsetY", {
+        get: function () {
+            var rect = this.rect;
+            if (!rect)
+                return 0;
+            return rect.y;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "scale", {
-        get: function() {
-            if (!this.viewportElement) return 1;
-            var t = this.viewportElement.getBoundingClientRect(), e = this.viewportElement.offsetWidth;
-            return t.width && e ? Math.round(t.width / e) : 1;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "scale", {
+        get: function () {
+            if (!this.viewportElement)
+                return 1;
+            var clientRect = this.viewportElement.getBoundingClientRect();
+            var offsetWidth = this.viewportElement.offsetWidth;
+            if (!clientRect.width || !offsetWidth)
+                return 1;
+            return Math.round(clientRect.width / offsetWidth);
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "dragScrollXDelta", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "dragScrollXDelta", {
+        get: function () {
             return this.scrollX - this.dragStartSnapshot.scrollX;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(e.prototype, "dragScrollYDelta", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "dragScrollYDelta", {
+        get: function () {
             return this.scrollY - this.dragStartSnapshot.scrollY;
         },
-        enumerable: !1,
-        configurable: !0
-    }), e.prototype.cacheElements = function() {
-        var t, e = this;
-        this.nodeElementsStore = {}, null === (t = this.viewportRoot) || void 0 === t || t.querySelectorAll("*[".concat(this.nodeIdAttrName, "]")).forEach((function(t) {
-            var n = t.getAttribute(e.nodeIdAttrName);
-            e.nodeElementsStore[n] = e.nodeElementsStore[n] || [], e.nodeElementsStore[n].push(t);
-        }));
-    }, e.prototype.clearCache = function() {
+        enumerable: false,
+        configurable: true
+    });
+    Viewport.prototype.cacheElements = function () {
+        var _this = this;
+        var _a;
         this.nodeElementsStore = {};
-    }, e.prototype.getCurrentData = function() {
-        var t, e, n, r, o, i, s, a, c = {};
-        return this.isIframe ? (c.scrollX = (null === (t = this.contentWindow) || void 0 === t ? void 0 : t.scrollX) || 0, 
-        c.scrollY = (null === (e = this.contentWindow) || void 0 === e ? void 0 : e.scrollY) || 0, 
-        c.width = (null === (n = this.contentWindow) || void 0 === n ? void 0 : n.innerWidth) || 0, 
-        c.height = (null === (r = this.contentWindow) || void 0 === r ? void 0 : r.innerHeight) || 0) : this.viewportElement && (c.scrollX = (null === (o = this.viewportElement) || void 0 === o ? void 0 : o.scrollLeft) || 0, 
-        c.scrollY = (null === (i = this.viewportElement) || void 0 === i ? void 0 : i.scrollTop) || 0, 
-        c.width = (null === (s = this.viewportElement) || void 0 === s ? void 0 : s.clientWidth) || 0, 
-        c.height = (null === (a = this.viewportElement) || void 0 === a ? void 0 : a.clientHeight) || 0), 
-        c;
-    }, e.prototype.takeDragStartSnapshot = function() {
-        this.dragStartSnapshot = this.getCurrentData();
-    }, e.prototype.digestViewport = function() {
-        Object.assign(this, this.getCurrentData());
-    }, e.prototype.elementFromPoint = function(t) {
-        var e;
-        if (null === (e = this.contentWindow) || void 0 === e ? void 0 : e.document) return this.contentWindow.document.elementFromPoint(t.x, t.y);
-    }, e.prototype.matchViewport = function(t) {
-        var e;
-        return this.isIframe ? t === this.viewportElement || t === this.contentWindow || t === (null === (e = this.contentWindow) || void 0 === e ? void 0 : e.document) : t === this.viewportElement;
-    }, e.prototype.attachEvents = function() {
-        var t = this, e = this.engine;
-        a(this.attachRequest), this.attachRequest = c((function() {
-            e && (t.isIframe ? t.workspace.attachEvents(t.contentWindow, t.contentWindow) : u(t.viewportElement) && t.workspace.attachEvents(t.viewportElement, t.contentWindow));
-        }));
-    }, e.prototype.detachEvents = function() {
-        this.isIframe ? (this.workspace.detachEvents(this.contentWindow), this.workspace.detachEvents(this.viewportElement)) : this.viewportElement && this.workspace.detachEvents(this.viewportElement);
-    }, e.prototype.onMount = function(t, e) {
-        this.mounted = !0, this.viewportElement = t, this.contentWindow = e, this.attachEvents(), 
-        this.digestViewport();
-    }, e.prototype.onUnmount = function() {
-        this.mounted = !1, this.detachEvents();
-    }, e.prototype.isPointInViewport = function(t, e) {
-        return !!this.rect && (!!this.containsElement(document.elementFromPoint(t.x, t.y)) && l(t, this.rect, e));
-    }, e.prototype.isRectInViewport = function(t) {
-        return !!this.rect && (!!this.containsElement(document.elementFromPoint(t.x, t.y)) && d(t, this.rect));
-    }, e.prototype.isPointInViewportArea = function(t, e) {
-        return !!this.rect && l(t, this.rect, e);
-    }, e.prototype.isOffsetPointInViewport = function(t, e) {
-        return !!this.innerRect && (!!this.containsElement(document.elementFromPoint(t.x, t.y)) && l(t, this.innerRect, e));
-    }, e.prototype.isOffsetRectInViewport = function(t) {
-        return !!this.innerRect && (!!this.containsElement(document.elementFromPoint(t.x, t.y)) && d(t, this.innerRect));
-    }, e.prototype.makeObservable = function() {
-        V(this, {
-            scrollX: Y.ref,
-            scrollY: Y.ref,
-            width: Y.ref,
-            height: Y.ref,
-            digestViewport: z,
-            viewportElement: Y.ref,
-            contentWindow: Y.ref
+        (_a = this.viewportRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll("*[".concat(this.nodeIdAttrName, "]")).forEach(function (element) {
+            var id = element.getAttribute(_this.nodeIdAttrName);
+            _this.nodeElementsStore[id] = _this.nodeElementsStore[id] || [];
+            _this.nodeElementsStore[id].push(element);
         });
-    }, e.prototype.findElementById = function(t) {
-        var e;
-        if (t) return this.nodeElementsStore[t] ? this.nodeElementsStore[t][0] : null === (e = this.viewportRoot) || void 0 === e ? void 0 : e.querySelector("*[".concat(this.nodeIdAttrName, "='").concat(t, "']"));
-    }, e.prototype.findElementsById = function(t) {
-        var e, n;
-        return t ? this.nodeElementsStore[t] ? this.nodeElementsStore[t] : Array.from(null !== (n = null === (e = this.viewportRoot) || void 0 === e ? void 0 : e.querySelectorAll("*[".concat(this.nodeIdAttrName, "='").concat(t, "']"))) && void 0 !== n ? n : []) : [];
-    }, e.prototype.containsElement = function(t) {
-        var e = this.viewportElement;
-        return e === t || (null == e ? void 0 : e.contains(t));
-    }, e.prototype.getOffsetPoint = function(t) {
-        var e = this.getCurrentData();
-        return {
-            x: t.x - this.offsetX + e.scrollX,
-            y: t.y - this.offsetY + e.scrollY
-        };
-    }, e.prototype.getElementRect = function(t) {
-        var e = t.getBoundingClientRect(), n = t["offsetWidth"] ? t["offsetWidth"] : e.width, r = t["offsetHeight"] ? t["offsetHeight"] : e.height;
-        return new h(e.x, e.y, 1 !== this.scale ? n : e.width, 1 !== this.scale ? r : e.height);
-    }, e.prototype.getElementRectById = function(t) {
-        var e = this, n = this.findElementsById(t), r = p(n.map((function(t) {
-            return e.getElementRect(t);
-        })));
-        if (r) return this.isIframe ? new h(r.x + this.offsetX, r.y + this.offsetY, r.width, r.height) : new h(r.x, r.y, r.width, r.height);
-    }, e.prototype.getElementOffsetRect = function(t) {
-        var e = t.getBoundingClientRect();
-        if (e) return this.isIframe ? new h(e.x + this.contentWindow.scrollX, e.y + this.contentWindow.scrollY, e.width, e.height) : new h((e.x - this.offsetX + this.viewportElement.scrollLeft) / this.scale, (e.y - this.offsetY + this.viewportElement.scrollTop) / this.scale, e.width, e.height);
-    }, e.prototype.getElementOffsetRectById = function(t) {
-        var e = this, n = this.findElementsById(t);
-        if (n.length) {
-            var r = p(n.map((function(t) {
-                return e.getElementRect(t);
-            })));
-            return r ? this.isIframe ? new h(r.x + this.contentWindow.scrollX, r.y + this.contentWindow.scrollY, r.width, r.height) : new h((r.x - this.offsetX + this.viewportElement.scrollLeft) / this.scale, (r.y - this.offsetY + this.viewportElement.scrollTop) / this.scale, r.width, r.height) : void 0;
+    };
+    Viewport.prototype.clearCache = function () {
+        this.nodeElementsStore = {};
+    };
+    Viewport.prototype.getCurrentData = function () {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var data = {};
+        if (this.isIframe) {
+            data.scrollX = ((_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.scrollX) || 0;
+            data.scrollY = ((_b = this.contentWindow) === null || _b === void 0 ? void 0 : _b.scrollY) || 0;
+            data.width = ((_c = this.contentWindow) === null || _c === void 0 ? void 0 : _c.innerWidth) || 0;
+            data.height = ((_d = this.contentWindow) === null || _d === void 0 ? void 0 : _d.innerHeight) || 0;
         }
-    }, e.prototype.getValidNodeElement = function(t) {
-        var e = this, n = function(t) {
-            if (t) {
-                var r = e.findElementById(t.id);
-                return r || n(t.parent);
+        else if (this.viewportElement) {
+            data.scrollX = ((_e = this.viewportElement) === null || _e === void 0 ? void 0 : _e.scrollLeft) || 0;
+            data.scrollY = ((_f = this.viewportElement) === null || _f === void 0 ? void 0 : _f.scrollTop) || 0;
+            data.width = ((_g = this.viewportElement) === null || _g === void 0 ? void 0 : _g.clientWidth) || 0;
+            data.height = ((_h = this.viewportElement) === null || _h === void 0 ? void 0 : _h.clientHeight) || 0;
+        }
+        return data;
+    };
+    Viewport.prototype.takeDragStartSnapshot = function () {
+        this.dragStartSnapshot = this.getCurrentData();
+    };
+    Viewport.prototype.digestViewport = function () {
+        Object.assign(this, this.getCurrentData());
+    };
+    Viewport.prototype.elementFromPoint = function (point) {
+        var _a;
+        if ((_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document) {
+            return this.contentWindow.document.elementFromPoint(point.x, point.y);
+        }
+    };
+    Viewport.prototype.matchViewport = function (target) {
+        var _a;
+        if (this.isIframe) {
+            return (target === this.viewportElement ||
+                target === this.contentWindow ||
+                target === ((_a = this.contentWindow) === null || _a === void 0 ? void 0 : _a.document));
+        }
+        else {
+            return target === this.viewportElement;
+        }
+    };
+    Viewport.prototype.attachEvents = function () {
+        var _this = this;
+        var engine = this.engine;
+        cancelIdle(this.attachRequest);
+        this.attachRequest = requestIdle(function () {
+            if (!engine)
+                return;
+            if (_this.isIframe) {
+                _this.workspace.attachEvents(_this.contentWindow, _this.contentWindow);
+            }
+            else if (isHTMLElement(_this.viewportElement)) {
+                _this.workspace.attachEvents(_this.viewportElement, _this.contentWindow);
+            }
+        });
+    };
+    Viewport.prototype.detachEvents = function () {
+        if (this.isIframe) {
+            this.workspace.detachEvents(this.contentWindow);
+            this.workspace.detachEvents(this.viewportElement);
+        }
+        else if (this.viewportElement) {
+            this.workspace.detachEvents(this.viewportElement);
+        }
+    };
+    Viewport.prototype.onMount = function (element, contentWindow) {
+        this.mounted = true;
+        this.viewportElement = element;
+        this.contentWindow = contentWindow;
+        this.attachEvents();
+        this.digestViewport();
+    };
+    Viewport.prototype.onUnmount = function () {
+        this.mounted = false;
+        this.detachEvents();
+    };
+    Viewport.prototype.isPointInViewport = function (point, sensitive) {
+        if (!this.rect)
+            return false;
+        if (!this.containsElement(document.elementFromPoint(point.x, point.y))) {
+            return false;
+        }
+        return isPointInRect(point, this.rect, sensitive);
+    };
+    Viewport.prototype.isRectInViewport = function (rect) {
+        if (!this.rect)
+            return false;
+        if (!this.containsElement(document.elementFromPoint(rect.x, rect.y))) {
+            return false;
+        }
+        return isRectInRect(rect, this.rect);
+    };
+    Viewport.prototype.isPointInViewportArea = function (point, sensitive) {
+        if (!this.rect)
+            return false;
+        return isPointInRect(point, this.rect, sensitive);
+    };
+    Viewport.prototype.isOffsetPointInViewport = function (point, sensitive) {
+        if (!this.innerRect)
+            return false;
+        if (!this.containsElement(document.elementFromPoint(point.x, point.y)))
+            return false;
+        return isPointInRect(point, this.innerRect, sensitive);
+    };
+    Viewport.prototype.isOffsetRectInViewport = function (rect) {
+        if (!this.innerRect)
+            return false;
+        if (!this.containsElement(document.elementFromPoint(rect.x, rect.y))) {
+            return false;
+        }
+        return isRectInRect(rect, this.innerRect);
+    };
+    Viewport.prototype.makeObservable = function () {
+        define(this, {
+            scrollX: observable.ref,
+            scrollY: observable.ref,
+            width: observable.ref,
+            height: observable.ref,
+            digestViewport: action,
+            viewportElement: observable.ref,
+            contentWindow: observable.ref,
+        });
+    };
+    Viewport.prototype.findElementById = function (id) {
+        var _a;
+        if (!id)
+            return;
+        if (this.nodeElementsStore[id])
+            return this.nodeElementsStore[id][0];
+        return (_a = this.viewportRoot) === null || _a === void 0 ? void 0 : _a.querySelector("*[".concat(this.nodeIdAttrName, "='").concat(id, "']"));
+    };
+    Viewport.prototype.findElementsById = function (id) {
+        var _a, _b;
+        if (!id)
+            return [];
+        if (this.nodeElementsStore[id])
+            return this.nodeElementsStore[id];
+        return Array.from((_b = (_a = this.viewportRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll("*[".concat(this.nodeIdAttrName, "='").concat(id, "']"))) !== null && _b !== void 0 ? _b : []);
+    };
+    Viewport.prototype.containsElement = function (element) {
+        var root = this.viewportElement;
+        if (root === element)
+            return true;
+        return root === null || root === void 0 ? void 0 : root.contains(element);
+    };
+    Viewport.prototype.getOffsetPoint = function (topPoint) {
+        var data = this.getCurrentData();
+        return {
+            x: topPoint.x - this.offsetX + data.scrollX,
+            y: topPoint.y - this.offsetY + data.scrollY,
+        };
+    };
+    //相对于页面
+    Viewport.prototype.getElementRect = function (element) {
+        var rect = element.getBoundingClientRect();
+        var offsetWidth = element['offsetWidth']
+            ? element['offsetWidth']
+            : rect.width;
+        var offsetHeight = element['offsetHeight']
+            ? element['offsetHeight']
+            : rect.height;
+        return new Rect(rect.x, rect.y, this.scale !== 1 ? offsetWidth : rect.width, this.scale !== 1 ? offsetHeight : rect.height);
+    };
+    //相对于页面
+    Viewport.prototype.getElementRectById = function (id) {
+        var _this = this;
+        var elements = this.findElementsById(id);
+        var rect = calcBoundingRect(elements.map(function (element) { return _this.getElementRect(element); }));
+        if (rect) {
+            if (this.isIframe) {
+                return new Rect(rect.x + this.offsetX, rect.y + this.offsetY, rect.width, rect.height);
+            }
+            else {
+                return new Rect(rect.x, rect.y, rect.width, rect.height);
+            }
+        }
+    };
+    //相对于视口
+    Viewport.prototype.getElementOffsetRect = function (element) {
+        var elementRect = element.getBoundingClientRect();
+        if (elementRect) {
+            if (this.isIframe) {
+                return new Rect(elementRect.x + this.contentWindow.scrollX, elementRect.y + this.contentWindow.scrollY, elementRect.width, elementRect.height);
+            }
+            else {
+                return new Rect((elementRect.x - this.offsetX + this.viewportElement.scrollLeft) /
+                    this.scale, (elementRect.y - this.offsetY + this.viewportElement.scrollTop) /
+                    this.scale, elementRect.width, elementRect.height);
+            }
+        }
+    };
+    //相对于视口
+    Viewport.prototype.getElementOffsetRectById = function (id) {
+        var _this = this;
+        var elements = this.findElementsById(id);
+        if (!elements.length)
+            return;
+        var elementRect = calcBoundingRect(elements.map(function (element) { return _this.getElementRect(element); }));
+        if (elementRect) {
+            if (this.isIframe) {
+                return new Rect(elementRect.x + this.contentWindow.scrollX, elementRect.y + this.contentWindow.scrollY, elementRect.width, elementRect.height);
+            }
+            else {
+                return new Rect((elementRect.x - this.offsetX + this.viewportElement.scrollLeft) /
+                    this.scale, (elementRect.y - this.offsetY + this.viewportElement.scrollTop) /
+                    this.scale, elementRect.width, elementRect.height);
+            }
+        }
+    };
+    Viewport.prototype.getValidNodeElement = function (node) {
+        var _this = this;
+        var getNodeElement = function (node) {
+            if (!node)
+                return;
+            var ele = _this.findElementById(node.id);
+            if (ele) {
+                return ele;
+            }
+            else {
+                return getNodeElement(node.parent);
             }
         };
-        return n(t);
-    }, e.prototype.getChildrenRect = function(t) {
-        var e, n = this;
-        if (null === (e = null == t ? void 0 : t.children) || void 0 === e ? void 0 : e.length) return p(t.children.reduce((function(t, e) {
-            var r = n.getValidNodeRect(e);
-            return r ? t.concat(r) : t;
-        }), []));
-    }, e.prototype.getChildrenOffsetRect = function(t) {
-        var e, n = this;
-        if (null === (e = null == t ? void 0 : t.children) || void 0 === e ? void 0 : e.length) return p(t.children.reduce((function(t, e) {
-            var r = n.getValidNodeOffsetRect(e);
-            return r ? t.concat(r) : t;
-        }), []));
-    }, e.prototype.getValidNodeRect = function(t) {
-        if (t) {
-            var e = this.getElementRectById(t.id);
-            return t && t === t.root && t.isInOperation ? e ? p([ this.rect, e ]) : this.rect : e || this.getChildrenRect(t);
+        return getNodeElement(node);
+    };
+    Viewport.prototype.getChildrenRect = function (node) {
+        var _this = this;
+        var _a;
+        if (!((_a = node === null || node === void 0 ? void 0 : node.children) === null || _a === void 0 ? void 0 : _a.length))
+            return;
+        return calcBoundingRect(node.children.reduce(function (buf, child) {
+            var rect = _this.getValidNodeRect(child);
+            if (rect) {
+                return buf.concat(rect);
+            }
+            return buf;
+        }, []));
+    };
+    Viewport.prototype.getChildrenOffsetRect = function (node) {
+        var _this = this;
+        var _a;
+        if (!((_a = node === null || node === void 0 ? void 0 : node.children) === null || _a === void 0 ? void 0 : _a.length))
+            return;
+        return calcBoundingRect(node.children.reduce(function (buf, child) {
+            var rect = _this.getValidNodeOffsetRect(child);
+            if (rect) {
+                return buf.concat(rect);
+            }
+            return buf;
+        }, []));
+    };
+    Viewport.prototype.getValidNodeRect = function (node) {
+        if (!node)
+            return;
+        var rect = this.getElementRectById(node.id);
+        if (node && node === node.root && node.isInOperation) {
+            if (!rect)
+                return this.rect;
+            return calcBoundingRect([this.rect, rect]);
         }
-    }, e.prototype.getValidNodeOffsetRect = function(t) {
-        if (t) {
-            var e = this.getElementOffsetRectById(t.id);
-            return t && t === t.root && t.isInOperation ? e ? p([ this.innerRect, e ]) : this.innerRect : e || this.getChildrenOffsetRect(t);
+        if (rect) {
+            return rect;
         }
-    }, e.prototype.getValidNodeLayout = function(t) {
-        var e, n;
-        return t ? (null === (n = null === (e = t.parent) || void 0 === e ? void 0 : e.designerProps) || void 0 === n ? void 0 : n.inlineChildrenLayout) ? "horizontal" : f(this.findElementById(t.id)) : "vertical";
-    }, e;
-}(), pe = function() {
-    function t(t) {
-        this.selected = [], this.indexes = {}, t.selected && (this.selected = t.selected), 
-        t.operation && (this.operation = t.operation), this.makeObservable();
+        else {
+            return this.getChildrenRect(node);
+        }
+    };
+    Viewport.prototype.getValidNodeOffsetRect = function (node) {
+        if (!node)
+            return;
+        var rect = this.getElementOffsetRectById(node.id);
+        if (node && node === node.root && node.isInOperation) {
+            if (!rect)
+                return this.innerRect;
+            return calcBoundingRect([this.innerRect, rect]);
+        }
+        if (rect) {
+            return rect;
+        }
+        else {
+            return this.getChildrenOffsetRect(node);
+        }
+    };
+    Viewport.prototype.getValidNodeLayout = function (node) {
+        var _a, _b;
+        if (!node)
+            return 'vertical';
+        if ((_b = (_a = node.parent) === null || _a === void 0 ? void 0 : _a.designerProps) === null || _b === void 0 ? void 0 : _b.inlineChildrenLayout)
+            return 'horizontal';
+        return calcElementLayout(this.findElementById(node.id));
+    };
+    return Viewport;
+}());
+
+var Selection = /** @class */ (function () {
+    function Selection(props) {
+        this.selected = [];
+        this.indexes = {};
+        if (props.selected) {
+            this.selected = props.selected;
+        }
+        if (props.operation) {
+            this.operation = props.operation;
+        }
+        this.makeObservable();
     }
-    return t.prototype.makeObservable = function() {
-        V(this, {
-            selected: Y,
-            select: z,
-            batchSelect: z,
-            add: z,
-            remove: z,
-            clear: z,
-            crossAddTo: z
+    Selection.prototype.makeObservable = function () {
+        define(this, {
+            selected: observable,
+            select: action,
+            batchSelect: action,
+            add: action,
+            remove: action,
+            clear: action,
+            crossAddTo: action,
         });
-    }, t.prototype.trigger = function(t) {
-        return void 0 === t && (t = bt), this.operation.dispatch(new t({
+    };
+    Selection.prototype.trigger = function (type) {
+        if (type === void 0) { type = SelectNodeEvent; }
+        return this.operation.dispatch(new type({
             target: this.operation.tree,
-            source: this.selectedNodes
+            source: this.selectedNodes,
         }));
-    }, t.prototype.select = function(t) {
-        var e;
-        if (v(t)) {
-            if (1 === this.selected.length && this.selected.includes(t)) return void this.trigger(bt);
-            this.selected = [ t ], this.indexes = (e = {}, e[t] = !0, e), this.trigger(bt);
-        } else this.select(null == t ? void 0 : t.id);
-    }, t.prototype.safeSelect = function(t) {
-        t && this.select(t);
-    }, t.prototype.mapIds = function(t) {
-        return g(t) ? t.map((function(t) {
-            return v(t) ? t : null == t ? void 0 : t.id;
-        })) : [];
-    }, t.prototype.batchSelect = function(t) {
-        this.selected = this.mapIds(t), this.indexes = this.selected.reduce((function(t, e) {
-            return t[e] = !0, t;
-        }), {}), this.trigger(bt);
-    }, t.prototype.batchSafeSelect = function(t) {
-        (null == t ? void 0 : t.length) && this.batchSelect(t);
-    }, Object.defineProperty(t.prototype, "selectedNodes", {
-        get: function() {
-            var t = this;
-            return this.selected.map((function(e) {
-                return t.operation.tree.findById(e);
-            }));
+    };
+    Selection.prototype.select = function (id) {
+        var _a;
+        if (isStr(id)) {
+            if (this.selected.length === 1 && this.selected.includes(id)) {
+                this.trigger(SelectNodeEvent);
+                return;
+            }
+            this.selected = [id];
+            this.indexes = (_a = {}, _a[id] = true, _a);
+            this.trigger(SelectNodeEvent);
+        }
+        else {
+            this.select(id === null || id === void 0 ? void 0 : id.id);
+        }
+    };
+    Selection.prototype.safeSelect = function (id) {
+        if (!id)
+            return;
+        this.select(id);
+    };
+    Selection.prototype.mapIds = function (ids) {
+        return isArr(ids)
+            ? ids.map(function (node) { return (isStr(node) ? node : node === null || node === void 0 ? void 0 : node.id); })
+            : [];
+    };
+    Selection.prototype.batchSelect = function (ids) {
+        this.selected = this.mapIds(ids);
+        this.indexes = this.selected.reduce(function (buf, id) {
+            buf[id] = true;
+            return buf;
+        }, {});
+        this.trigger(SelectNodeEvent);
+    };
+    Selection.prototype.batchSafeSelect = function (ids) {
+        if (!(ids === null || ids === void 0 ? void 0 : ids.length))
+            return;
+        this.batchSelect(ids);
+    };
+    Object.defineProperty(Selection.prototype, "selectedNodes", {
+        get: function () {
+            var _this = this;
+            return this.selected.map(function (id) { return _this.operation.tree.findById(id); });
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "first", {
-        get: function() {
-            if (this.selected && this.selected.length) return this.selected[0];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "first", {
+        get: function () {
+            if (this.selected && this.selected.length)
+                return this.selected[0];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "last", {
-        get: function() {
-            if (this.selected && this.selected.length) return this.selected[this.selected.length - 1];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "last", {
+        get: function () {
+            if (this.selected && this.selected.length)
+                return this.selected[this.selected.length - 1];
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "length", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "length", {
+        get: function () {
             return this.selected.length;
         },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.add = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        this.mapIds(e).forEach((function(e) {
-            v(e) ? t.selected.includes(e) || (t.selected.push(e), t.indexes[e] = !0) : t.add(null == e ? void 0 : e.id);
-        })), this.trigger();
-    }, t.prototype.crossAddTo = function(t) {
-        var e = this;
-        if (t.parent) {
-            var n = this.selectedNodes;
-            if (this.has(t)) this.remove(t); else {
-                var r = n.reduce((function(e, n) {
-                    return n.distanceTo(t) < e.distanceTo(t) ? n : e;
-                }), n[0]);
-                if (r) {
-                    var o = t.crossSiblings(r);
-                    o.forEach((function(t) {
-                        e.has(t.id) || (e.selected.push(t.id), e.indexes[t.id] = !0);
-                    }));
-                }
-                this.has(t.id) || (this.selected.push(t.id), this.indexes[t.id] = !0);
-            }
+        enumerable: false,
+        configurable: true
+    });
+    Selection.prototype.add = function () {
+        var _this = this;
+        var ids = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            ids[_i] = arguments[_i];
         }
-    }, t.prototype.remove = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        this.mapIds(e).forEach((function(e) {
-            v(e) ? (t.selected = t.selected.filter((function(t) {
-                return t !== e;
-            })), delete t.indexes[e]) : t.remove(null == e ? void 0 : e.id);
-        })), this.trigger(Et);
-    }, t.prototype.has = function() {
-        for (var t = this, e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-        return this.mapIds(e).some((function(e) {
-            return v(e) ? t.indexes[e] : !!(null == e ? void 0 : e.id) && t.has(null == e ? void 0 : e.id);
-        }));
-    }, t.prototype.clear = function() {
-        this.selected = [], this.indexes = {}, this.trigger(Et);
-    }, t;
-}(), fe = function() {
-    function t(t) {
-        this.node = null, this.operation = null == t ? void 0 : t.operation, this.makeObservable();
-    }
-    return t.prototype.setHover = function(t) {
-        this.node = t || null, this.trigger();
-    }, t.prototype.clear = function() {
-        this.node = null;
-    }, t.prototype.trigger = function() {
-        if (this.operation) return this.operation.dispatch(new ft({
-            target: this.operation.tree,
-            source: this.node
-        }));
-    }, t.prototype.makeObservable = function() {
-        V(this, {
-            node: Y.ref,
-            setHover: z,
-            clear: z
+        this.mapIds(ids).forEach(function (id) {
+            if (isStr(id)) {
+                if (!_this.selected.includes(id)) {
+                    _this.selected.push(id);
+                    _this.indexes[id] = true;
+                }
+            }
+            else {
+                _this.add(id === null || id === void 0 ? void 0 : id.id);
+            }
         });
-    }, t;
-}(), ve = function() {
-    function t(t, e) {
-        this.helper = t, this.type = e.type || "normal", this._id = e.id, this.refer = e.refer, 
-        this.start = G({}, e.start), this.end = G({}, e.end), this.distance = e.distance;
-    }
-    return Object.defineProperty(t.prototype, "id", {
-        get: function() {
-            var t;
-            return null !== (t = this._id) && void 0 !== t ? t : "".concat(this.start.x, "-").concat(this.start.y, "-").concat(this.end.x, "-").concat(this.end.y);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "direction", {
-        get: function() {
-            var t, e;
-            return (null === (t = this.start) || void 0 === t ? void 0 : t.x) === (null === (e = this.end) || void 0 === e ? void 0 : e.x) ? "v" : "h";
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "closest", {
-        get: function() {
-            return this.distance < Ne.threshold;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "rect", {
-        get: function() {
-            return m(this);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.translate = function(t, e) {
-        if (t && (null == t ? void 0 : t.parent)) {
-            var n = t.parent, r = t.getValidElementOffsetRect(), o = n.getValidElementOffsetRect(), i = y(this, r);
-            "h" === this.direction ? e.y = this.start.y - o.y - i.y : e.x = this.start.x - o.x - i.x;
-        }
-    }, t.prototype.resize = function(t, e) {
-        if (t && (null == t ? void 0 : t.parent)) {
-            var n = t.parent, r = t.getValidElementOffsetRect(), o = n.getValidElementOffsetRect(), i = y(this, r), s = this.helper.cursorDragNodesRect, a = this.snapEdge(e);
-            if ("h" === this.direction) {
-                var c = this.start.y - o.y - i.y;
-                switch (this.helper.direction) {
-                  case "left-top":
-                  case "center-top":
-                  case "right-top":
-                    if ("ht" !== a) return;
-                    e.y = c, e.height = s.bottom - c;
-                    break;
-
-                  case "left-bottom":
-                  case "center-bottom":
-                  case "right-bottom":
-                    if ("hb" !== a) return;
-                    e.height = this.start.y - s.top;
+        this.trigger();
+    };
+    Selection.prototype.crossAddTo = function (node) {
+        var _this = this;
+        if (node.parent) {
+            var selectedNodes = this.selectedNodes;
+            if (this.has(node)) {
+                this.remove(node);
+            }
+            else {
+                var minDistanceNode = selectedNodes.reduce(function (minDistanceNode, item) {
+                    return item.distanceTo(node) < minDistanceNode.distanceTo(node)
+                        ? item
+                        : minDistanceNode;
+                }, selectedNodes[0]);
+                if (minDistanceNode) {
+                    var crossNodes = node.crossSiblings(minDistanceNode);
+                    crossNodes.forEach(function (node) {
+                        if (!_this.has(node.id)) {
+                            _this.selected.push(node.id);
+                            _this.indexes[node.id] = true;
+                        }
+                    });
                 }
-            } else {
-                var u = this.start.x - o.x - i.x;
-                switch (this.helper.direction) {
-                  case "left-top":
-                  case "left-bottom":
-                  case "left-center":
-                    if ("vl" !== a) return;
-                    e.x = u, e.width = s.right - u;
-                    break;
-
-                  case "right-center":
-                  case "right-top":
-                  case "right-bottom":
-                    if ("vr" !== a) return;
-                    e.width = this.start.x - s.left;
+                if (!this.has(node.id)) {
+                    this.selected.push(node.id);
+                    this.indexes[node.id] = true;
                 }
             }
         }
-    }, t.prototype.snapEdge = function(t) {
-        var e = Ne.threshold;
-        if ("h" === this.direction) {
-            if (Math.abs(this.start.y - t.top) < e) return "ht";
-            if (Math.abs(this.start.y - (t.top + t.height / 2)) < e) return "hc";
-            if (Math.abs(this.start.y - t.bottom) < e) return "hb";
-        } else {
-            if (Math.abs(this.start.x - t.left) < e) return "vl";
-            if (Math.abs(this.start.x - (t.left + t.width / 2)) < e) return "vc";
-            if (Math.abs(this.start.x - t.right) < e) return "vr";
+    };
+    Selection.prototype.remove = function () {
+        var _this = this;
+        var ids = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            ids[_i] = arguments[_i];
         }
-    }, t;
-}(), ge = function() {
-    function t(t, e) {
-        this.helper = t, this.distance = e.distance, this.refer = e.refer, this.rect = e.rect, 
-        this.type = e.type;
+        this.mapIds(ids).forEach(function (id) {
+            if (isStr(id)) {
+                _this.selected = _this.selected.filter(function (item) { return item !== id; });
+                delete _this.indexes[id];
+            }
+            else {
+                _this.remove(id === null || id === void 0 ? void 0 : id.id);
+            }
+        });
+        this.trigger(UnSelectNodeEvent);
+    };
+    Selection.prototype.has = function () {
+        var _this = this;
+        var ids = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            ids[_i] = arguments[_i];
+        }
+        return this.mapIds(ids).some(function (id) {
+            if (isStr(id)) {
+                return _this.indexes[id];
+            }
+            else {
+                if (!(id === null || id === void 0 ? void 0 : id.id))
+                    return false;
+                return _this.has(id === null || id === void 0 ? void 0 : id.id);
+            }
+        });
+    };
+    Selection.prototype.clear = function () {
+        this.selected = [];
+        this.indexes = {};
+        this.trigger(UnSelectNodeEvent);
+    };
+    return Selection;
+}());
+
+var Hover = /** @class */ (function () {
+    function Hover(props) {
+        this.node = null;
+        this.operation = props === null || props === void 0 ? void 0 : props.operation;
+        this.makeObservable();
     }
-    return Object.defineProperty(t.prototype, "referRect", {
-        get: function() {
-            if (this.refer) return this.helper.getNodeRect(this.refer);
+    Hover.prototype.setHover = function (node) {
+        if (node) {
+            this.node = node;
+        }
+        else {
+            this.node = null;
+        }
+        this.trigger();
+    };
+    Hover.prototype.clear = function () {
+        this.node = null;
+    };
+    Hover.prototype.trigger = function () {
+        if (this.operation) {
+            return this.operation.dispatch(new HoverNodeEvent({
+                target: this.operation.tree,
+                source: this.node,
+            }));
+        }
+    };
+    Hover.prototype.makeObservable = function () {
+        define(this, {
+            node: observable.ref,
+            setHover: action,
+            clear: action,
+        });
+    };
+    return Hover;
+}());
+
+var SnapLine = /** @class */ (function () {
+    function SnapLine(helper, line) {
+        this.helper = helper;
+        this.type = line.type || 'normal';
+        this._id = line.id;
+        this.refer = line.refer;
+        this.start = __assign({}, line.start);
+        this.end = __assign({}, line.end);
+        this.distance = line.distance;
+    }
+    Object.defineProperty(SnapLine.prototype, "id", {
+        get: function () {
+            var _a;
+            return ((_a = this._id) !== null && _a !== void 0 ? _a : "".concat(this.start.x, "-").concat(this.start.y, "-").concat(this.end.x, "-").concat(this.end.y));
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "id", {
-        get: function() {
-            var t;
-            return null !== (t = this._id) && void 0 !== t ? t : "".concat(this.rect.x, "-").concat(this.rect.y, "-").concat(this.rect.width, "-").concat(this.rect.height);
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SnapLine.prototype, "direction", {
+        get: function () {
+            var _a, _b;
+            if (((_a = this.start) === null || _a === void 0 ? void 0 : _a.x) === ((_b = this.end) === null || _b === void 0 ? void 0 : _b.x))
+                return 'v';
+            return 'h';
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "next", {
-        get: function() {
-            var t = this.helper.calcAroundSpaceBlocks(this.referRect);
-            return t[this.type];
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SnapLine.prototype, "closest", {
+        get: function () {
+            return this.distance < TransformHelper.threshold;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "extendsLine", {
-        get: function() {
-            if (this.needExtendsLine) {
-                var t = this.helper.dragNodesRect;
-                return w(t, this.referRect);
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SnapLine.prototype, "rect", {
+        get: function () {
+            return calcRectOfAxisLineSegment(this);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    SnapLine.prototype.translate = function (node, translate) {
+        if (!node || !(node === null || node === void 0 ? void 0 : node.parent))
+            return;
+        var parent = node.parent;
+        var dragNodeRect = node.getValidElementOffsetRect();
+        var parentRect = parent.getValidElementOffsetRect();
+        var edgeOffset = calcOffsetOfSnapLineSegmentToEdge(this, dragNodeRect);
+        if (this.direction === 'h') {
+            translate.y = this.start.y - parentRect.y - edgeOffset.y;
+        }
+        else {
+            translate.x = this.start.x - parentRect.x - edgeOffset.x;
+        }
+    };
+    SnapLine.prototype.resize = function (node, rect) {
+        if (!node || !(node === null || node === void 0 ? void 0 : node.parent))
+            return;
+        var parent = node.parent;
+        var dragNodeRect = node.getValidElementOffsetRect();
+        var parentRect = parent.getValidElementOffsetRect();
+        var edgeOffset = calcOffsetOfSnapLineSegmentToEdge(this, dragNodeRect);
+        var cursorRect = this.helper.cursorDragNodesRect;
+        var snapEdge = this.snapEdge(rect);
+        if (this.direction === 'h') {
+            var y = this.start.y - parentRect.y - edgeOffset.y;
+            switch (this.helper.direction) {
+                case 'left-top':
+                case 'center-top':
+                case 'right-top':
+                    if (snapEdge !== 'ht')
+                        return;
+                    rect.y = y;
+                    rect.height = cursorRect.bottom - y;
+                    break;
+                case 'left-bottom':
+                case 'center-bottom':
+                case 'right-bottom':
+                    if (snapEdge !== 'hb')
+                        return;
+                    rect.height = this.start.y - cursorRect.top;
+                    break;
+            }
+        }
+        else {
+            var x = this.start.x - parentRect.x - edgeOffset.x;
+            switch (this.helper.direction) {
+                case 'left-top':
+                case 'left-bottom':
+                case 'left-center':
+                    if (snapEdge !== 'vl')
+                        return;
+                    rect.x = x;
+                    rect.width = cursorRect.right - x;
+                    break;
+                case 'right-center':
+                case 'right-top':
+                case 'right-bottom':
+                    if (snapEdge !== 'vr')
+                        return;
+                    rect.width = this.start.x - cursorRect.left;
+                    break;
+            }
+        }
+    };
+    SnapLine.prototype.snapEdge = function (rect) {
+        var threshold = TransformHelper.threshold;
+        if (this.direction === 'h') {
+            if (Math.abs(this.start.y - rect.top) < threshold)
+                return 'ht';
+            if (Math.abs(this.start.y - (rect.top + rect.height / 2)) < threshold)
+                return 'hc';
+            if (Math.abs(this.start.y - rect.bottom) < threshold)
+                return 'hb';
+        }
+        else {
+            if (Math.abs(this.start.x - rect.left) < threshold)
+                return 'vl';
+            if (Math.abs(this.start.x - (rect.left + rect.width / 2)) < threshold)
+                return 'vc';
+            if (Math.abs(this.start.x - rect.right) < threshold)
+                return 'vr';
+        }
+    };
+    return SnapLine;
+}());
+
+var SpaceBlock = /** @class */ (function () {
+    function SpaceBlock(helper, box) {
+        this.helper = helper;
+        this.distance = box.distance;
+        this.refer = box.refer;
+        this.rect = box.rect;
+        this.type = box.type;
+    }
+    Object.defineProperty(SpaceBlock.prototype, "referRect", {
+        get: function () {
+            if (!this.refer)
+                return;
+            return this.helper.getNodeRect(this.refer);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "id", {
+        get: function () {
+            var _a;
+            return ((_a = this._id) !== null && _a !== void 0 ? _a : "".concat(this.rect.x, "-").concat(this.rect.y, "-").concat(this.rect.width, "-").concat(this.rect.height));
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "next", {
+        get: function () {
+            var spaceBlock = this.helper.calcAroundSpaceBlocks(this.referRect);
+            return spaceBlock[this.type];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "extendsLine", {
+        get: function () {
+            if (!this.needExtendsLine)
+                return;
+            var dragNodesRect = this.helper.dragNodesRect;
+            return calcExtendsLineSegmentOfRect(dragNodesRect, this.referRect);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "needExtendsLine", {
+        get: function () {
+            var targetRect = this.crossDragNodesRect;
+            var referRect = this.crossReferRect;
+            if (this.type === 'top' || this.type === 'bottom') {
+                var rightDelta = referRect.right - targetRect.left;
+                var leftDelta = targetRect.right - referRect.left;
+                return (rightDelta < targetRect.width / 2 || leftDelta < targetRect.width / 2);
+            }
+            else {
+                var topDelta = targetRect.bottom - referRect.top;
+                var bottomDelta = referRect.bottom - targetRect.top;
+                return (topDelta < targetRect.height / 2 || bottomDelta < targetRect.height / 2);
             }
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "needExtendsLine", {
-        get: function() {
-            var t = this.crossDragNodesRect, e = this.crossReferRect;
-            if ("top" === this.type || "bottom" === this.type) {
-                var n = e.right - t.left, r = t.right - e.left;
-                return n < t.width / 2 || r < t.width / 2;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "crossReferRect", {
+        get: function () {
+            var referRect = this.referRect;
+            if (this.type === 'top' || this.type === 'bottom') {
+                return new Rect(referRect.x, this.rect.y, referRect.width, this.rect.height);
             }
-            var o = t.bottom - e.top, i = e.bottom - t.top;
-            return o < t.height / 2 || i < t.height / 2;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "crossReferRect", {
-        get: function() {
-            var t = this.referRect;
-            return "top" === this.type || "bottom" === this.type ? new h(t.x, this.rect.y, t.width, this.rect.height) : new h(this.rect.x, t.y, this.rect.width, t.height);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "crossDragNodesRect", {
-        get: function() {
-            var t = this.helper.dragNodesRect;
-            return "top" === this.type || "bottom" === this.type ? new h(t.x, this.rect.y, t.width, this.rect.height) : new h(this.rect.x, t.y, this.rect.width, t.height);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "isometrics", {
-        get: function() {
-            for (var t = [], e = this; e = e.next; ) if (Math.abs(e.distance - this.distance) < Ne.threshold) {
-                if (t.some((function(t) {
-                    return t.distance !== e.distance;
-                }))) continue;
-                t.push(e);
+            else {
+                return new Rect(this.rect.x, referRect.y, this.rect.width, referRect.height);
             }
-            return t;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "snapLine", {
-        get: function() {
-            if (this.isometrics.length) {
-                var t, e = this.next.rect, n = this.referRect;
-                t = "top" === this.type ? new b({
-                    x: e.left,
-                    y: n.bottom + e.height
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "crossDragNodesRect", {
+        get: function () {
+            var dragNodesRect = this.helper.dragNodesRect;
+            if (this.type === 'top' || this.type === 'bottom') {
+                return new Rect(dragNodesRect.x, this.rect.y, dragNodesRect.width, this.rect.height);
+            }
+            else {
+                return new Rect(this.rect.x, dragNodesRect.y, this.rect.width, dragNodesRect.height);
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "isometrics", {
+        get: function () {
+            var results = [];
+            var spaceBlock = this;
+            while ((spaceBlock = spaceBlock.next)) {
+                if (Math.abs(spaceBlock.distance - this.distance) <
+                    TransformHelper.threshold) {
+                    if (results.some(function (box) { return box.distance !== spaceBlock.distance; }))
+                        continue;
+                    results.push(spaceBlock);
+                }
+            }
+            return results;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SpaceBlock.prototype, "snapLine", {
+        get: function () {
+            if (!this.isometrics.length)
+                return;
+            var nextRect = this.next.rect;
+            var referRect = this.referRect;
+            var line;
+            if (this.type === 'top') {
+                line = new LineSegment({
+                    x: nextRect.left,
+                    y: referRect.bottom + nextRect.height,
                 }, {
-                    x: e.right,
-                    y: n.bottom + e.height
-                }) : "bottom" === this.type ? new b({
-                    x: e.left,
-                    y: n.top - e.height
-                }, {
-                    x: e.right,
-                    y: n.top - e.height
-                }) : "left" === this.type ? new b({
-                    x: n.right + e.width,
-                    y: e.top
-                }, {
-                    x: n.right + e.width,
-                    y: e.bottom
-                }) : new b({
-                    x: n.left - e.width,
-                    y: e.top
-                }, {
-                    x: n.left - e.width,
-                    y: e.bottom
+                    x: nextRect.right,
+                    y: referRect.bottom + nextRect.height,
                 });
-                var r = E(t, this.helper.dragNodesEdgeLines);
-                return new ve(this.helper, G(G({}, t), {
-                    distance: r,
-                    type: "space-block"
-                }));
             }
+            else if (this.type === 'bottom') {
+                line = new LineSegment({
+                    x: nextRect.left,
+                    y: referRect.top - nextRect.height,
+                }, {
+                    x: nextRect.right,
+                    y: referRect.top - nextRect.height,
+                });
+            }
+            else if (this.type === 'left') {
+                line = new LineSegment({
+                    x: referRect.right + nextRect.width,
+                    y: nextRect.top,
+                }, {
+                    x: referRect.right + nextRect.width,
+                    y: nextRect.bottom,
+                });
+            }
+            else {
+                line = new LineSegment({
+                    x: referRect.left - nextRect.width,
+                    y: nextRect.top,
+                }, {
+                    x: referRect.left - nextRect.width,
+                    y: nextRect.bottom,
+                });
+            }
+            var distance = calcDistanceOfSnapLineToEdges(line, this.helper.dragNodesEdgeLines);
+            return new SnapLine(this.helper, __assign(__assign({}, line), { distance: distance, type: 'space-block' }));
         },
-        enumerable: !1,
-        configurable: !0
-    }), t;
-}();
+        enumerable: false,
+        configurable: true
+    });
+    return SpaceBlock;
+}());
 
-(function(t) {
-    t["Normal"] = "NORMAL", t["DragStart"] = "DRAG_START", t["Dragging"] = "DRAGGING", 
-    t["DragStop"] = "DRAG_STOP";
-})(Ut || (Ut = {})), function(t) {
-    t["Move"] = "MOVE", t["Resize"] = "RESIZE", t["Rotate"] = "ROTATE", t["Scale"] = "SCALE", 
-    t["Translate"] = "TRANSLATE", t["Round"] = "ROUND";
-}(Kt || (Kt = {})), function(t) {
-    t["Normal"] = "NORMAL", t["Selection"] = "SELECTION", t["Sketch"] = "SKETCH";
-}(_t || (_t = {}));
-
-var ye, me = {
+var CursorStatus;
+(function (CursorStatus) {
+    CursorStatus["Normal"] = "NORMAL";
+    CursorStatus["DragStart"] = "DRAG_START";
+    CursorStatus["Dragging"] = "DRAGGING";
+    CursorStatus["DragStop"] = "DRAG_STOP";
+})(CursorStatus || (CursorStatus = {}));
+var CursorDragType;
+(function (CursorDragType) {
+    CursorDragType["Move"] = "MOVE";
+    CursorDragType["Resize"] = "RESIZE";
+    CursorDragType["Rotate"] = "ROTATE";
+    CursorDragType["Scale"] = "SCALE";
+    CursorDragType["Translate"] = "TRANSLATE";
+    CursorDragType["Round"] = "ROUND";
+})(CursorDragType || (CursorDragType = {}));
+var CursorType;
+(function (CursorType) {
+    CursorType["Normal"] = "NORMAL";
+    CursorType["Selection"] = "SELECTION";
+    CursorType["Sketch"] = "SKETCH";
+})(CursorType || (CursorType = {}));
+var DEFAULT_POSITION = {
     pageX: 0,
     pageY: 0,
     clientX: 0,
@@ -1770,1637 +2964,2804 @@ var ye, me = {
     topPageX: 0,
     topPageY: 0,
     topClientX: 0,
-    topClientY: 0
-}, we = function(t, e) {
-    var n, r, o, i, s = null === (r = null === (n = null === document || void 0 === document ? void 0 : document.getElementsByTagName) || void 0 === n ? void 0 : n.call(document, "html")) || void 0 === r ? void 0 : r[0], a = null === (i = null === (o = null == t ? void 0 : t.document) || void 0 === o ? void 0 : o.getElementsByTagName("html")) || void 0 === i ? void 0 : i[0];
-    a && a.style.cursor !== e && (a.style.cursor = e), s && s.style.cursor !== e && (s.style.cursor = e);
-}, be = function(t, e) {
-    return Object.keys(t || {}).reduce((function(n, r) {
-        return N(null == t ? void 0 : t[r]) && N(null == e ? void 0 : e[r]) ? n[r] = t[r] - e[r] : n[r] = t[r], 
-        n;
-    }), {});
-}, Ee = function() {
-    function e(e) {
-        this.type = _t.Normal, this.dragType = Kt.Move, this.status = Ut.Normal, this.position = me, 
-        this.dragAtomDelta = me, this.dragStartToCurrentDelta = me, this.dragStartToEndDelta = me, 
-        this.view = t, this.engine = e, this.makeObservable();
+    topClientY: 0,
+};
+var setCursorStyle = function (contentWindow, style) {
+    var _a, _b, _c, _d;
+    var currentRoot = (_b = (_a = document === null || document === void 0 ? void 0 : document.getElementsByTagName) === null || _a === void 0 ? void 0 : _a.call(document, 'html')) === null || _b === void 0 ? void 0 : _b[0];
+    var root = (_d = (_c = contentWindow === null || contentWindow === void 0 ? void 0 : contentWindow.document) === null || _c === void 0 ? void 0 : _c.getElementsByTagName('html')) === null || _d === void 0 ? void 0 : _d[0];
+    if (root && root.style.cursor !== style) {
+        root.style.cursor = style;
     }
-    return e.prototype.makeObservable = function() {
-        V(this, {
-            type: Y.ref,
-            dragType: Y.ref,
-            status: Y.ref,
-            position: Y.ref,
-            dragStartPosition: Y.ref,
-            dragEndPosition: Y.ref,
-            dragAtomDelta: Y.ref,
-            dragStartToCurrentDelta: Y.ref,
-            dragStartToEndDelta: Y.ref,
-            view: Y.ref,
-            setStyle: z,
-            setPosition: z,
-            setStatus: z,
-            setType: z
-        });
-    }, Object.defineProperty(e.prototype, "speed", {
-        get: function() {
-            return Math.sqrt(Math.pow(this.dragAtomDelta.clientX, 2) + Math.pow(this.dragAtomDelta.clientY, 2));
-        },
-        enumerable: !1,
-        configurable: !0
-    }), e.prototype.setStatus = function(t) {
-        this.status = t;
-    }, e.prototype.setType = function(t) {
-        this.type = t;
-    }, e.prototype.setDragType = function(t) {
-        this.dragType = t;
-    }, e.prototype.setStyle = function(t) {
-        this.engine.workbench.eachWorkspace((function(e) {
-            we(e.viewport.contentWindow, t);
-        }));
-    }, e.prototype.setPosition = function(t) {
-        this.dragAtomDelta = be(this.position, t), this.position = G({}, t), this.status === Ut.Dragging && (this.dragStartToCurrentDelta = be(this.position, this.dragStartPosition));
-    }, e.prototype.setDragStartPosition = function(t) {
-        t ? this.dragStartPosition = G({}, t) : (this.dragStartPosition = null, this.dragStartToCurrentDelta = me);
-    }, e.prototype.setDragEndPosition = function(t) {
-        this.dragStartPosition && (t ? (this.dragEndPosition = G({}, t), this.dragStartToEndDelta = be(this.dragStartPosition, this.dragEndPosition)) : (this.dragEndPosition = null, 
-        this.dragStartToEndDelta = me));
-    }, e;
-}(), Ne = function() {
-    function t(t) {
-        this.dragNodes = [], this.rulerSnapLines = [], this.aroundSnapLines = [], this.aroundSpaceBlocks = null, 
-        this.viewportRectsStore = {}, this.dragStartTranslateStore = {}, this.dragStartSizeStore = {}, 
-        this.dragStartNodesRect = null, this.snapping = !1, this.dragging = !1, this.snapped = !1, 
-        this.operation = t.operation, this.makeObservable();
+    if (currentRoot && currentRoot.style.cursor !== style) {
+        currentRoot.style.cursor = style;
     }
-    return Object.defineProperty(t.prototype, "tree", {
-        get: function() {
-            return this.operation.tree;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "cursor", {
-        get: function() {
-            return this.operation.engine.cursor;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "viewport", {
-        get: function() {
-            return this.operation.workspace.viewport;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "deltaX", {
-        get: function() {
-            return this.cursor.dragStartToCurrentDelta.clientX;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "deltaY", {
-        get: function() {
-            return this.cursor.dragStartToCurrentDelta.clientY;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "cursorPosition", {
-        get: function() {
-            var t = this.cursor.position;
-            return this.operation.workspace.viewport.getOffsetPoint(new O(t.clientX, t.clientY));
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "cursorDragNodesRect", {
-        get: function() {
-            if ("translate" === this.type) return new h(this.cursorPosition.x - this.dragStartCursorOffset.x, this.cursorPosition.y - this.dragStartCursorOffset.y, this.dragNodesRect.width, this.dragNodesRect.height);
-            if ("resize" === this.type) {
-                var t = this.dragStartNodesRect, e = this.cursor.dragStartToCurrentDelta.clientX, n = this.cursor.dragStartToCurrentDelta.clientY;
-                switch (this.direction) {
-                  case "left-top":
-                    return new h(this.cursorPosition.x - this.dragStartCursorOffset.x, this.cursorPosition.y - this.dragStartCursorOffset.y, t.width - e, t.height - n);
-
-                  case "left-center":
-                    return new h(this.cursorPosition.x - this.dragStartCursorOffset.x, t.y, t.width - e, t.height);
-
-                  case "left-bottom":
-                    return new h(this.cursorPosition.x - this.dragStartCursorOffset.x, t.y, t.width - e, t.height - n);
-
-                  case "center-top":
-                    return new h(t.x, this.cursorPosition.y - this.dragStartCursorOffset.y, t.width, t.height - n);
-
-                  case "center-bottom":
-                    return new h(t.x, t.y, t.width, t.height + n);
-
-                  case "right-top":
-                    return new h(t.x, this.cursorPosition.y - this.dragStartCursorOffset.y, t.width + e, t.height - n);
-
-                  case "right-center":
-                    return new h(t.x, t.y, t.width + e, t.height);
-
-                  case "right-bottom":
-                    return new h(t.x, t.y, t.width + e, t.height - n);
-                }
-            }
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "cursorDragNodesEdgeLines", {
-        get: function() {
-            return k(this.cursorDragNodesRect);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "dragNodesRect", {
-        get: function() {
-            return this.draggingNodesRect ? this.draggingNodesRect : p(this.dragNodes.map((function(t) {
-                return t.getValidElementOffsetRect();
-            })));
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "dragNodesEdgeLines", {
-        get: function() {
-            return k(this.dragNodesRect);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "cursorOffset", {
-        get: function() {
-            return new O(this.cursorPosition.x - this.dragNodesRect.x, this.cursorPosition.y - this.dragNodesRect.y);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "dragStartCursor", {
-        get: function() {
-            var t = this.operation.engine.cursor.dragStartPosition;
-            return this.operation.workspace.viewport.getOffsetPoint(new O(t.clientX, t.clientY));
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "dragStartCursorOffset", {
-        get: function() {
-            return new O(this.dragStartCursor.x - this.dragStartNodesRect.x, this.dragStartCursor.y - this.dragStartNodesRect.y);
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "closestSnapLines", {
-        get: function() {
-            if (!this.dragging) return [];
-            var e = [], n = this.cursorDragNodesEdgeLines;
-            return this.thresholdSnapLines.forEach((function(r) {
-                var o = E(r, n);
-                if (o < t.threshold) {
-                    var i = e.findIndex((function(t) {
-                        return t.distance > o && t.distance > 0 && t.direction === r.direction;
-                    }));
-                    i > -1 && e.splice(i, 1), e.push(r);
-                }
-            })), e;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "closestSpaceBlocks", {
-        get: function() {
-            if (!this.dragging) return [];
-            var e = this.cursorDragNodesEdgeLines;
-            return this.thresholdSpaceBlocks.filter((function(n) {
-                var r = n.snapLine;
-                return !!r && E(r, e) < t.threshold;
-            }));
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "thresholdSnapLines", {
-        get: function() {
-            if (!this.dragging) return [];
-            var t = [];
-            for (var e in this.aroundSnapLines.forEach((function(e) {
-                t.push(e);
-            })), this.rulerSnapLines.forEach((function(e) {
-                e.closest && t.push(e);
-            })), this.aroundSpaceBlocks) {
-                var n = this.aroundSpaceBlocks[e], r = n.snapLine;
-                r && t.push(r);
-            }
-            return t;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "thresholdSpaceBlocks", {
-        get: function() {
-            var t = [];
-            if (!this.dragging) return [];
-            for (var e in this.aroundSpaceBlocks) {
-                var n = this.aroundSpaceBlocks[e];
-                if (!n.snapLine) return [];
-                if (0 !== n.snapLine.distance) return [];
-                n.isometrics.length && (t.push(n), t.push.apply(t, tt([], Q(n.isometrics), !1)));
-            }
-            return t;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "measurerSpaceBlocks", {
-        get: function() {
-            var t = [];
-            if (!this.dragging || !this.snapped) return [];
-            for (var e in this.aroundSpaceBlocks) this.aroundSpaceBlocks[e] && t.push(this.aroundSpaceBlocks[e]);
-            return t;
-        },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.calcBaseTranslate = function(t) {
-        var e, n = null !== (e = this.dragStartTranslateStore[t.id]) && void 0 !== e ? e : {
-            x: 0,
-            y: 0
-        }, r = n.x + this.deltaX, o = n.y + this.deltaY;
-        return {
-            x: r,
-            y: o
-        };
-    }, t.prototype.calcBaseResize = function(t) {
-        var e, n, r = this.deltaX, o = this.deltaY, i = null !== (e = this.dragStartTranslateStore[t.id]) && void 0 !== e ? e : {
-            x: 0,
-            y: 0
-        }, s = null !== (n = this.dragStartSizeStore[t.id]) && void 0 !== n ? n : {
-            width: 0,
-            height: 0
-        };
-        switch (this.direction) {
-          case "left-top":
-            return new h(i.x + r, i.y + o, s.width - r, s.height - o);
-
-          case "left-center":
-            return new h(i.x + r, i.y, s.width - r, s.height);
-
-          case "left-bottom":
-            return new h(i.x + r, i.y, s.width - r, s.height + o);
-
-          case "center-bottom":
-            return new h(i.x, i.y, s.width, s.height + o);
-
-          case "center-top":
-            return new h(i.x, i.y + o, s.width, s.height - o);
-
-          case "right-top":
-            return new h(i.x, i.y + o, s.width + r, s.height - o);
-
-          case "right-bottom":
-            return new h(i.x, i.y, s.width + r, s.height + o);
-
-          case "right-center":
-            return new h(i.x, i.y, s.width + r, s.height);
+};
+var calcPositionDelta = function (end, start) {
+    return Object.keys(end || {}).reduce(function (buf, key) {
+        if (isValidNumber(end === null || end === void 0 ? void 0 : end[key]) && isValidNumber(start === null || start === void 0 ? void 0 : start[key])) {
+            buf[key] = end[key] - start[key];
         }
-    }, t.prototype.calcDragStartStore = function(t) {
-        var e = this;
-        void 0 === t && (t = []), this.dragStartNodesRect = this.dragNodesRect, t.forEach((function(t) {
-            var n = t.getElement(), r = t.getElementOffsetRect();
-            e.dragStartTranslateStore[t.id] = S(n), e.dragStartSizeStore[t.id] = {
-                width: r.width,
-                height: r.height
-            };
-        }));
-    }, t.prototype.calcRulerSnapLines = function(t) {
-        var e = k(t);
-        return this.rulerSnapLines.map((function(t) {
-            return t.distance = E(t, e), t;
-        }));
-    }, t.prototype.calcAroundSnapLines = function(e) {
-        var n = this, r = [], o = k(e);
-        return this.eachViewportNodes((function(i, s) {
-            if (!n.dragNodes.includes(i)) {
-                var a = k(s), c = function(i) {
-                    var s = Q(A(i, o), 2), a = s[0], c = s[1], u = D(i, c);
-                    if (a < t.threshold) {
-                        if (n.snapping && 0 !== a) return;
-                        var l = new ve(n, G(G({}, u), {
-                            distance: a
-                        })), d = l.snapEdge(e);
-                        ("translate" === n.type || "hc" !== d && "vc" !== d) && r.push(l);
-                    }
-                };
-                a.h.forEach(c), a.v.forEach(c);
-            }
-        })), r;
-    }, t.prototype.calcAroundSpaceBlocks = function(t) {
-        var e = this, n = {};
-        return this.eachViewportNodes((function(r, o) {
-            if (!R(t, o)) {
-                var i = C(t, o);
-                if (i) {
-                    var s = new ge(e, G({
-                        refer: r
-                    }, i));
-                    n[i.type] ? s.distance < n[i.type].distance && (n[i.type] = s) : n[i.type] = s;
-                }
-            }
-        })), n;
-    }, t.prototype.calcViewportNodes = function() {
-        var t = this;
-        this.tree.eachTree((function(e) {
-            var n = e.getValidElementRect(), r = e.getValidElementOffsetRect();
-            t.dragNodes.includes(e) || t.viewport.isRectInViewport(n) && (t.viewportRectsStore[e.id] = r);
-        }));
-    }, t.prototype.getNodeRect = function(t) {
-        return this.viewportRectsStore[t.id];
-    }, t.prototype.eachViewportNodes = function(t) {
-        for (var e in this.viewportRectsStore) t(this.tree.findById(e), this.viewportRectsStore[e]);
-    }, t.prototype.translate = function(t, e) {
-        var n, r;
-        if (this.dragging) {
-            var o = this.calcBaseTranslate(t);
-            this.snapped = !1, this.snapping = !1;
-            try {
-                for (var i = J(this.closestSnapLines), s = i.next(); !s.done; s = i.next()) {
-                    var a = s.value;
-                    a.translate(t, o), this.snapping = !0, this.snapped = !0;
-                }
-            } catch (c) {
-                n = {
-                    error: c
-                };
-            } finally {
-                try {
-                    s && !s.done && (r = i.return) && r.call(i);
-                } finally {
-                    if (n) throw n.error;
-                }
-            }
-            e(o), this.snapping && (this.dragMove(), this.snapping = !1);
+        else {
+            buf[key] = end[key];
         }
-    }, t.prototype.resize = function(t, e) {
-        var n, r;
-        if (this.dragging) {
-            var o = this.calcBaseResize(t);
-            this.snapping = !1, this.snapping = !1;
-            try {
-                for (var i = J(this.closestSnapLines), s = i.next(); !s.done; s = i.next()) {
-                    var a = s.value;
-                    a.resize(t, o), this.snapping = !0, this.snapped = !0;
-                }
-            } catch (c) {
-                n = {
-                    error: c
-                };
-            } finally {
-                try {
-                    s && !s.done && (r = i.return) && r.call(i);
-                } finally {
-                    if (n) throw n.error;
-                }
-            }
-            e(o), this.snapping && (this.dragMove(), this.snapping = !1);
-        }
-    }, t.prototype.findRulerSnapLine = function(t) {
-        return this.rulerSnapLines.find((function(e) {
-            return e.id === t;
-        }));
-    }, t.prototype.addRulerSnapLine = function(t) {
-        P(t) && (this.findRulerSnapLine(t.id) || this.rulerSnapLines.push(new ve(this, G(G({}, t), {
-            type: "ruler"
-        }))));
-    }, t.prototype.removeRulerSnapLine = function(t) {
-        var e = this.rulerSnapLines.findIndex((function(e) {
-            return e.id === t;
-        }));
-        e > -1 && this.rulerSnapLines.splice(e, 1);
-    }, t.prototype.dragStart = function(t) {
-        var e = null == t ? void 0 : t.dragNodes, n = null == t ? void 0 : t.type, r = null == t ? void 0 : t.direction;
-        if ("resize" === n) {
-            var o = de.filterResizable(e);
-            o.length && (this.dragging = !0, this.type = n, this.direction = r, this.dragNodes = o, 
-            this.calcDragStartStore(o), this.cursor.setDragType(Kt.Resize));
-        } else if ("translate" === n) {
-            o = de.filterTranslatable(e);
-            o.length && (this.dragging = !0, this.type = n, this.direction = r, this.dragNodes = o, 
-            this.calcDragStartStore(o), this.cursor.setDragType(Kt.Translate));
-        } else if ("rotate" === n) {
-            o = de.filterRotatable(e);
-            o.length && (this.dragging = !0, this.type = n, this.dragNodes = o, this.calcDragStartStore(o), 
-            this.cursor.setDragType(Kt.Rotate));
-        } else if ("scale" === n) {
-            o = de.filterScalable(e);
-            o.length && (this.dragging = !0, this.type = n, this.dragNodes = o, this.calcDragStartStore(o), 
-            this.cursor.setDragType(Kt.Scale));
-        } else if ("round" === n) {
-            o = de.filterRoundable(e);
-            o.length && (this.dragging = !0, this.type = n, this.dragNodes = o, this.calcDragStartStore(o), 
-            this.cursor.setDragType(Kt.Round));
-        }
-        this.dragging && this.calcViewportNodes();
-    }, t.prototype.dragMove = function() {
-        this.dragging && (this.draggingNodesRect = null, this.draggingNodesRect = this.dragNodesRect, 
-        this.rulerSnapLines = this.calcRulerSnapLines(this.dragNodesRect), this.aroundSnapLines = this.calcAroundSnapLines(this.dragNodesRect), 
-        this.aroundSpaceBlocks = this.calcAroundSpaceBlocks(this.dragNodesRect));
-    }, t.prototype.dragEnd = function() {
-        this.dragging = !1, this.viewportRectsStore = {}, this.dragStartTranslateStore = {}, 
-        this.aroundSnapLines = [], this.draggingNodesRect = null, this.aroundSpaceBlocks = null, 
-        this.dragStartNodesRect = null, this.dragNodes = [], this.cursor.setDragType(Kt.Move);
-    }, t.prototype.makeObservable = function() {
-        V(this, {
-            snapped: Y.ref,
-            dragging: Y.ref,
-            snapping: Y.ref,
-            dragNodes: Y.ref,
-            aroundSnapLines: Y.ref,
-            aroundSpaceBlocks: Y.ref,
-            rulerSnapLines: Y.shallow,
-            closestSnapLines: Y.computed,
-            thresholdSnapLines: Y.computed,
-            thresholdSpaceBlocks: Y.computed,
-            measurerSpaceBlocks: Y.computed,
-            cursor: Y.computed,
-            cursorPosition: Y.computed,
-            cursorOffset: Y.computed,
-            dragStartCursor: Y.computed,
-            translate: z,
-            dragStart: z,
-            dragMove: z,
-            dragEnd: z
-        });
-    }, t.threshold = 6, t;
-}();
-
-(function(t) {
-    t["Before"] = "BEFORE", t["ForbidBefore"] = "FORBID_BEFORE", t["After"] = "After", 
-    t["ForbidAfter"] = "FORBID_AFTER", t["Upper"] = "UPPER", t["ForbidUpper"] = "FORBID_UPPER", 
-    t["Under"] = "UNDER", t["ForbidUnder"] = "FORBID_UNDER", t["Inner"] = "INNER", t["ForbidInner"] = "FORBID_INNER", 
-    t["InnerAfter"] = "INNER_AFTER", t["ForbidInnerAfter"] = "FORBID_INNER_AFTER", t["InnerBefore"] = "INNER_BEFORE", 
-    t["ForbidInnerBefore"] = "FORBID_INNER_BEFORE", t["Forbid"] = "FORBID";
-})(ye || (ye = {}));
-
-var Se, ke, Re = function() {
-    function t(t) {
-        this.dragNodes = [], this.touchNode = null, this.closestNode = null, this.activeViewport = null, 
-        this.viewportClosestRect = null, this.outlineClosestRect = null, this.viewportClosestOffsetRect = null, 
-        this.outlineClosestOffsetRect = null, this.viewportClosestDirection = null, this.outlineClosestDirection = null, 
-        this.dragging = !1, this.operation = t.operation, this.rootNode = this.operation.tree, 
+        return buf;
+    }, {});
+};
+var Cursor = /** @class */ (function () {
+    function Cursor(engine) {
+        this.type = CursorType.Normal;
+        this.dragType = CursorDragType.Move;
+        this.status = CursorStatus.Normal;
+        this.position = DEFAULT_POSITION;
+        this.dragAtomDelta = DEFAULT_POSITION;
+        this.dragStartToCurrentDelta = DEFAULT_POSITION;
+        this.dragStartToEndDelta = DEFAULT_POSITION;
+        this.view = globalThisPolyfill;
+        this.engine = engine;
         this.makeObservable();
     }
-    return Object.defineProperty(t.prototype, "cursor", {
-        get: function() {
+    Cursor.prototype.makeObservable = function () {
+        define(this, {
+            type: observable.ref,
+            dragType: observable.ref,
+            status: observable.ref,
+            position: observable.ref,
+            dragStartPosition: observable.ref,
+            dragEndPosition: observable.ref,
+            dragAtomDelta: observable.ref,
+            dragStartToCurrentDelta: observable.ref,
+            dragStartToEndDelta: observable.ref,
+            view: observable.ref,
+            setStyle: action,
+            setPosition: action,
+            setStatus: action,
+            setType: action,
+        });
+    };
+    Object.defineProperty(Cursor.prototype, "speed", {
+        get: function () {
+            return Math.sqrt(Math.pow(this.dragAtomDelta.clientX, 2) +
+                Math.pow(this.dragAtomDelta.clientY, 2));
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Cursor.prototype.setStatus = function (status) {
+        this.status = status;
+    };
+    Cursor.prototype.setType = function (type) {
+        this.type = type;
+    };
+    Cursor.prototype.setDragType = function (type) {
+        this.dragType = type;
+    };
+    Cursor.prototype.setStyle = function (style) {
+        this.engine.workbench.eachWorkspace(function (workspace) {
+            setCursorStyle(workspace.viewport.contentWindow, style);
+        });
+    };
+    Cursor.prototype.setPosition = function (position) {
+        this.dragAtomDelta = calcPositionDelta(this.position, position);
+        this.position = __assign({}, position);
+        if (this.status === CursorStatus.Dragging) {
+            this.dragStartToCurrentDelta = calcPositionDelta(this.position, this.dragStartPosition);
+        }
+    };
+    Cursor.prototype.setDragStartPosition = function (position) {
+        if (position) {
+            this.dragStartPosition = __assign({}, position);
+        }
+        else {
+            this.dragStartPosition = null;
+            this.dragStartToCurrentDelta = DEFAULT_POSITION;
+        }
+    };
+    Cursor.prototype.setDragEndPosition = function (position) {
+        if (!this.dragStartPosition)
+            return;
+        if (position) {
+            this.dragEndPosition = __assign({}, position);
+            this.dragStartToEndDelta = calcPositionDelta(this.dragStartPosition, this.dragEndPosition);
+        }
+        else {
+            this.dragEndPosition = null;
+            this.dragStartToEndDelta = DEFAULT_POSITION;
+        }
+    };
+    return Cursor;
+}());
+
+var TransformHelper = /** @class */ (function () {
+    function TransformHelper(props) {
+        this.dragNodes = [];
+        this.rulerSnapLines = [];
+        this.aroundSnapLines = [];
+        this.aroundSpaceBlocks = null;
+        this.viewportRectsStore = {};
+        this.dragStartTranslateStore = {};
+        this.dragStartSizeStore = {};
+        this.dragStartNodesRect = null;
+        this.snapping = false;
+        this.dragging = false;
+        this.snapped = false;
+        this.operation = props.operation;
+        this.makeObservable();
+    }
+    Object.defineProperty(TransformHelper.prototype, "tree", {
+        get: function () {
+            return this.operation.tree;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "cursor", {
+        get: function () {
             return this.operation.engine.cursor;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "viewport", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "viewport", {
+        get: function () {
             return this.operation.workspace.viewport;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "outline", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "deltaX", {
+        get: function () {
+            return this.cursor.dragStartToCurrentDelta.clientX;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "deltaY", {
+        get: function () {
+            return this.cursor.dragStartToCurrentDelta.clientY;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "cursorPosition", {
+        get: function () {
+            var position = this.cursor.position;
+            return this.operation.workspace.viewport.getOffsetPoint(new Point(position.clientX, position.clientY));
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "cursorDragNodesRect", {
+        get: function () {
+            if (this.type === 'translate') {
+                return new Rect(this.cursorPosition.x - this.dragStartCursorOffset.x, this.cursorPosition.y - this.dragStartCursorOffset.y, this.dragNodesRect.width, this.dragNodesRect.height);
+            }
+            else if (this.type === 'resize') {
+                var dragNodesRect = this.dragStartNodesRect;
+                var deltaX = this.cursor.dragStartToCurrentDelta.clientX;
+                var deltaY = this.cursor.dragStartToCurrentDelta.clientY;
+                switch (this.direction) {
+                    case 'left-top':
+                        return new Rect(this.cursorPosition.x - this.dragStartCursorOffset.x, this.cursorPosition.y - this.dragStartCursorOffset.y, dragNodesRect.width - deltaX, dragNodesRect.height - deltaY);
+                    case 'left-center':
+                        return new Rect(this.cursorPosition.x - this.dragStartCursorOffset.x, dragNodesRect.y, dragNodesRect.width - deltaX, dragNodesRect.height);
+                    case 'left-bottom':
+                        return new Rect(this.cursorPosition.x - this.dragStartCursorOffset.x, dragNodesRect.y, dragNodesRect.width - deltaX, dragNodesRect.height - deltaY);
+                    case 'center-top':
+                        return new Rect(dragNodesRect.x, this.cursorPosition.y - this.dragStartCursorOffset.y, dragNodesRect.width, dragNodesRect.height - deltaY);
+                    case 'center-bottom':
+                        return new Rect(dragNodesRect.x, dragNodesRect.y, dragNodesRect.width, dragNodesRect.height + deltaY);
+                    case 'right-top':
+                        return new Rect(dragNodesRect.x, this.cursorPosition.y - this.dragStartCursorOffset.y, dragNodesRect.width + deltaX, dragNodesRect.height - deltaY);
+                    case 'right-center':
+                        return new Rect(dragNodesRect.x, dragNodesRect.y, dragNodesRect.width + deltaX, dragNodesRect.height);
+                    case 'right-bottom':
+                        return new Rect(dragNodesRect.x, dragNodesRect.y, dragNodesRect.width + deltaX, dragNodesRect.height - deltaY);
+                }
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "cursorDragNodesEdgeLines", {
+        get: function () {
+            return calcEdgeLinesOfRect(this.cursorDragNodesRect);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "dragNodesRect", {
+        get: function () {
+            if (this.draggingNodesRect)
+                return this.draggingNodesRect;
+            return calcBoundingRect(this.dragNodes.map(function (node) { return node.getValidElementOffsetRect(); }));
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "dragNodesEdgeLines", {
+        get: function () {
+            return calcEdgeLinesOfRect(this.dragNodesRect);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "cursorOffset", {
+        get: function () {
+            return new Point(this.cursorPosition.x - this.dragNodesRect.x, this.cursorPosition.y - this.dragNodesRect.y);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "dragStartCursor", {
+        get: function () {
+            var position = this.operation.engine.cursor.dragStartPosition;
+            return this.operation.workspace.viewport.getOffsetPoint(new Point(position.clientX, position.clientY));
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "dragStartCursorOffset", {
+        get: function () {
+            return new Point(this.dragStartCursor.x - this.dragStartNodesRect.x, this.dragStartCursor.y - this.dragStartNodesRect.y);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "closestSnapLines", {
+        get: function () {
+            if (!this.dragging)
+                return [];
+            var results = [];
+            var cursorDragNodesEdgeLines = this.cursorDragNodesEdgeLines;
+            this.thresholdSnapLines.forEach(function (line) {
+                var distance = calcDistanceOfSnapLineToEdges(line, cursorDragNodesEdgeLines);
+                if (distance < TransformHelper.threshold) {
+                    var existed = results.findIndex(function (l) {
+                        return l.distance > distance &&
+                            l.distance > 0 &&
+                            l.direction === line.direction;
+                    });
+                    if (existed > -1) {
+                        results.splice(existed, 1);
+                    }
+                    results.push(line);
+                }
+            });
+            return results;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "closestSpaceBlocks", {
+        get: function () {
+            if (!this.dragging)
+                return [];
+            var cursorDragNodesEdgeLines = this.cursorDragNodesEdgeLines;
+            return this.thresholdSpaceBlocks.filter(function (block) {
+                var line = block.snapLine;
+                if (!line)
+                    return false;
+                return (calcDistanceOfSnapLineToEdges(line, cursorDragNodesEdgeLines) <
+                    TransformHelper.threshold);
+            });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "thresholdSnapLines", {
+        get: function () {
+            if (!this.dragging)
+                return [];
+            var lines = [];
+            this.aroundSnapLines.forEach(function (line) {
+                lines.push(line);
+            });
+            this.rulerSnapLines.forEach(function (line) {
+                if (line.closest) {
+                    lines.push(line);
+                }
+            });
+            for (var type in this.aroundSpaceBlocks) {
+                var block = this.aroundSpaceBlocks[type];
+                var line = block.snapLine;
+                if (line) {
+                    lines.push(line);
+                }
+            }
+            return lines;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "thresholdSpaceBlocks", {
+        get: function () {
+            var results = [];
+            if (!this.dragging)
+                return [];
+            for (var type in this.aroundSpaceBlocks) {
+                var block = this.aroundSpaceBlocks[type];
+                if (!block.snapLine)
+                    return [];
+                if (block.snapLine.distance !== 0)
+                    return [];
+                if (block.isometrics.length) {
+                    results.push(block);
+                    results.push.apply(results, __spreadArray([], __read(block.isometrics), false));
+                }
+            }
+            return results;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TransformHelper.prototype, "measurerSpaceBlocks", {
+        get: function () {
+            var results = [];
+            if (!this.dragging || !this.snapped)
+                return [];
+            for (var type in this.aroundSpaceBlocks) {
+                if (this.aroundSpaceBlocks[type])
+                    results.push(this.aroundSpaceBlocks[type]);
+            }
+            return results;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    TransformHelper.prototype.calcBaseTranslate = function (node) {
+        var _a;
+        var dragStartTranslate = (_a = this.dragStartTranslateStore[node.id]) !== null && _a !== void 0 ? _a : {
+            x: 0,
+            y: 0,
+        };
+        var x = dragStartTranslate.x + this.deltaX, y = dragStartTranslate.y + this.deltaY;
+        return { x: x, y: y };
+    };
+    TransformHelper.prototype.calcBaseResize = function (node) {
+        var _a, _b;
+        var deltaX = this.deltaX;
+        var deltaY = this.deltaY;
+        var dragStartTranslate = (_a = this.dragStartTranslateStore[node.id]) !== null && _a !== void 0 ? _a : {
+            x: 0,
+            y: 0,
+        };
+        var dragStartSize = (_b = this.dragStartSizeStore[node.id]) !== null && _b !== void 0 ? _b : {
+            width: 0,
+            height: 0,
+        };
+        switch (this.direction) {
+            case 'left-top':
+                return new Rect(dragStartTranslate.x + deltaX, dragStartTranslate.y + deltaY, dragStartSize.width - deltaX, dragStartSize.height - deltaY);
+            case 'left-center':
+                return new Rect(dragStartTranslate.x + deltaX, dragStartTranslate.y, dragStartSize.width - deltaX, dragStartSize.height);
+            case 'left-bottom':
+                return new Rect(dragStartTranslate.x + deltaX, dragStartTranslate.y, dragStartSize.width - deltaX, dragStartSize.height + deltaY);
+            case 'center-bottom':
+                return new Rect(dragStartTranslate.x, dragStartTranslate.y, dragStartSize.width, dragStartSize.height + deltaY);
+            case 'center-top':
+                return new Rect(dragStartTranslate.x, dragStartTranslate.y + deltaY, dragStartSize.width, dragStartSize.height - deltaY);
+            case 'right-top':
+                return new Rect(dragStartTranslate.x, dragStartTranslate.y + deltaY, dragStartSize.width + deltaX, dragStartSize.height - deltaY);
+            case 'right-bottom':
+                return new Rect(dragStartTranslate.x, dragStartTranslate.y, dragStartSize.width + deltaX, dragStartSize.height + deltaY);
+            case 'right-center':
+                return new Rect(dragStartTranslate.x, dragStartTranslate.y, dragStartSize.width + deltaX, dragStartSize.height);
+        }
+    };
+    TransformHelper.prototype.calcDragStartStore = function (nodes) {
+        var _this = this;
+        if (nodes === void 0) { nodes = []; }
+        this.dragStartNodesRect = this.dragNodesRect;
+        nodes.forEach(function (node) {
+            var element = node.getElement();
+            var rect = node.getElementOffsetRect();
+            _this.dragStartTranslateStore[node.id] = calcElementTranslate(element);
+            _this.dragStartSizeStore[node.id] = {
+                width: rect.width,
+                height: rect.height,
+            };
+        });
+    };
+    TransformHelper.prototype.calcRulerSnapLines = function (dragNodesRect) {
+        var edgeLines = calcEdgeLinesOfRect(dragNodesRect);
+        return this.rulerSnapLines.map(function (line) {
+            line.distance = calcDistanceOfSnapLineToEdges(line, edgeLines);
+            return line;
+        });
+    };
+    TransformHelper.prototype.calcAroundSnapLines = function (dragNodesRect) {
+        var _this = this;
+        var results = [];
+        var edgeLines = calcEdgeLinesOfRect(dragNodesRect);
+        this.eachViewportNodes(function (refer, referRect) {
+            if (_this.dragNodes.includes(refer))
+                return;
+            var referLines = calcEdgeLinesOfRect(referRect);
+            var add = function (line) {
+                var _a = __read(calcClosestEdges(line, edgeLines), 2), distance = _a[0], edge = _a[1];
+                var combined = calcCombineSnapLineSegment(line, edge);
+                if (distance < TransformHelper.threshold) {
+                    if (_this.snapping && distance !== 0)
+                        return;
+                    var snapLine = new SnapLine(_this, __assign(__assign({}, combined), { distance: distance }));
+                    var edge_1 = snapLine.snapEdge(dragNodesRect);
+                    if (_this.type === 'translate') {
+                        results.push(snapLine);
+                    }
+                    else if (edge_1 !== 'hc' && edge_1 !== 'vc') {
+                        results.push(snapLine);
+                    }
+                }
+            };
+            referLines.h.forEach(add);
+            referLines.v.forEach(add);
+        });
+        return results;
+    };
+    TransformHelper.prototype.calcAroundSpaceBlocks = function (dragNodesRect) {
+        var _this = this;
+        var closestSpaces = {};
+        this.eachViewportNodes(function (refer, referRect) {
+            if (isEqualRect(dragNodesRect, referRect))
+                return;
+            var origin = calcSpaceBlockOfRect(dragNodesRect, referRect);
+            if (origin) {
+                var spaceBlock = new SpaceBlock(_this, __assign({ refer: refer }, origin));
+                if (!closestSpaces[origin.type]) {
+                    closestSpaces[origin.type] = spaceBlock;
+                }
+                else if (spaceBlock.distance < closestSpaces[origin.type].distance) {
+                    closestSpaces[origin.type] = spaceBlock;
+                }
+            }
+        });
+        return closestSpaces;
+    };
+    TransformHelper.prototype.calcViewportNodes = function () {
+        var _this = this;
+        this.tree.eachTree(function (node) {
+            var topRect = node.getValidElementRect();
+            var offsetRect = node.getValidElementOffsetRect();
+            if (_this.dragNodes.includes(node))
+                return;
+            if (_this.viewport.isRectInViewport(topRect)) {
+                _this.viewportRectsStore[node.id] = offsetRect;
+            }
+        });
+    };
+    TransformHelper.prototype.getNodeRect = function (node) {
+        return this.viewportRectsStore[node.id];
+    };
+    TransformHelper.prototype.eachViewportNodes = function (visitor) {
+        for (var id in this.viewportRectsStore) {
+            visitor(this.tree.findById(id), this.viewportRectsStore[id]);
+        }
+    };
+    TransformHelper.prototype.translate = function (node, handler) {
+        var e_1, _a;
+        if (!this.dragging)
+            return;
+        var translate = this.calcBaseTranslate(node);
+        this.snapped = false;
+        this.snapping = false;
+        try {
+            for (var _b = __values(this.closestSnapLines), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var line = _c.value;
+                line.translate(node, translate);
+                this.snapping = true;
+                this.snapped = true;
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        handler(translate);
+        if (this.snapping) {
+            this.dragMove();
+            this.snapping = false;
+        }
+    };
+    TransformHelper.prototype.resize = function (node, handler) {
+        var e_2, _a;
+        if (!this.dragging)
+            return;
+        var rect = this.calcBaseResize(node);
+        this.snapping = false;
+        this.snapping = false;
+        try {
+            for (var _b = __values(this.closestSnapLines), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var line = _c.value;
+                line.resize(node, rect);
+                this.snapping = true;
+                this.snapped = true;
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        handler(rect);
+        if (this.snapping) {
+            this.dragMove();
+            this.snapping = false;
+        }
+    };
+    // rotate(node: TreeNode, handler: (rotate: number) => void) {}
+    // scale(node: TreeNode, handler: (scale: number) => void) {}
+    // round(node: TreeNode, handler: (round: number) => void) {}
+    TransformHelper.prototype.findRulerSnapLine = function (id) {
+        return this.rulerSnapLines.find(function (item) { return item.id === id; });
+    };
+    TransformHelper.prototype.addRulerSnapLine = function (line) {
+        if (!isLineSegment(line))
+            return;
+        if (!this.findRulerSnapLine(line.id)) {
+            this.rulerSnapLines.push(new SnapLine(this, __assign(__assign({}, line), { type: 'ruler' })));
+        }
+    };
+    TransformHelper.prototype.removeRulerSnapLine = function (id) {
+        var matchedLineIndex = this.rulerSnapLines.findIndex(function (item) { return item.id === id; });
+        if (matchedLineIndex > -1) {
+            this.rulerSnapLines.splice(matchedLineIndex, 1);
+        }
+    };
+    TransformHelper.prototype.dragStart = function (props) {
+        var dragNodes = props === null || props === void 0 ? void 0 : props.dragNodes;
+        var type = props === null || props === void 0 ? void 0 : props.type;
+        var direction = props === null || props === void 0 ? void 0 : props.direction;
+        if (type === 'resize') {
+            var nodes = TreeNode.filterResizable(dragNodes);
+            if (nodes.length) {
+                this.dragging = true;
+                this.type = type;
+                this.direction = direction;
+                this.dragNodes = nodes;
+                this.calcDragStartStore(nodes);
+                this.cursor.setDragType(CursorDragType.Resize);
+            }
+        }
+        else if (type === 'translate') {
+            var nodes = TreeNode.filterTranslatable(dragNodes);
+            if (nodes.length) {
+                this.dragging = true;
+                this.type = type;
+                this.direction = direction;
+                this.dragNodes = nodes;
+                this.calcDragStartStore(nodes);
+                this.cursor.setDragType(CursorDragType.Translate);
+            }
+        }
+        else if (type === 'rotate') {
+            var nodes = TreeNode.filterRotatable(dragNodes);
+            if (nodes.length) {
+                this.dragging = true;
+                this.type = type;
+                this.dragNodes = nodes;
+                this.calcDragStartStore(nodes);
+                this.cursor.setDragType(CursorDragType.Rotate);
+            }
+        }
+        else if (type === 'scale') {
+            var nodes = TreeNode.filterScalable(dragNodes);
+            if (nodes.length) {
+                this.dragging = true;
+                this.type = type;
+                this.dragNodes = nodes;
+                this.calcDragStartStore(nodes);
+                this.cursor.setDragType(CursorDragType.Scale);
+            }
+        }
+        else if (type === 'round') {
+            var nodes = TreeNode.filterRoundable(dragNodes);
+            if (nodes.length) {
+                this.dragging = true;
+                this.type = type;
+                this.dragNodes = nodes;
+                this.calcDragStartStore(nodes);
+                this.cursor.setDragType(CursorDragType.Round);
+            }
+        }
+        if (this.dragging) {
+            this.calcViewportNodes();
+        }
+    };
+    TransformHelper.prototype.dragMove = function () {
+        if (!this.dragging)
+            return;
+        this.draggingNodesRect = null;
+        this.draggingNodesRect = this.dragNodesRect;
+        this.rulerSnapLines = this.calcRulerSnapLines(this.dragNodesRect);
+        this.aroundSnapLines = this.calcAroundSnapLines(this.dragNodesRect);
+        this.aroundSpaceBlocks = this.calcAroundSpaceBlocks(this.dragNodesRect);
+    };
+    TransformHelper.prototype.dragEnd = function () {
+        this.dragging = false;
+        this.viewportRectsStore = {};
+        this.dragStartTranslateStore = {};
+        this.aroundSnapLines = [];
+        this.draggingNodesRect = null;
+        this.aroundSpaceBlocks = null;
+        this.dragStartNodesRect = null;
+        this.dragNodes = [];
+        this.cursor.setDragType(CursorDragType.Move);
+    };
+    TransformHelper.prototype.makeObservable = function () {
+        define(this, {
+            snapped: observable.ref,
+            dragging: observable.ref,
+            snapping: observable.ref,
+            dragNodes: observable.ref,
+            aroundSnapLines: observable.ref,
+            aroundSpaceBlocks: observable.ref,
+            rulerSnapLines: observable.shallow,
+            closestSnapLines: observable.computed,
+            thresholdSnapLines: observable.computed,
+            thresholdSpaceBlocks: observable.computed,
+            measurerSpaceBlocks: observable.computed,
+            cursor: observable.computed,
+            cursorPosition: observable.computed,
+            cursorOffset: observable.computed,
+            dragStartCursor: observable.computed,
+            translate: action,
+            dragStart: action,
+            dragMove: action,
+            dragEnd: action,
+        });
+    };
+    TransformHelper.threshold = 6;
+    return TransformHelper;
+}());
+
+var ClosestPosition;
+(function (ClosestPosition) {
+    ClosestPosition["Before"] = "BEFORE";
+    ClosestPosition["ForbidBefore"] = "FORBID_BEFORE";
+    ClosestPosition["After"] = "After";
+    ClosestPosition["ForbidAfter"] = "FORBID_AFTER";
+    ClosestPosition["Upper"] = "UPPER";
+    ClosestPosition["ForbidUpper"] = "FORBID_UPPER";
+    ClosestPosition["Under"] = "UNDER";
+    ClosestPosition["ForbidUnder"] = "FORBID_UNDER";
+    ClosestPosition["Inner"] = "INNER";
+    ClosestPosition["ForbidInner"] = "FORBID_INNER";
+    ClosestPosition["InnerAfter"] = "INNER_AFTER";
+    ClosestPosition["ForbidInnerAfter"] = "FORBID_INNER_AFTER";
+    ClosestPosition["InnerBefore"] = "INNER_BEFORE";
+    ClosestPosition["ForbidInnerBefore"] = "FORBID_INNER_BEFORE";
+    ClosestPosition["Forbid"] = "FORBID";
+})(ClosestPosition || (ClosestPosition = {}));
+var MoveHelper = /** @class */ (function () {
+    function MoveHelper(props) {
+        this.dragNodes = [];
+        this.touchNode = null;
+        this.closestNode = null;
+        this.activeViewport = null;
+        this.viewportClosestRect = null;
+        this.outlineClosestRect = null;
+        this.viewportClosestOffsetRect = null;
+        this.outlineClosestOffsetRect = null;
+        this.viewportClosestDirection = null;
+        this.outlineClosestDirection = null;
+        this.dragging = false;
+        this.operation = props.operation;
+        this.rootNode = this.operation.tree;
+        this.makeObservable();
+    }
+    Object.defineProperty(MoveHelper.prototype, "cursor", {
+        get: function () {
+            return this.operation.engine.cursor;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MoveHelper.prototype, "viewport", {
+        get: function () {
+            return this.operation.workspace.viewport;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MoveHelper.prototype, "outline", {
+        get: function () {
             return this.operation.workspace.outline;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "hasDragNodes", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MoveHelper.prototype, "hasDragNodes", {
+        get: function () {
             return this.dragNodes.length > 0;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "closestDirection", {
-        get: function() {
-            return this.activeViewport === this.outline ? this.outlineClosestDirection : this.viewportClosestDirection;
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(MoveHelper.prototype, "closestDirection", {
+        get: function () {
+            if (this.activeViewport === this.outline) {
+                return this.outlineClosestDirection;
+            }
+            return this.viewportClosestDirection;
         },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.getClosestLayout = function(t) {
-        return t.getValidNodeLayout(this.closestNode);
-    }, t.prototype.calcClosestPosition = function(t, e) {
-        var n = this, r = this.closestNode;
-        if (!r || !e.isPointInViewport(t)) return ye.Forbid;
-        var o = e.getValidNodeRect(r), i = "horizontal" === this.getClosestLayout(e);
-        if (o) {
-            var s = x(t, o, "block" !== e.moveInsertionType && i), a = function(t) {
-                var e;
-                if (t) return (null === (e = t.parent) || void 0 === e ? void 0 : e.allowSibling(n.dragNodes)) ? t.parent : a(t.parent);
-            };
-            if (l(t, o, e.moveSensitive)) {
-                if (!r.allowAppend(this.dragNodes)) {
-                    if (r.allowSibling(this.dragNodes)) return i ? s ? ye.After : ye.Before : s ? ye.Under : ye.Upper;
-                    var c = a(r);
-                    return c && (this.closestNode = c), i ? c ? s ? ye.After : ye.Before : s ? ye.ForbidAfter : ye.ForbidBefore : c ? s ? ye.Under : ye.Upper : s ? ye.ForbidUnder : ye.ForbidUpper;
-                }
-                return r.contains.apply(r, tt([], Q(this.dragNodes), !1)) ? s ? ye.InnerAfter : ye.InnerBefore : ye.Inner;
-            }
-            if (r === r.root) return s ? ye.InnerAfter : ye.InnerBefore;
-            if (!r.allowSibling(this.dragNodes)) {
-                c = a(r);
-                return c && (this.closestNode = c), i ? c ? s ? ye.After : ye.Before : s ? ye.ForbidAfter : ye.ForbidBefore : c ? s ? ye.Under : ye.Upper : s ? ye.ForbidUnder : ye.ForbidUpper;
-            }
-            return i ? s ? ye.After : ye.Before : s ? ye.Under : ye.Upper;
+        enumerable: false,
+        configurable: true
+    });
+    MoveHelper.prototype.getClosestLayout = function (viewport) {
+        return viewport.getValidNodeLayout(this.closestNode);
+    };
+    MoveHelper.prototype.calcClosestPosition = function (point, viewport) {
+        var _this = this;
+        var closestNode = this.closestNode;
+        if (!closestNode || !viewport.isPointInViewport(point))
+            return ClosestPosition.Forbid;
+        var closestRect = viewport.getValidNodeRect(closestNode);
+        var isInline = this.getClosestLayout(viewport) === 'horizontal';
+        if (!closestRect) {
+            return;
         }
-    }, t.prototype.calcClosestNode = function(t, e) {
-        var n, r;
-        if (this.touchNode) {
-            var o = e.getValidNodeRect(this.touchNode);
-            if (!o) return;
-            if (null === (r = null === (n = this.touchNode) || void 0 === n ? void 0 : n.children) || void 0 === r ? void 0 : r.length) {
-                var i = I(t, o), s = i, a = this.touchNode;
-                return this.touchNode.eachChildren((function(n) {
-                    var r = e.getElementRectById(n.id);
-                    if (r) {
-                        var o = l(t, r, e.moveSensitive) ? 0 : T(t, r);
-                        o <= s && (s = o, a = n);
+        var isAfter = isNearAfter(point, closestRect, viewport.moveInsertionType === 'block' ? false : isInline);
+        var getValidParent = function (node) {
+            var _a;
+            if (!node)
+                return;
+            if ((_a = node.parent) === null || _a === void 0 ? void 0 : _a.allowSibling(_this.dragNodes))
+                return node.parent;
+            return getValidParent(node.parent);
+        };
+        if (isPointInRect(point, closestRect, viewport.moveSensitive)) {
+            if (!closestNode.allowAppend(this.dragNodes)) {
+                if (!closestNode.allowSibling(this.dragNodes)) {
+                    var parentClosestNode = getValidParent(closestNode);
+                    if (parentClosestNode) {
+                        this.closestNode = parentClosestNode;
                     }
-                })), a;
+                    if (isInline) {
+                        if (parentClosestNode) {
+                            if (isAfter) {
+                                return ClosestPosition.After;
+                            }
+                            return ClosestPosition.Before;
+                        }
+                        if (isAfter) {
+                            return ClosestPosition.ForbidAfter;
+                        }
+                        return ClosestPosition.ForbidBefore;
+                    }
+                    else {
+                        if (parentClosestNode) {
+                            if (isAfter) {
+                                return ClosestPosition.Under;
+                            }
+                            return ClosestPosition.Upper;
+                        }
+                        if (isAfter) {
+                            return ClosestPosition.ForbidUnder;
+                        }
+                        return ClosestPosition.ForbidUpper;
+                    }
+                }
+                else {
+                    if (isInline) {
+                        return isAfter ? ClosestPosition.After : ClosestPosition.Before;
+                    }
+                    else {
+                        return isAfter ? ClosestPosition.Under : ClosestPosition.Upper;
+                    }
+                }
             }
-            return this.touchNode;
+            if (closestNode.contains.apply(closestNode, __spreadArray([], __read(this.dragNodes), false))) {
+                if (isAfter) {
+                    return ClosestPosition.InnerAfter;
+                }
+                return ClosestPosition.InnerBefore;
+            }
+            else {
+                return ClosestPosition.Inner;
+            }
+        }
+        else if (closestNode === closestNode.root) {
+            return isAfter ? ClosestPosition.InnerAfter : ClosestPosition.InnerBefore;
+        }
+        else {
+            if (!closestNode.allowSibling(this.dragNodes)) {
+                var parentClosestNode = getValidParent(closestNode);
+                if (parentClosestNode) {
+                    this.closestNode = parentClosestNode;
+                }
+                if (isInline) {
+                    if (parentClosestNode) {
+                        if (isAfter) {
+                            return ClosestPosition.After;
+                        }
+                        return ClosestPosition.Before;
+                    }
+                    return isAfter
+                        ? ClosestPosition.ForbidAfter
+                        : ClosestPosition.ForbidBefore;
+                }
+                else {
+                    if (parentClosestNode) {
+                        if (isAfter) {
+                            return ClosestPosition.Under;
+                        }
+                        return ClosestPosition.Upper;
+                    }
+                    return isAfter
+                        ? ClosestPosition.ForbidUnder
+                        : ClosestPosition.ForbidUpper;
+                }
+            }
+            if (isInline) {
+                return isAfter ? ClosestPosition.After : ClosestPosition.Before;
+            }
+            else {
+                return isAfter ? ClosestPosition.Under : ClosestPosition.Upper;
+            }
+        }
+    };
+    MoveHelper.prototype.calcClosestNode = function (point, viewport) {
+        var _a, _b;
+        if (this.touchNode) {
+            var touchNodeRect = viewport.getValidNodeRect(this.touchNode);
+            if (!touchNodeRect)
+                return;
+            if ((_b = (_a = this.touchNode) === null || _a === void 0 ? void 0 : _a.children) === null || _b === void 0 ? void 0 : _b.length) {
+                var touchDistance = calcDistancePointToEdge(point, touchNodeRect);
+                var minDistance_1 = touchDistance;
+                var minDistanceNode_1 = this.touchNode;
+                this.touchNode.eachChildren(function (node) {
+                    var rect = viewport.getElementRectById(node.id);
+                    if (!rect)
+                        return;
+                    var distance = isPointInRect(point, rect, viewport.moveSensitive)
+                        ? 0
+                        : calcDistanceOfPointToRect(point, rect);
+                    if (distance <= minDistance_1) {
+                        minDistance_1 = distance;
+                        minDistanceNode_1 = node;
+                    }
+                });
+                return minDistanceNode_1;
+            }
+            else {
+                return this.touchNode;
+            }
         }
         return this.operation.tree;
-    }, t.prototype.calcClosestRect = function(t, e) {
-        var n = this.closestNode;
-        if (n && e) {
-            var r = t.getValidNodeRect(n);
-            return e === ye.InnerAfter || e === ye.InnerBefore ? t.getChildrenRect(n) : r;
+    };
+    MoveHelper.prototype.calcClosestRect = function (viewport, closestDirection) {
+        var closestNode = this.closestNode;
+        if (!closestNode || !closestDirection)
+            return;
+        var closestRect = viewport.getValidNodeRect(closestNode);
+        if (closestDirection === ClosestPosition.InnerAfter ||
+            closestDirection === ClosestPosition.InnerBefore) {
+            return viewport.getChildrenRect(closestNode);
         }
-    }, t.prototype.calcClosestOffsetRect = function(t, e) {
-        var n = this.closestNode;
-        if (n && e) {
-            var r = t.getValidNodeOffsetRect(n);
-            return e === ye.InnerAfter || e === ye.InnerBefore ? t.getChildrenOffsetRect(n) : r;
+        else {
+            return closestRect;
         }
-    }, t.prototype.dragStart = function(t) {
-        var e = de.filterDraggable(null == t ? void 0 : t.dragNodes);
-        e.length && (this.dragNodes = e, this.trigger(new ht({
+    };
+    MoveHelper.prototype.calcClosestOffsetRect = function (viewport, closestDirection) {
+        var closestNode = this.closestNode;
+        if (!closestNode || !closestDirection)
+            return;
+        var closestRect = viewport.getValidNodeOffsetRect(closestNode);
+        if (closestDirection === ClosestPosition.InnerAfter ||
+            closestDirection === ClosestPosition.InnerBefore) {
+            return viewport.getChildrenOffsetRect(closestNode);
+        }
+        else {
+            return closestRect;
+        }
+    };
+    MoveHelper.prototype.dragStart = function (props) {
+        var nodes = TreeNode.filterDraggable(props === null || props === void 0 ? void 0 : props.dragNodes);
+        if (nodes.length) {
+            this.dragNodes = nodes;
+            this.trigger(new DragNodeEvent({
+                target: this.operation.tree,
+                source: this.dragNodes,
+            }));
+            this.viewport.cacheElements();
+            this.cursor.setDragType(CursorDragType.Move);
+            this.dragging = true;
+        }
+    };
+    MoveHelper.prototype.dragMove = function (props) {
+        var point = props.point, touchNode = props.touchNode;
+        if (!this.dragging)
+            return;
+        if (this.outline.isPointInViewport(point, false)) {
+            this.activeViewport = this.outline;
+            this.touchNode = touchNode;
+            this.closestNode = this.calcClosestNode(point, this.outline);
+        }
+        else if (this.viewport.isPointInViewport(point, false)) {
+            this.activeViewport = this.viewport;
+            this.touchNode = touchNode;
+            this.closestNode = this.calcClosestNode(point, this.viewport);
+        }
+        if (!this.activeViewport)
+            return;
+        if (this.activeViewport === this.outline) {
+            this.outlineClosestDirection = this.calcClosestPosition(point, this.outline);
+            this.viewportClosestDirection = this.outlineClosestDirection;
+        }
+        else {
+            this.viewportClosestDirection = this.calcClosestPosition(point, this.viewport);
+            this.outlineClosestDirection = this.viewportClosestDirection;
+        }
+        if (this.outline.mounted) {
+            this.outlineClosestRect = this.calcClosestRect(this.outline, this.outlineClosestDirection);
+            this.outlineClosestOffsetRect = this.calcClosestOffsetRect(this.outline, this.outlineClosestDirection);
+        }
+        if (this.viewport.mounted) {
+            this.viewportClosestRect = this.calcClosestRect(this.viewport, this.viewportClosestDirection);
+            this.viewportClosestOffsetRect = this.calcClosestOffsetRect(this.viewport, this.viewportClosestDirection);
+        }
+    };
+    MoveHelper.prototype.dragDrop = function (props) {
+        this.trigger(new DropNodeEvent({
             target: this.operation.tree,
-            source: this.dragNodes
-        })), this.viewport.cacheElements(), this.cursor.setDragType(Kt.Move), this.dragging = !0);
-    }, t.prototype.dragMove = function(t) {
-        var e = t.point, n = t.touchNode;
-        this.dragging && (this.outline.isPointInViewport(e, !1) ? (this.activeViewport = this.outline, 
-        this.touchNode = n, this.closestNode = this.calcClosestNode(e, this.outline)) : this.viewport.isPointInViewport(e, !1) && (this.activeViewport = this.viewport, 
-        this.touchNode = n, this.closestNode = this.calcClosestNode(e, this.viewport)), 
-        this.activeViewport && (this.activeViewport === this.outline ? (this.outlineClosestDirection = this.calcClosestPosition(e, this.outline), 
-        this.viewportClosestDirection = this.outlineClosestDirection) : (this.viewportClosestDirection = this.calcClosestPosition(e, this.viewport), 
-        this.outlineClosestDirection = this.viewportClosestDirection), this.outline.mounted && (this.outlineClosestRect = this.calcClosestRect(this.outline, this.outlineClosestDirection), 
-        this.outlineClosestOffsetRect = this.calcClosestOffsetRect(this.outline, this.outlineClosestDirection)), 
-        this.viewport.mounted && (this.viewportClosestRect = this.calcClosestRect(this.viewport, this.viewportClosestDirection), 
-        this.viewportClosestOffsetRect = this.calcClosestOffsetRect(this.viewport, this.viewportClosestDirection))));
-    }, t.prototype.dragDrop = function(t) {
-        this.trigger(new pt({
-            target: this.operation.tree,
-            source: null == t ? void 0 : t.dropNode
+            source: props === null || props === void 0 ? void 0 : props.dropNode,
         }));
-    }, t.prototype.dragEnd = function() {
-        this.dragging = !1, this.dragNodes = [], this.touchNode = null, this.closestNode = null, 
-        this.activeViewport = null, this.outlineClosestDirection = null, this.outlineClosestOffsetRect = null, 
-        this.outlineClosestRect = null, this.viewportClosestDirection = null, this.viewportClosestOffsetRect = null, 
-        this.viewportClosestRect = null, this.viewport.clearCache();
-    }, t.prototype.trigger = function(t) {
-        if (this.operation) return this.operation.dispatch(t);
-    }, t.prototype.makeObservable = function() {
-        V(this, {
-            dragging: Y.ref,
-            dragNodes: Y.ref,
-            touchNode: Y.ref,
-            closestNode: Y.ref,
-            outlineClosestDirection: Y.ref,
-            outlineClosestOffsetRect: Y.ref,
-            outlineClosestRect: Y.ref,
-            viewportClosestDirection: Y.ref,
-            viewportClosestOffsetRect: Y.ref,
-            viewportClosestRect: Y.ref,
-            dragStart: z,
-            dragMove: z,
-            dragEnd: z
+    };
+    MoveHelper.prototype.dragEnd = function () {
+        this.dragging = false;
+        this.dragNodes = [];
+        this.touchNode = null;
+        this.closestNode = null;
+        this.activeViewport = null;
+        this.outlineClosestDirection = null;
+        this.outlineClosestOffsetRect = null;
+        this.outlineClosestRect = null;
+        this.viewportClosestDirection = null;
+        this.viewportClosestOffsetRect = null;
+        this.viewportClosestRect = null;
+        this.viewport.clearCache();
+    };
+    MoveHelper.prototype.trigger = function (event) {
+        if (this.operation) {
+            return this.operation.dispatch(event);
+        }
+    };
+    MoveHelper.prototype.makeObservable = function () {
+        define(this, {
+            dragging: observable.ref,
+            dragNodes: observable.ref,
+            touchNode: observable.ref,
+            closestNode: observable.ref,
+            outlineClosestDirection: observable.ref,
+            outlineClosestOffsetRect: observable.ref,
+            outlineClosestRect: observable.ref,
+            viewportClosestDirection: observable.ref,
+            viewportClosestOffsetRect: observable.ref,
+            viewportClosestRect: observable.ref,
+            dragStart: action,
+            dragMove: action,
+            dragEnd: action,
         });
-    }, t;
-}(), Ce = function() {
-    function t(t) {
+    };
+    return MoveHelper;
+}());
+
+var Operation = /** @class */ (function () {
+    function Operation(workspace) {
         this.requests = {
-            snapshot: null
-        }, this.engine = t.engine, this.workspace = t, this.tree = new de(G(G({
-            componentName: this.engine.props.rootComponentName
-        }, this.engine.props.defaultComponentTree), {
-            operation: this
-        })), this.hover = new fe({
-            operation: this
-        }), this.selection = new pe({
-            operation: this
-        }), this.moveHelper = new Re({
-            operation: this
-        }), this.transformHelper = new Ne({
-            operation: this
-        }), this.selection.select(this.tree);
+            snapshot: null,
+        };
+        this.engine = workspace.engine;
+        this.workspace = workspace;
+        this.tree = new TreeNode(__assign(__assign({ componentName: this.engine.props.rootComponentName }, this.engine.props.defaultComponentTree), { operation: this }));
+        this.hover = new Hover({
+            operation: this,
+        });
+        this.selection = new Selection({
+            operation: this,
+        });
+        this.moveHelper = new MoveHelper({
+            operation: this,
+        });
+        this.transformHelper = new TransformHelper({
+            operation: this,
+        });
+        this.selection.select(this.tree);
     }
-    return t.prototype.dispatch = function(t, e) {
-        if (!1 !== this.workspace.dispatch(t)) return i(e) ? e() : void 0;
-    }, t.prototype.snapshot = function(t) {
-        var e = this;
-        a(this.requests.snapshot), this.workspace && this.workspace.history && !this.workspace.history.locking && (this.requests.snapshot = c((function() {
-            e.workspace.history.push(t);
-        })));
-    }, t.prototype.from = function(t) {
-        t && (t.tree && this.tree.from(t.tree), t.selected && (this.selection.selected = t.selected));
-    }, t.prototype.serialize = function() {
+    Operation.prototype.dispatch = function (event, callback) {
+        if (this.workspace.dispatch(event) === false)
+            return;
+        if (isFn(callback))
+            return callback();
+    };
+    Operation.prototype.snapshot = function (type) {
+        var _this = this;
+        cancelIdle(this.requests.snapshot);
+        if (!this.workspace ||
+            !this.workspace.history ||
+            this.workspace.history.locking)
+            return;
+        this.requests.snapshot = requestIdle(function () {
+            _this.workspace.history.push(type);
+        });
+    };
+    Operation.prototype.from = function (operation) {
+        if (!operation)
+            return;
+        if (operation.tree) {
+            this.tree.from(operation.tree);
+        }
+        if (operation.selected) {
+            this.selection.selected = operation.selected;
+        }
+    };
+    Operation.prototype.serialize = function () {
         return {
             tree: this.tree.serialize(),
-            selected: [ this.tree.id ]
+            selected: [this.tree.id],
         };
-    }, t;
-}(), Pe = function() {
-    function t(t, e) {
-        this.current = 0, this.history = [], this.updateTimer = null, this.maxSize = 100, 
-        this.locking = !1, this.context = t, this.props = e, this.push(), this.makeObservable();
+    };
+    return Operation;
+}());
+
+var History = /** @class */ (function () {
+    function History(context, props) {
+        this.current = 0;
+        this.history = [];
+        this.updateTimer = null;
+        this.maxSize = 100;
+        this.locking = false;
+        this.context = context;
+        this.props = props;
+        this.push();
+        this.makeObservable();
     }
-    return t.prototype.makeObservable = function() {
-        V(this, {
-            current: Y.ref,
-            history: Y.shallow,
-            push: z,
-            undo: z,
-            redo: z,
-            goTo: z,
-            clear: z
+    History.prototype.makeObservable = function () {
+        define(this, {
+            current: observable.ref,
+            history: observable.shallow,
+            push: action,
+            undo: action,
+            redo: action,
+            goTo: action,
+            clear: action,
         });
-    }, t.prototype.list = function() {
+    };
+    History.prototype.list = function () {
         return this.history;
-    }, t.prototype.push = function(t) {
-        var e;
-        if (!this.locking) {
-            this.current < this.history.length - 1 && (this.history = this.history.slice(0, this.current + 1));
-            var n = {
-                data: this.context.serialize(),
-                timestamp: Date.now(),
-                type: t
-            };
-            this.current = this.history.length, this.history.push(n);
-            var r = this.history.length - this.maxSize;
-            r > 0 && (this.history.splice(0, r), this.current = this.history.length - 1), (null === (e = this.props) || void 0 === e ? void 0 : e.onPush) && this.props.onPush(n);
+    };
+    History.prototype.push = function (type) {
+        var _a;
+        if (this.locking)
+            return;
+        if (this.current < this.history.length - 1) {
+            this.history = this.history.slice(0, this.current + 1);
         }
-    }, Object.defineProperty(t.prototype, "allowUndo", {
-        get: function() {
+        var item = {
+            data: this.context.serialize(),
+            timestamp: Date.now(),
+            type: type,
+        };
+        this.current = this.history.length;
+        this.history.push(item);
+        var overSizeCount = this.history.length - this.maxSize;
+        if (overSizeCount > 0) {
+            this.history.splice(0, overSizeCount);
+            this.current = this.history.length - 1;
+        }
+        if ((_a = this.props) === null || _a === void 0 ? void 0 : _a.onPush) {
+            this.props.onPush(item);
+        }
+    };
+    Object.defineProperty(History.prototype, "allowUndo", {
+        get: function () {
             return this.history.length > 0 && this.current - 1 >= 0;
         },
-        enumerable: !1,
-        configurable: !0
-    }), Object.defineProperty(t.prototype, "allowRedo", {
-        get: function() {
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(History.prototype, "allowRedo", {
+        get: function () {
             return this.history.length > this.current + 1;
         },
-        enumerable: !1,
-        configurable: !0
-    }), t.prototype.redo = function() {
-        var t;
+        enumerable: false,
+        configurable: true
+    });
+    History.prototype.redo = function () {
+        var _a;
         if (this.allowRedo) {
-            var e = this.history[this.current + 1];
-            this.locking = !0, this.context.from(e.data), this.locking = !1, this.current++, 
-            (null === (t = this.props) || void 0 === t ? void 0 : t.onRedo) && this.props.onRedo(e);
-        }
-    }, t.prototype.undo = function() {
-        var t;
-        if (this.allowUndo) {
-            var e = this.history[this.current - 1];
-            this.locking = !0, this.context.from(e.data), this.locking = !1, this.current--, 
-            (null === (t = this.props) || void 0 === t ? void 0 : t.onUndo) && this.props.onUndo(e);
-        }
-    }, t.prototype.goTo = function(t) {
-        var e, n = this.history[t];
-        n && (this.locking = !0, this.context.from(n.data), this.locking = !1, this.current = t, 
-        (null === (e = this.props) || void 0 === e ? void 0 : e.onGoto) && this.props.onGoto(n));
-    }, t.prototype.clear = function() {
-        this.history = [], this.current = 0;
-    }, t;
-}(), Oe = function() {
-    function t(t, e) {
-        var n = this;
-        this.engine = t, this.props = e, this.id = e.id || s(), this.title = e.title, this.description = e.description, 
-        this.viewport = new he({
-            engine: this.engine,
-            workspace: this,
-            viewportElement: e.viewportElement,
-            contentWindow: e.contentWindow,
-            nodeIdAttrName: this.engine.props.nodeIdAttrName,
-            moveSensitive: !0,
-            moveInsertionType: "all"
-        }), this.outline = new he({
-            engine: this.engine,
-            workspace: this,
-            viewportElement: e.viewportElement,
-            contentWindow: e.contentWindow,
-            nodeIdAttrName: this.engine.props.outlineNodeIdAttrName,
-            moveSensitive: !1,
-            moveInsertionType: "block"
-        }), this.operation = new Ce(this), this.history = new Pe(this, {
-            onPush: function(t) {
-                n.operation.dispatch(new Xt(t));
-            },
-            onRedo: function(t) {
-                n.operation.hover.clear(), n.operation.dispatch(new Bt(t));
-            },
-            onUndo: function(t) {
-                n.operation.hover.clear(), n.operation.dispatch(new Lt(t));
-            },
-            onGoto: function(t) {
-                n.operation.hover.clear(), n.operation.dispatch(new jt(t));
+            var item = this.history[this.current + 1];
+            this.locking = true;
+            this.context.from(item.data);
+            this.locking = false;
+            this.current++;
+            if ((_a = this.props) === null || _a === void 0 ? void 0 : _a.onRedo) {
+                this.props.onRedo(item);
             }
+        }
+    };
+    History.prototype.undo = function () {
+        var _a;
+        if (this.allowUndo) {
+            var item = this.history[this.current - 1];
+            this.locking = true;
+            this.context.from(item.data);
+            this.locking = false;
+            this.current--;
+            if ((_a = this.props) === null || _a === void 0 ? void 0 : _a.onUndo) {
+                this.props.onUndo(item);
+            }
+        }
+    };
+    History.prototype.goTo = function (index) {
+        var _a;
+        var item = this.history[index];
+        if (item) {
+            this.locking = true;
+            this.context.from(item.data);
+            this.locking = false;
+            this.current = index;
+            if ((_a = this.props) === null || _a === void 0 ? void 0 : _a.onGoto) {
+                this.props.onGoto(item);
+            }
+        }
+    };
+    History.prototype.clear = function () {
+        this.history = [];
+        this.current = 0;
+    };
+    return History;
+}());
+
+//工作区模型
+var Workspace = /** @class */ (function () {
+    function Workspace(engine, props) {
+        var _this = this;
+        this.engine = engine;
+        this.props = props;
+        this.id = props.id || uid();
+        this.title = props.title;
+        this.description = props.description;
+        this.viewport = new Viewport({
+            engine: this.engine,
+            workspace: this,
+            viewportElement: props.viewportElement,
+            contentWindow: props.contentWindow,
+            nodeIdAttrName: this.engine.props.nodeIdAttrName,
+            moveSensitive: true,
+            moveInsertionType: 'all',
+        });
+        this.outline = new Viewport({
+            engine: this.engine,
+            workspace: this,
+            viewportElement: props.viewportElement,
+            contentWindow: props.contentWindow,
+            nodeIdAttrName: this.engine.props.outlineNodeIdAttrName,
+            moveSensitive: false,
+            moveInsertionType: 'block',
+        });
+        this.operation = new Operation(this);
+        this.history = new History(this, {
+            onPush: function (item) {
+                _this.operation.dispatch(new HistoryPushEvent(item));
+            },
+            onRedo: function (item) {
+                _this.operation.hover.clear();
+                _this.operation.dispatch(new HistoryRedoEvent(item));
+            },
+            onUndo: function (item) {
+                _this.operation.hover.clear();
+                _this.operation.dispatch(new HistoryUndoEvent(item));
+            },
+            onGoto: function (item) {
+                _this.operation.hover.clear();
+                _this.operation.dispatch(new HistoryGotoEvent(item));
+            },
         });
     }
-    return t.prototype.getEventContext = function() {
+    Workspace.prototype.getEventContext = function () {
         return {
             workbench: this.engine.workbench,
             workspace: this,
             engine: this.engine,
-            viewport: this.viewport
+            viewport: this.viewport,
         };
-    }, t.prototype.attachEvents = function(t, e) {
-        this.engine.attachEvents(t, e, this.getEventContext());
-    }, t.prototype.detachEvents = function(t) {
-        this.engine.detachEvents(t);
-    }, t.prototype.dispatch = function(t) {
-        return this.engine.dispatch(t, this.getEventContext());
-    }, t.prototype.serialize = function() {
+    };
+    Workspace.prototype.attachEvents = function (container, contentWindow) {
+        this.engine.attachEvents(container, contentWindow, this.getEventContext());
+    };
+    Workspace.prototype.detachEvents = function (container) {
+        this.engine.detachEvents(container);
+    };
+    Workspace.prototype.dispatch = function (event) {
+        return this.engine.dispatch(event, this.getEventContext());
+    };
+    Workspace.prototype.serialize = function () {
         return {
             id: this.id,
             title: this.title,
             description: this.description,
-            operation: this.operation.serialize()
+            operation: this.operation.serialize(),
         };
-    }, t.prototype.from = function(t) {
-        t && (t.operation && this.operation.from(t.operation), t.id && (this.id = t.id), 
-        t.title && (this.title = t.title), t.description && (this.description = t.description));
-    }, t;
-}(), Ae = function() {
-    function t(t) {
-        this.type = "DESIGNABLE", this.engine = t, this.workspaces = [], this.currentWorkspace = null, 
-        this.activeWorkspace = null, this.makeObservable();
+    };
+    Workspace.prototype.from = function (workspace) {
+        if (!workspace)
+            return;
+        if (workspace.operation) {
+            this.operation.from(workspace.operation);
+        }
+        if (workspace.id) {
+            this.id = workspace.id;
+        }
+        if (workspace.title) {
+            this.title = workspace.title;
+        }
+        if (workspace.description) {
+            this.description = workspace.description;
+        }
+    };
+    return Workspace;
+}());
+
+var Workbench = /** @class */ (function () {
+    function Workbench(engine) {
+        this.type = 'DESIGNABLE';
+        this.engine = engine;
+        this.workspaces = [];
+        this.currentWorkspace = null;
+        this.activeWorkspace = null;
+        this.makeObservable();
     }
-    return t.prototype.makeObservable = function() {
-        V(this, {
-            currentWorkspace: Y.ref,
-            workspaces: Y.shallow,
-            activeWorkspace: Y.ref,
-            type: Y.ref,
-            switchWorkspace: z,
-            addWorkspace: z,
-            removeWorkspace: z,
-            setActiveWorkspace: z,
-            setWorkbenchType: z
+    Workbench.prototype.makeObservable = function () {
+        define(this, {
+            currentWorkspace: observable.ref,
+            workspaces: observable.shallow,
+            activeWorkspace: observable.ref,
+            type: observable.ref,
+            switchWorkspace: action,
+            addWorkspace: action,
+            removeWorkspace: action,
+            setActiveWorkspace: action,
+            setWorkbenchType: action,
         });
-    }, t.prototype.getEventContext = function() {
+    };
+    Workbench.prototype.getEventContext = function () {
         return {
             engine: this.engine,
             workbench: this.engine.workbench,
             workspace: null,
-            viewport: null
+            viewport: null,
         };
-    }, t.prototype.switchWorkspace = function(t) {
-        var e = this.findWorkspaceById(t);
-        return e && (this.currentWorkspace = e, this.engine.dispatch(new Wt(e))), this.currentWorkspace;
-    }, t.prototype.setActiveWorkspace = function(t) {
-        return this.activeWorkspace = t, t;
-    }, t.prototype.setWorkbenchType = function(t) {
-        this.type = t;
-    }, t.prototype.addWorkspace = function(t) {
-        var e = this.findWorkspaceById(t.id);
-        return e || (this.currentWorkspace = new Oe(this.engine, t), this.workspaces.push(this.currentWorkspace), 
-        this.engine.dispatch(new It(this.currentWorkspace)), this.currentWorkspace);
-    }, t.prototype.removeWorkspace = function(t) {
-        var e = this.findWorkspaceIndexById(t);
-        if (e > -1 && e < this.workspaces.length) {
-            var n = this.workspaces[e];
-            n.viewport.detachEvents(), this.workspaces.splice(e, 1), n === this.currentWorkspace && (this.workspaces.length && this.workspaces[e] ? this.currentWorkspace = this.workspaces[e] : this.currentWorkspace = this.workspaces[this.workspaces.length - 1]), 
-            this.engine.dispatch(new Tt(n));
+    };
+    Workbench.prototype.switchWorkspace = function (id) {
+        var finded = this.findWorkspaceById(id);
+        if (finded) {
+            this.currentWorkspace = finded;
+            this.engine.dispatch(new SwitchWorkspaceEvent(finded));
         }
-    }, t.prototype.ensureWorkspace = function(t) {
-        void 0 === t && (t = {});
-        var e = this.findWorkspaceById(t.id);
-        return e || (this.addWorkspace(t), this.currentWorkspace);
-    }, t.prototype.findWorkspaceById = function(t) {
-        return this.workspaces.find((function(e) {
-            return e.id === t;
-        }));
-    }, t.prototype.findWorkspaceIndexById = function(t) {
-        return this.workspaces.findIndex((function(e) {
-            return e.id === t;
-        }));
-    }, t.prototype.mapWorkspace = function(t) {
-        return this.workspaces.map(t);
-    }, t.prototype.eachWorkspace = function(t) {
-        this.workspaces.forEach(t);
-    }, t;
-}(), De = function() {
-    function t(t) {
-        this.codes = this.parseCodes(t.codes), this.handler = t.handler, this.matcher = t.matcher;
+        return this.currentWorkspace;
+    };
+    Workbench.prototype.setActiveWorkspace = function (workspace) {
+        this.activeWorkspace = workspace;
+        return workspace;
+    };
+    Workbench.prototype.setWorkbenchType = function (type) {
+        this.type = type;
+    };
+    Workbench.prototype.addWorkspace = function (props) {
+        var finded = this.findWorkspaceById(props.id);
+        if (!finded) {
+            this.currentWorkspace = new Workspace(this.engine, props);
+            this.workspaces.push(this.currentWorkspace);
+            this.engine.dispatch(new AddWorkspaceEvent(this.currentWorkspace));
+            return this.currentWorkspace;
+        }
+        return finded;
+    };
+    Workbench.prototype.removeWorkspace = function (id) {
+        var findIndex = this.findWorkspaceIndexById(id);
+        if (findIndex > -1 && findIndex < this.workspaces.length) {
+            var findedWorkspace = this.workspaces[findIndex];
+            findedWorkspace.viewport.detachEvents();
+            this.workspaces.splice(findIndex, 1);
+            if (findedWorkspace === this.currentWorkspace) {
+                if (this.workspaces.length && this.workspaces[findIndex]) {
+                    this.currentWorkspace = this.workspaces[findIndex];
+                }
+                else {
+                    this.currentWorkspace = this.workspaces[this.workspaces.length - 1];
+                }
+            }
+            this.engine.dispatch(new RemoveWorkspaceEvent(findedWorkspace));
+        }
+    };
+    Workbench.prototype.ensureWorkspace = function (props) {
+        if (props === void 0) { props = {}; }
+        var workspace = this.findWorkspaceById(props.id);
+        if (workspace)
+            return workspace;
+        this.addWorkspace(props);
+        return this.currentWorkspace;
+    };
+    Workbench.prototype.findWorkspaceById = function (id) {
+        return this.workspaces.find(function (item) { return item.id === id; });
+    };
+    Workbench.prototype.findWorkspaceIndexById = function (id) {
+        return this.workspaces.findIndex(function (item) { return item.id === id; });
+    };
+    Workbench.prototype.mapWorkspace = function (callbackFn) {
+        return this.workspaces.map(callbackFn);
+    };
+    Workbench.prototype.eachWorkspace = function (callbackFn) {
+        this.workspaces.forEach(callbackFn);
+    };
+    return Workbench;
+}());
+
+var Shortcut = /** @class */ (function () {
+    function Shortcut(props) {
+        this.codes = this.parseCodes(props.codes);
+        this.handler = props.handler;
+        this.matcher = props.matcher;
     }
-    return t.prototype.parseCodes = function(t) {
-        var e = [];
-        return t.forEach((function(t) {
-            Array.isArray(t) ? e.push(t) : e.push([ t ]);
-        })), e;
-    }, t.prototype.preventCodes = function(e) {
-        var n;
+    Shortcut.prototype.parseCodes = function (codes) {
+        var results = [];
+        codes.forEach(function (code) {
+            if (Array.isArray(code)) {
+                results.push(code);
+            }
+            else {
+                results.push([code]);
+            }
+        });
+        return results;
+    };
+    Shortcut.prototype.preventCodes = function (codes) {
+        var _a;
         if (this.codes.length) {
-            for (var r = 0; r < e.length; r++) for (var o = null !== (n = this.codes[r]) && void 0 !== n ? n : [], i = 0; i < o.length; i++) if (!t.matchCode(e[i], o[i])) return !1;
-            return !0;
+            for (var i = 0; i < codes.length; i++) {
+                var sequence = (_a = this.codes[i]) !== null && _a !== void 0 ? _a : [];
+                for (var j = 0; j < sequence.length; j++) {
+                    if (!Shortcut.matchCode(codes[j], sequence[j])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
-        return !1;
-    }, t.prototype.matched = function(t, e) {
-        return i(this.handler) && t && this.handler(e), t;
-    }, t.prototype.match = function(e, n) {
-        var r = this;
-        return this.codes.some((function(o) {
-            var s = t.sortCodes(o), a = t.sortCodes(e);
-            if (i(r.matcher)) return r.matched(r.matcher(a), n);
-            if (a.length !== s.length) return r.matched(!1, n);
-            for (var c = 0; c < s.length; c++) if (!t.matchCode(a[c], s[c])) return r.matched(!1, n);
-            return r.matched(!0, n);
-        }));
-    }, t.matchCode = function(t, e) {
-        var n, r;
-        return (null === (n = null == t ? void 0 : t.toLocaleLowerCase) || void 0 === n ? void 0 : n.call(t)) === (null === (r = null == e ? void 0 : e.toLocaleLowerCase) || void 0 === r ? void 0 : r.call(e));
-    }, t.sortCodes = function(t) {
-        return t.map((function(t) {
-            return t.toLocaleLowerCase();
-        })).sort();
-    }, t;
-}(), xe = [ [ "metaKey", W.Meta ], [ "shiftKey", W.Shift ], [ "ctrlKey", W.Control ], [ "altKey", W.Alt ] ], Ie = function() {
-    function t(t) {
-        var e;
-        this.shortcuts = [], this.sequence = [], this.keyDown = null, this.modifiers = {}, 
-        this.requestTimer = null, this.engine = t, this.shortcuts = (null === (e = t.props) || void 0 === e ? void 0 : e.shortcuts) || [], 
+        return false;
+    };
+    Shortcut.prototype.matched = function (matched, context) {
+        if (isFn(this.handler) && matched) {
+            this.handler(context);
+        }
+        return matched;
+    };
+    Shortcut.prototype.match = function (codes, context) {
+        var _this = this;
+        return this.codes.some(function (sequence) {
+            var sortedSelf = Shortcut.sortCodes(sequence);
+            var sortedTarget = Shortcut.sortCodes(codes);
+            if (isFn(_this.matcher)) {
+                return _this.matched(_this.matcher(sortedTarget), context);
+            }
+            if (sortedTarget.length !== sortedSelf.length)
+                return _this.matched(false, context);
+            for (var i = 0; i < sortedSelf.length; i++) {
+                if (!Shortcut.matchCode(sortedTarget[i], sortedSelf[i])) {
+                    return _this.matched(false, context);
+                }
+            }
+            return _this.matched(true, context);
+        });
+    };
+    Shortcut.matchCode = function (code1, code2) {
+        var _a, _b;
+        return ((_a = code1 === null || code1 === void 0 ? void 0 : code1.toLocaleLowerCase) === null || _a === void 0 ? void 0 : _a.call(code1)) === ((_b = code2 === null || code2 === void 0 ? void 0 : code2.toLocaleLowerCase) === null || _b === void 0 ? void 0 : _b.call(code2));
+    };
+    Shortcut.sortCodes = function (codes) {
+        return codes.map(function (code) { return code.toLocaleLowerCase(); }).sort();
+    };
+    return Shortcut;
+}());
+
+var Modifiers = [
+    ['metaKey', KeyCode.Meta],
+    ['shiftKey', KeyCode.Shift],
+    ['ctrlKey', KeyCode.Control],
+    ['altKey', KeyCode.Alt],
+];
+var Keyboard = /** @class */ (function () {
+    function Keyboard(engine) {
+        var _a;
+        this.shortcuts = [];
+        this.sequence = [];
+        this.keyDown = null;
+        this.modifiers = {};
+        this.requestTimer = null;
+        this.engine = engine;
+        this.shortcuts = ((_a = engine.props) === null || _a === void 0 ? void 0 : _a.shortcuts) || [];
         this.makeObservable();
     }
-    return t.prototype.matchCodes = function(t) {
-        for (var e = 0; e < this.shortcuts.length; e++) {
-            var n = this.shortcuts[e];
-            if (n.match(this.sequence, t)) return !0;
+    Keyboard.prototype.matchCodes = function (context) {
+        for (var i = 0; i < this.shortcuts.length; i++) {
+            var shortcut = this.shortcuts[i];
+            if (shortcut.match(this.sequence, context)) {
+                return true;
+            }
         }
-        return !1;
-    }, t.prototype.preventCodes = function() {
-        var t = this;
-        return this.shortcuts.some((function(e) {
-            return e.preventCodes(t.sequence);
-        }));
-    }, t.prototype.includes = function(t) {
-        return this.sequence.some((function(e) {
-            return De.matchCode(e, t);
-        }));
-    }, t.prototype.excludes = function(t) {
-        this.sequence = this.sequence.filter((function(e) {
-            return !De.matchCode(t, e);
-        }));
-    }, t.prototype.addKeyCode = function(t) {
-        this.includes(t) || this.sequence.push(t);
-    }, t.prototype.removeKeyCode = function(t) {
-        this.includes(t) && this.excludes(t);
-    }, t.prototype.isModifier = function(t) {
-        return xe.some((function(e) {
-            return De.matchCode(e[1], t);
-        }));
-    }, t.prototype.handleModifiers = function(t) {
-        var e = this;
-        xe.forEach((function(n) {
-            var r = Q(n, 2), o = r[0], i = r[1];
-            t[o] && (e.includes(i) || (e.sequence = [ i ].concat(e.sequence)));
-        }));
-    }, t.prototype.handleKeyboard = function(t, e) {
-        "keydown" === t.eventType ? (this.keyDown = t.data, this.addKeyCode(this.keyDown), 
-        this.handleModifiers(t), this.matchCodes(e) && (this.sequence = []), this.requestClean(4e3), 
-        this.preventCodes() && (t.preventDefault(), t.stopPropagation())) : (this.isModifier(t.data) && (this.sequence = []), 
-        this.keyDown = null);
-    }, t.prototype.isKeyDown = function(t) {
-        return this.keyDown === t;
-    }, t.prototype.requestClean = function(t) {
-        var e = this;
-        void 0 === t && (t = 320), clearTimeout(this.requestTimer), this.requestTimer = setTimeout((function() {
-            e.keyDown = null, e.sequence = [], clearTimeout(e.requestTimer);
-        }), t);
-    }, t.prototype.makeObservable = function() {
-        V(this, {
-            sequence: Y.shallow,
-            keyDown: Y.ref,
-            handleKeyboard: z
+        return false;
+    };
+    Keyboard.prototype.preventCodes = function () {
+        var _this = this;
+        return this.shortcuts.some(function (shortcut) {
+            return shortcut.preventCodes(_this.sequence);
         });
-    }, t;
-}();
+    };
+    Keyboard.prototype.includes = function (key) {
+        return this.sequence.some(function (code) { return Shortcut.matchCode(code, key); });
+    };
+    Keyboard.prototype.excludes = function (key) {
+        this.sequence = this.sequence.filter(function (code) { return !Shortcut.matchCode(key, code); });
+    };
+    Keyboard.prototype.addKeyCode = function (key) {
+        if (!this.includes(key)) {
+            this.sequence.push(key);
+        }
+    };
+    Keyboard.prototype.removeKeyCode = function (key) {
+        if (this.includes(key)) {
+            this.excludes(key);
+        }
+    };
+    Keyboard.prototype.isModifier = function (code) {
+        return Modifiers.some(function (modifier) { return Shortcut.matchCode(modifier[1], code); });
+    };
+    Keyboard.prototype.handleModifiers = function (event) {
+        var _this = this;
+        Modifiers.forEach(function (_a) {
+            var _b = __read(_a, 2), key = _b[0], code = _b[1];
+            if (event[key]) {
+                if (!_this.includes(code)) {
+                    _this.sequence = [code].concat(_this.sequence);
+                }
+            }
+        });
+    };
+    Keyboard.prototype.handleKeyboard = function (event, context) {
+        if (event.eventType === 'keydown') {
+            this.keyDown = event.data;
+            this.addKeyCode(this.keyDown);
+            this.handleModifiers(event);
+            if (this.matchCodes(context)) {
+                this.sequence = [];
+            }
+            this.requestClean(4000);
+            if (this.preventCodes()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+        else {
+            if (this.isModifier(event.data)) {
+                this.sequence = [];
+            }
+            this.keyDown = null;
+        }
+    };
+    Keyboard.prototype.isKeyDown = function (code) {
+        return this.keyDown === code;
+    };
+    Keyboard.prototype.requestClean = function (duration) {
+        var _this = this;
+        if (duration === void 0) { duration = 320; }
+        clearTimeout(this.requestTimer);
+        this.requestTimer = setTimeout(function () {
+            _this.keyDown = null;
+            _this.sequence = [];
+            clearTimeout(_this.requestTimer);
+        }, duration);
+    };
+    Keyboard.prototype.makeObservable = function () {
+        define(this, {
+            sequence: observable.shallow,
+            keyDown: observable.ref,
+            handleKeyboard: action,
+        });
+    };
+    return Keyboard;
+}());
 
-(function(t) {
-    t["PC"] = "PC", t["Responsive"] = "Responsive", t["Mobile"] = "Mobile", t["Sketch"] = "Sketch";
-})(Se || (Se = {})), function(t) {
-    t["Normal"] = "Normal", t["Resizing"] = "Resizing", t["Zooming"] = "Zooming";
-}(ke || (ke = {}));
-
-var Te = function() {
-    function t(t) {
-        this.scale = 1, this.width = "100%", this.height = "100%", this.background = "", 
-        this.flip = !1, this.status = ke.Normal, this.engine = t, this.type = t.props.defaultScreenType, 
+var ScreenType;
+(function (ScreenType) {
+    ScreenType["PC"] = "PC";
+    ScreenType["Responsive"] = "Responsive";
+    ScreenType["Mobile"] = "Mobile";
+    ScreenType["Sketch"] = "Sketch";
+})(ScreenType || (ScreenType = {}));
+var ScreenStatus;
+(function (ScreenStatus) {
+    ScreenStatus["Normal"] = "Normal";
+    ScreenStatus["Resizing"] = "Resizing";
+    ScreenStatus["Zooming"] = "Zooming";
+})(ScreenStatus || (ScreenStatus = {}));
+var Screen = /** @class */ (function () {
+    function Screen(engine) {
+        this.scale = 1;
+        this.width = '100%';
+        this.height = '100%';
+        this.background = '';
+        this.flip = false;
+        this.status = ScreenStatus.Normal;
+        this.engine = engine;
+        this.type = engine.props.defaultScreenType;
         this.makeObservable();
     }
-    return t.prototype.makeObservable = function() {
-        V(this, {
-            type: Y.ref,
-            scale: Y.ref,
-            width: Y.ref,
-            height: Y.ref,
-            status: Y.ref,
-            flip: Y.ref,
-            background: Y.ref,
-            setType: z,
-            setScale: z,
-            setSize: z,
-            resetSize: z,
-            setBackground: z,
-            setFlip: z
+    Screen.prototype.makeObservable = function () {
+        define(this, {
+            type: observable.ref,
+            scale: observable.ref,
+            width: observable.ref,
+            height: observable.ref,
+            status: observable.ref,
+            flip: observable.ref,
+            background: observable.ref,
+            setType: action,
+            setScale: action,
+            setSize: action,
+            resetSize: action,
+            setBackground: action,
+            setFlip: action,
         });
-    }, t.prototype.setStatus = function(t) {
-        this.status = t;
-    }, t.prototype.setType = function(t) {
-        this.type = t;
-    }, t.prototype.setScale = function(t) {
-        this.scale = t;
-    }, t.prototype.setSize = function(t, e) {
-        t && (this.width = t), e && (this.height = e);
-    }, t.prototype.resetSize = function() {
-        this.width = "100%", this.height = "100%";
-    }, t.prototype.setBackground = function(t) {
-        this.background = t;
-    }, t.prototype.setFlip = function(t) {
-        this.flip = t;
-    }, t;
-}(), We = function(e) {
-    function n(t) {
-        var r = e.call(this, t) || this;
-        return r.props = G(G({}, n.defaultProps), t), r.init(), r.id = s(), r;
-    }
-    return $(n, e), n.prototype.init = function() {
-        this.workbench = new Ae(this), this.screen = new Te(this), this.cursor = new Ee(this), 
-        this.keyboard = new Ie(this);
-    }, n.prototype.setCurrentTree = function(t) {
-        this.workbench.currentWorkspace && this.workbench.currentWorkspace.operation.tree.from(t);
-    }, n.prototype.getCurrentTree = function() {
-        var t, e, n;
-        return null === (n = null === (e = null === (t = this.workbench) || void 0 === t ? void 0 : t.currentWorkspace) || void 0 === e ? void 0 : e.operation) || void 0 === n ? void 0 : n.tree;
-    }, n.prototype.getAllSelectedNodes = function() {
-        for (var t = [], e = 0; e < this.workbench.workspaces.length; e++) {
-            var n = this.workbench.workspaces[e];
-            t = t.concat(n.operation.selection.selectedNodes);
+    };
+    Screen.prototype.setStatus = function (status) {
+        this.status = status;
+    };
+    Screen.prototype.setType = function (type) {
+        this.type = type;
+    };
+    Screen.prototype.setScale = function (scale) {
+        this.scale = scale;
+    };
+    Screen.prototype.setSize = function (width, height) {
+        if (width) {
+            this.width = width;
         }
-        return t;
-    }, n.prototype.findNodeById = function(t) {
-        return de.findById(t);
-    }, n.prototype.findMovingNodes = function() {
-        var t = [];
-        return this.workbench.eachWorkspace((function(e) {
-            var n;
-            null === (n = e.operation.moveHelper.dragNodes) || void 0 === n || n.forEach((function(e) {
-                t.includes(e) || t.push(e);
-            }));
-        })), t;
-    }, n.prototype.createNode = function(t, e) {
-        return new de(t, e);
-    }, n.prototype.mount = function() {
-        this.attachEvents(t);
-    }, n.prototype.unmount = function() {
+        if (height) {
+            this.height = height;
+        }
+    };
+    Screen.prototype.resetSize = function () {
+        this.width = '100%';
+        this.height = '100%';
+    };
+    Screen.prototype.setBackground = function (background) {
+        this.background = background;
+    };
+    Screen.prototype.setFlip = function (flip) {
+        this.flip = flip;
+    };
+    return Screen;
+}());
+
+/**
+ * 设计器引擎
+ */
+var Engine = /** @class */ (function (_super) {
+    __extends(Engine, _super);
+    function Engine(props) {
+        var _this = _super.call(this, props) || this;
+        _this.props = __assign(__assign({}, Engine.defaultProps), props);
+        _this.init();
+        _this.id = uid();
+        return _this;
+    }
+    Engine.prototype.init = function () {
+        this.workbench = new Workbench(this);
+        this.screen = new Screen(this);
+        this.cursor = new Cursor(this);
+        this.keyboard = new Keyboard(this);
+    };
+    Engine.prototype.setCurrentTree = function (tree) {
+        if (this.workbench.currentWorkspace) {
+            this.workbench.currentWorkspace.operation.tree.from(tree);
+        }
+    };
+    Engine.prototype.getCurrentTree = function () {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = this.workbench) === null || _a === void 0 ? void 0 : _a.currentWorkspace) === null || _b === void 0 ? void 0 : _b.operation) === null || _c === void 0 ? void 0 : _c.tree;
+    };
+    Engine.prototype.getAllSelectedNodes = function () {
+        var results = [];
+        for (var i = 0; i < this.workbench.workspaces.length; i++) {
+            var workspace = this.workbench.workspaces[i];
+            results = results.concat(workspace.operation.selection.selectedNodes);
+        }
+        return results;
+    };
+    Engine.prototype.findNodeById = function (id) {
+        return TreeNode.findById(id);
+    };
+    Engine.prototype.findMovingNodes = function () {
+        var results = [];
+        this.workbench.eachWorkspace(function (workspace) {
+            var _a;
+            (_a = workspace.operation.moveHelper.dragNodes) === null || _a === void 0 ? void 0 : _a.forEach(function (node) {
+                if (!results.includes(node)) {
+                    results.push(node);
+                }
+            });
+        });
+        return results;
+    };
+    Engine.prototype.createNode = function (node, parent) {
+        return new TreeNode(node, parent);
+    };
+    Engine.prototype.mount = function () {
+        this.attachEvents(globalThisPolyfill);
+    };
+    Engine.prototype.unmount = function () {
         this.detachEvents();
-    }, n.defaultProps = {
+    };
+    Engine.defaultProps = {
         shortcuts: [],
         effects: [],
         drivers: [],
-        rootComponentName: "Root",
-        sourceIdAttrName: "data-designer-source-id",
-        nodeIdAttrName: "data-designer-node-id",
-        contentEditableAttrName: "data-content-editable",
-        contentEditableNodeIdAttrName: "data-content-editable-node-id",
-        clickStopPropagationAttrName: "data-click-stop-propagation",
-        nodeSelectionIdAttrName: "data-designer-node-helpers-id",
-        nodeDragHandlerAttrName: "data-designer-node-drag-handler",
-        screenResizeHandlerAttrName: "data-designer-screen-resize-handler",
-        nodeResizeHandlerAttrName: "data-designer-node-resize-handler",
-        outlineNodeIdAttrName: "data-designer-outline-node-id",
-        nodeTranslateAttrName: "data-designer-node-translate-handler",
-        defaultScreenType: Se.PC
-    }, n;
-}(M);
+        rootComponentName: 'Root',
+        sourceIdAttrName: 'data-designer-source-id',
+        nodeIdAttrName: 'data-designer-node-id',
+        contentEditableAttrName: 'data-content-editable',
+        contentEditableNodeIdAttrName: 'data-content-editable-node-id',
+        clickStopPropagationAttrName: 'data-click-stop-propagation',
+        nodeSelectionIdAttrName: 'data-designer-node-helpers-id',
+        nodeDragHandlerAttrName: 'data-designer-node-drag-handler',
+        screenResizeHandlerAttrName: 'data-designer-screen-resize-handler',
+        nodeResizeHandlerAttrName: 'data-designer-node-resize-handler',
+        outlineNodeIdAttrName: 'data-designer-outline-node-id',
+        nodeTranslateAttrName: 'data-designer-node-translate-handler',
+        defaultScreenType: ScreenType.PC,
+    };
+    return Engine;
+}(Event));
 
-function Me(t) {
-    for (var e = [], n = 0; n < t.rangeCount; n++) {
-        var r = t.getRangeAt(n);
-        e[n] = {
-            collapsed: r.collapsed,
-            startOffset: r.startOffset,
-            endOffset: r.endOffset
-        };
-    }
-    return e;
-}
-
-function Le(e) {
-    var n = document.createRange();
-    n.selectNodeContents(e), n.collapse(!1);
-    var r = t.getSelection();
-    r.removeAllRanges(), r.addRange(n);
-}
-
-function Be(e) {
-    var n = t.getSelection();
-    if (!n.containsNode(e)) {
-        var r = Me(n);
-        return function(n) {
-            void 0 === n && (n = 0);
-            var o = t.getSelection(), i = e.childNodes[0];
-            i && (o.removeAllRanges(), r.forEach((function(t) {
-                var e = document.createRange();
-                e.collapse(t.collapsed), e.setStart(i, t.startOffset + n), e.setEnd(i, t.endOffset + n), 
-                o.addRange(e);
-            })));
-        };
-    }
-}
-
-var je, Xe = new De({
-    codes: [ [ W.Meta ], [ W.Control ] ]
-}), Ye = new De({
-    codes: [ W.Shift ]
-}), Ve = new De({
-    codes: [ [ W.Meta, W.X ], [ W.Control, W.X ] ]
-}), ze = new De({
-    codes: [ [ W.Meta, W.A ], [ W.Control, W.A ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        if (e) {
-            var n = e.tree, r = e.selection;
-            r.batchSelect(n.descendants);
+var useCursorEffect = function (engine) {
+    engine.subscribeTo(MouseMoveEvent, function (event) {
+        engine.cursor.setStatus(engine.cursor.status === CursorStatus.Dragging ||
+            engine.cursor.status === CursorStatus.DragStart
+            ? engine.cursor.status
+            : CursorStatus.Normal);
+        if (engine.cursor.status === CursorStatus.Dragging)
+            return;
+        engine.cursor.setPosition(event.data);
+    });
+    engine.subscribeTo(DragStartEvent, function (event) {
+        engine.cursor.setStatus(CursorStatus.DragStart);
+        engine.cursor.setDragStartPosition(event.data);
+    });
+    engine.subscribeTo(DragMoveEvent, function (event) {
+        engine.cursor.setStatus(CursorStatus.Dragging);
+        engine.cursor.setPosition(event.data);
+    });
+    engine.subscribeTo(DragStopEvent, function (event) {
+        engine.cursor.setStatus(CursorStatus.DragStop);
+        engine.cursor.setDragEndPosition(event.data);
+        engine.cursor.setDragStartPosition(null);
+        requestIdle(function () {
+            engine.cursor.setStatus(CursorStatus.Normal);
+        });
+    });
+    engine.subscribeTo(MouseMoveEvent, function (event) {
+        var _a, _b;
+        var currentWorkspace = (_a = event === null || event === void 0 ? void 0 : event.context) === null || _a === void 0 ? void 0 : _a.workspace;
+        if (!currentWorkspace)
+            return;
+        var operation = currentWorkspace.operation;
+        if (engine.cursor.status !== CursorStatus.Normal) {
+            operation.hover.clear();
+            return;
         }
-    }
-}), Fe = new De({
-    codes: [ [ W.Backspace ], [ W.Delete ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        e && de.remove(e.selection.selectedNodes);
-    }
-}), qe = {
-    nodes: []
-}, He = new De({
-    codes: [ [ W.Meta, W.C ], [ W.Control, W.C ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        e && (qe.nodes = e.selection.selectedNodes);
-    }
-}), Ue = new De({
-    codes: [ [ W.Meta, W.V ], [ W.Control, W.V ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        e && de.clone(qe.nodes);
-    }
-}), Ke = new De({
-    codes: [ [ W.Meta, W.Z ], [ W.Control, W.Z ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace;
-        e && e.history.undo(), e.operation.hover.clear();
-    }
-}), _e = new De({
-    codes: [ [ W.Meta, W.Shift, W.Z ], [ W.Control, W.Shift, W.Z ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace;
-        e && e.history.redo(), e.operation.hover.clear();
-    }
-}), $e = new De({
-    codes: [ W.Shift, W.S ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.engine;
-        e && e.cursor.setType(_t.Selection);
-    }
-}), Ge = function(t) {
-    return t && t.lastChild ? Ge(t.lastChild) : t;
-}, Ze = function(t) {
-    var e;
-    return t.parent ? (null === (e = t.parent) || void 0 === e ? void 0 : e.next) ? t.parent.next : Ze(t.parent) : t;
-}, Je = new De({
-    codes: [ [ W.Up ], [ W.PageUp ], [ W.ArrowUp ], [ W.Left ], [ W.LeftWindowKey ], [ W.ArrowLeft ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        if (e) {
-            var n = e.tree, r = e.selection, o = n.findById(r.last);
-            if (o) {
-                var i = o.previous;
-                if (i) {
-                    var s = Ge(i);
-                    s ? r.select(s) : r.select(i);
-                } else if (o.parent) r.select(o.parent); else {
-                    s = Ge(o.lastChild);
-                    s && r.select(s);
+        var target = event.data.target;
+        var el = (_b = target === null || target === void 0 ? void 0 : target.closest) === null || _b === void 0 ? void 0 : _b.call(target, "\n      *[".concat(engine.props.nodeIdAttrName, "],\n      *[").concat(engine.props.outlineNodeIdAttrName, "]\n    "));
+        if (!(el === null || el === void 0 ? void 0 : el.getAttribute)) {
+            return;
+        }
+        var nodeId = el.getAttribute(engine.props.nodeIdAttrName);
+        var outlineNodeId = el.getAttribute(engine.props.outlineNodeIdAttrName);
+        var node = operation.tree.findById(nodeId || outlineNodeId);
+        if (node) {
+            operation.hover.setHover(node);
+        }
+        else {
+            operation.hover.clear();
+        }
+    });
+};
+
+var useViewportEffect = function (engine) {
+    engine.subscribeTo(ViewportResizeEvent, function (event) {
+        var _a;
+        var currentWorkspace = (_a = event === null || event === void 0 ? void 0 : event.context) === null || _a === void 0 ? void 0 : _a.workspace;
+        if (!currentWorkspace)
+            return;
+        var viewport = currentWorkspace.viewport;
+        var outline = currentWorkspace.outline;
+        if (viewport.matchViewport(event.data.target)) {
+            viewport.digestViewport();
+        }
+        if (outline.matchViewport(event.data.target)) {
+            outline.digestViewport();
+        }
+    });
+    engine.subscribeTo(ViewportScrollEvent, function (event) {
+        var _a;
+        var currentWorkspace = (_a = event === null || event === void 0 ? void 0 : event.context) === null || _a === void 0 ? void 0 : _a.workspace;
+        if (!currentWorkspace)
+            return;
+        var viewport = currentWorkspace.viewport;
+        var outline = currentWorkspace.outline;
+        if (viewport.matchViewport(event.data.target)) {
+            viewport.digestViewport();
+        }
+        if (outline.matchViewport(event.data.target)) {
+            outline.digestViewport();
+        }
+    });
+};
+
+var useDragDropEffect = function (engine) {
+    engine.subscribeTo(DragStartEvent, function (event) {
+        if (engine.cursor.type !== CursorType.Normal)
+            return;
+        var target = event.data.target;
+        var el = target === null || target === void 0 ? void 0 : target.closest("\n       *[".concat(engine.props.nodeIdAttrName, "],\n       *[").concat(engine.props.sourceIdAttrName, "],\n       *[").concat(engine.props.outlineNodeIdAttrName, "]\n      "));
+        var handler = target === null || target === void 0 ? void 0 : target.closest("*[".concat(engine.props.nodeDragHandlerAttrName, "]"));
+        var helper = handler === null || handler === void 0 ? void 0 : handler.closest("*[".concat(engine.props.nodeSelectionIdAttrName, "]"));
+        if (!(el === null || el === void 0 ? void 0 : el.getAttribute) && !handler)
+            return;
+        var sourceId = el === null || el === void 0 ? void 0 : el.getAttribute(engine.props.sourceIdAttrName);
+        var outlineId = el === null || el === void 0 ? void 0 : el.getAttribute(engine.props.outlineNodeIdAttrName);
+        var handlerId = helper === null || helper === void 0 ? void 0 : helper.getAttribute(engine.props.nodeSelectionIdAttrName);
+        var nodeId = el === null || el === void 0 ? void 0 : el.getAttribute(engine.props.nodeIdAttrName);
+        engine.workbench.eachWorkspace(function (currentWorkspace) {
+            var operation = currentWorkspace.operation;
+            var moveHelper = operation.moveHelper;
+            if (nodeId || outlineId || handlerId) {
+                var node_1 = engine.findNodeById(outlineId || nodeId || handlerId);
+                if (node_1) {
+                    if (!node_1.allowDrag())
+                        return;
+                    if (node_1 === node_1.root)
+                        return;
+                    var validSelected = engine
+                        .getAllSelectedNodes()
+                        .filter(function (node) { return node.allowDrag(); });
+                    if (validSelected.some(function (selectNode) { return selectNode === node_1; })) {
+                        moveHelper.dragStart({ dragNodes: TreeNode.sort(validSelected) });
+                    }
+                    else {
+                        moveHelper.dragStart({ dragNodes: [node_1] });
+                    }
                 }
             }
-        }
-    }
-}), Qe = new De({
-    codes: [ [ W.Down ], [ W.PageDown ], [ W.ArrowDown ], [ W.Right ], [ W.RightWindowKey ], [ W.ArrowRight ] ],
-    handler: function(t) {
-        var e = null == t ? void 0 : t.workspace.operation;
-        if (e) {
-            var n = e.tree, r = e.selection, o = n.findById(r.last);
-            if (o) {
-                var i = o.firstChild ? o.firstChild : o.next;
-                i ? r.select(i) : r.select(Ze(o));
-            }
-        }
-    }
-}), tn = [ function(t) {
-    t.subscribeTo(ot, (function(e) {
-        t.cursor.dragType === Kt.Move && (t.workbench.eachWorkspace((function(n) {
-            var r = n.viewport, o = new O(e.data.topClientX, e.data.topClientY), i = r.getOffsetPoint(new O(t.cursor.dragStartPosition.topClientX, t.cursor.dragStartPosition.topClientY)), s = r.getOffsetPoint(new O(t.cursor.position.topClientX, t.cursor.position.topClientY));
-            if (r.isPointInViewport(o, !1)) {
-                var a = n.operation.tree, c = L(i, s, r.dragScrollXDelta, r.dragScrollYDelta), u = [];
-                a.eachChildren((function(t) {
-                    var e = r.getValidNodeOffsetRect(t);
-                    e && B(c, e) && u.push([ t, e ]);
-                }));
-                var l = u.reduce((function(t, e) {
-                    var n = Q(e, 2), r = n[0], o = n[1];
-                    return d(o, c) && u.some((function(t) {
-                        var e = Q(t, 1), n = e[0];
-                        return n.isMyParents(r);
-                    })) ? t : t.concat(r);
-                }), []);
-                n.operation.selection.batchSafeSelect(l);
-            }
-        })), t.cursor.type === _t.Selection && t.cursor.setType(_t.Normal));
-    }));
-}, function(t) {
-    t.subscribeTo(at, (function(e) {
-        t.cursor.setStatus(t.cursor.status === Ut.Dragging || t.cursor.status === Ut.DragStart ? t.cursor.status : Ut.Normal), 
-        t.cursor.status !== Ut.Dragging && t.cursor.setPosition(e.data);
-    })), t.subscribeTo(rt, (function(e) {
-        t.cursor.setStatus(Ut.DragStart), t.cursor.setDragStartPosition(e.data);
-    })), t.subscribeTo(nt, (function(e) {
-        t.cursor.setStatus(Ut.Dragging), t.cursor.setPosition(e.data);
-    })), t.subscribeTo(ot, (function(e) {
-        t.cursor.setStatus(Ut.DragStop), t.cursor.setDragEndPosition(e.data), t.cursor.setDragStartPosition(null), 
-        c((function() {
-            t.cursor.setStatus(Ut.Normal);
-        }));
-    })), t.subscribeTo(at, (function(e) {
-        var n, r, o = null === (n = null == e ? void 0 : e.context) || void 0 === n ? void 0 : n.workspace;
-        if (o) {
-            var i = o.operation;
-            if (t.cursor.status === Ut.Normal) {
-                var s = e.data.target, a = null === (r = null == s ? void 0 : s.closest) || void 0 === r ? void 0 : r.call(s, "\n      *[".concat(t.props.nodeIdAttrName, "],\n      *[").concat(t.props.outlineNodeIdAttrName, "]\n    "));
-                if (null == a ? void 0 : a.getAttribute) {
-                    var c = a.getAttribute(t.props.nodeIdAttrName), u = a.getAttribute(t.props.outlineNodeIdAttrName), l = i.tree.findById(c || u);
-                    l ? i.hover.setHover(l) : i.hover.clear();
+            else if (sourceId) {
+                var sourceNode = engine.findNodeById(sourceId);
+                if (sourceNode) {
+                    moveHelper.dragStart({ dragNodes: [sourceNode] });
                 }
-            } else i.hover.clear();
-        }
-    }));
-}, function(t) {
-    t.subscribeTo(At, (function(t) {
-        var e, n = null === (e = null == t ? void 0 : t.context) || void 0 === e ? void 0 : e.workspace;
-        if (n) {
-            var r = n.viewport, o = n.outline;
-            r.matchViewport(t.data.target) && r.digestViewport(), o.matchViewport(t.data.target) && o.digestViewport();
-        }
-    })), t.subscribeTo(Dt, (function(t) {
-        var e, n = null === (e = null == t ? void 0 : t.context) || void 0 === e ? void 0 : e.workspace;
-        if (n) {
-            var r = n.viewport, o = n.outline;
-            r.matchViewport(t.data.target) && r.digestViewport(), o.matchViewport(t.data.target) && o.digestViewport();
-        }
-    }));
-}, function(t) {
-    t.subscribeTo(rt, (function(e) {
-        if (t.cursor.type === _t.Normal) {
-            var n = e.data.target, r = null == n ? void 0 : n.closest("\n       *[".concat(t.props.nodeIdAttrName, "],\n       *[").concat(t.props.sourceIdAttrName, "],\n       *[").concat(t.props.outlineNodeIdAttrName, "]\n      ")), o = null == n ? void 0 : n.closest("*[".concat(t.props.nodeDragHandlerAttrName, "]")), i = null == o ? void 0 : o.closest("*[".concat(t.props.nodeSelectionIdAttrName, "]"));
-            if ((null == r ? void 0 : r.getAttribute) || o) {
-                var s = null == r ? void 0 : r.getAttribute(t.props.sourceIdAttrName), a = null == r ? void 0 : r.getAttribute(t.props.outlineNodeIdAttrName), c = null == i ? void 0 : i.getAttribute(t.props.nodeSelectionIdAttrName), u = null == r ? void 0 : r.getAttribute(t.props.nodeIdAttrName);
-                t.workbench.eachWorkspace((function(e) {
-                    var n = e.operation, r = n.moveHelper;
-                    if (u || a || c) {
-                        var o = t.findNodeById(a || u || c);
-                        if (o) {
-                            if (!o.allowDrag()) return;
-                            if (o === o.root) return;
-                            var i = t.getAllSelectedNodes().filter((function(t) {
-                                return t.allowDrag();
-                            }));
-                            i.some((function(t) {
-                                return t === o;
-                            })) ? r.dragStart({
-                                dragNodes: de.sort(i)
-                            }) : r.dragStart({
-                                dragNodes: [ o ]
-                            });
+            }
+        });
+        engine.cursor.setStyle('move');
+    });
+    engine.subscribeTo(DragMoveEvent, function (event) {
+        if (engine.cursor.type !== CursorType.Normal)
+            return;
+        if (engine.cursor.dragType !== CursorDragType.Move)
+            return;
+        var target = event.data.target;
+        var el = target === null || target === void 0 ? void 0 : target.closest("\n      *[".concat(engine.props.nodeIdAttrName, "],\n      *[").concat(engine.props.outlineNodeIdAttrName, "]\n    "));
+        var point = new Point(event.data.topClientX, event.data.topClientY);
+        var nodeId = el === null || el === void 0 ? void 0 : el.getAttribute(engine.props.nodeIdAttrName);
+        var outlineId = el === null || el === void 0 ? void 0 : el.getAttribute(engine.props.outlineNodeIdAttrName);
+        engine.workbench.eachWorkspace(function (currentWorkspace) {
+            var operation = currentWorkspace.operation;
+            var moveHelper = operation.moveHelper;
+            var dragNodes = moveHelper.dragNodes;
+            var tree = operation.tree;
+            if (!dragNodes.length)
+                return;
+            var touchNode = tree.findById(outlineId || nodeId);
+            moveHelper.dragMove({
+                point: point,
+                touchNode: touchNode,
+            });
+        });
+    });
+    engine.subscribeTo(ViewportScrollEvent, function (event) {
+        var _a, _b;
+        if (engine.cursor.type !== CursorType.Normal)
+            return;
+        if (engine.cursor.dragType !== CursorDragType.Move)
+            return;
+        var point = new Point(engine.cursor.position.topClientX, engine.cursor.position.topClientY);
+        var currentWorkspace = (_b = (_a = event === null || event === void 0 ? void 0 : event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        if (!currentWorkspace)
+            return;
+        var operation = currentWorkspace.operation;
+        var moveHelper = operation.moveHelper;
+        if (!moveHelper.dragNodes.length)
+            return;
+        var tree = operation.tree;
+        var viewport = currentWorkspace.viewport;
+        var outline = currentWorkspace.outline;
+        var viewportTarget = viewport.elementFromPoint(point);
+        var outlineTarget = outline.elementFromPoint(point);
+        var viewportNodeElement = viewportTarget === null || viewportTarget === void 0 ? void 0 : viewportTarget.closest("\n      *[".concat(engine.props.nodeIdAttrName, "],\n      *[").concat(engine.props.outlineNodeIdAttrName, "]\n    "));
+        var outlineNodeElement = outlineTarget === null || outlineTarget === void 0 ? void 0 : outlineTarget.closest("\n    *[".concat(engine.props.nodeIdAttrName, "],\n    *[").concat(engine.props.outlineNodeIdAttrName, "]\n  "));
+        var nodeId = viewportNodeElement === null || viewportNodeElement === void 0 ? void 0 : viewportNodeElement.getAttribute(engine.props.nodeIdAttrName);
+        var outlineNodeId = outlineNodeElement === null || outlineNodeElement === void 0 ? void 0 : outlineNodeElement.getAttribute(engine.props.outlineNodeIdAttrName);
+        var touchNode = tree.findById(outlineNodeId || nodeId);
+        moveHelper.dragMove({ point: point, touchNode: touchNode });
+    });
+    engine.subscribeTo(DragStopEvent, function () {
+        if (engine.cursor.type !== CursorType.Normal)
+            return;
+        if (engine.cursor.dragType !== CursorDragType.Move)
+            return;
+        engine.workbench.eachWorkspace(function (currentWorkspace) {
+            var operation = currentWorkspace.operation;
+            var moveHelper = operation.moveHelper;
+            var dragNodes = moveHelper.dragNodes;
+            var closestNode = moveHelper.closestNode;
+            var closestDirection = moveHelper.closestDirection;
+            var selection = operation.selection;
+            if (!dragNodes.length)
+                return;
+            if (dragNodes.length && closestNode && closestDirection) {
+                if (closestDirection === ClosestPosition.After ||
+                    closestDirection === ClosestPosition.Under) {
+                    if (closestNode.allowSibling(dragNodes)) {
+                        selection.batchSafeSelect(closestNode.insertAfter.apply(closestNode, __spreadArray([], __read(TreeNode.filterDroppable(dragNodes, closestNode.parent)), false)));
+                    }
+                }
+                else if (closestDirection === ClosestPosition.Before ||
+                    closestDirection === ClosestPosition.Upper) {
+                    if (closestNode.allowSibling(dragNodes)) {
+                        selection.batchSafeSelect(closestNode.insertBefore.apply(closestNode, __spreadArray([], __read(TreeNode.filterDroppable(dragNodes, closestNode.parent)), false)));
+                    }
+                }
+                else if (closestDirection === ClosestPosition.Inner ||
+                    closestDirection === ClosestPosition.InnerAfter) {
+                    if (closestNode.allowAppend(dragNodes)) {
+                        selection.batchSafeSelect(closestNode.append.apply(closestNode, __spreadArray([], __read(TreeNode.filterDroppable(dragNodes, closestNode)), false)));
+                        moveHelper.dragDrop({ dropNode: closestNode });
+                    }
+                }
+                else if (closestDirection === ClosestPosition.InnerBefore) {
+                    if (closestNode.allowAppend(dragNodes)) {
+                        selection.batchSafeSelect(closestNode.prepend.apply(closestNode, __spreadArray([], __read(TreeNode.filterDroppable(dragNodes, closestNode)), false)));
+                        moveHelper.dragDrop({ dropNode: closestNode });
+                    }
+                }
+            }
+            moveHelper.dragEnd();
+        });
+        engine.cursor.setStyle('');
+    });
+};
+
+var useResizeEffect = function (engine) {
+    var findStartNodeHandler = function (target) {
+        var handler = target === null || target === void 0 ? void 0 : target.closest("*[".concat(engine.props.nodeResizeHandlerAttrName, "]"));
+        if (handler) {
+            var direction = handler.getAttribute(engine.props.nodeResizeHandlerAttrName);
+            if (direction) {
+                var element = handler.closest("*[".concat(engine.props.nodeSelectionIdAttrName, "]"));
+                if (element) {
+                    var nodeId = element.getAttribute(engine.props.nodeSelectionIdAttrName);
+                    if (nodeId) {
+                        var node = engine.findNodeById(nodeId);
+                        if (node) {
+                            return { direction: direction, node: node, element: element };
                         }
-                    } else if (s) {
-                        var l = t.findNodeById(s);
-                        l && r.dragStart({
-                            dragNodes: [ l ]
+                    }
+                }
+            }
+        }
+        return;
+    };
+    engine.subscribeTo(DragStartEvent, function (event) {
+        var _a, _b;
+        var target = event.data.target;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        if (!currentWorkspace)
+            return;
+        var handler = findStartNodeHandler(target);
+        var helper = currentWorkspace.operation.transformHelper;
+        if (handler) {
+            var selectionElement = handler.element.closest("*[".concat(engine.props.nodeSelectionIdAttrName, "]"));
+            if (selectionElement) {
+                var nodeId = selectionElement.getAttribute(engine.props.nodeSelectionIdAttrName);
+                if (nodeId) {
+                    var node = engine.findNodeById(nodeId);
+                    if (node) {
+                        helper.dragStart({
+                            dragNodes: [node],
+                            type: 'resize',
+                            direction: handler.direction,
                         });
                     }
-                })), t.cursor.setStyle("move");
-            }
-        }
-    })), t.subscribeTo(nt, (function(e) {
-        if (t.cursor.type === _t.Normal && t.cursor.dragType === Kt.Move) {
-            var n = e.data.target, r = null == n ? void 0 : n.closest("\n      *[".concat(t.props.nodeIdAttrName, "],\n      *[").concat(t.props.outlineNodeIdAttrName, "]\n    ")), o = new O(e.data.topClientX, e.data.topClientY), i = null == r ? void 0 : r.getAttribute(t.props.nodeIdAttrName), s = null == r ? void 0 : r.getAttribute(t.props.outlineNodeIdAttrName);
-            t.workbench.eachWorkspace((function(t) {
-                var e = t.operation, n = e.moveHelper, r = n.dragNodes, a = e.tree;
-                if (r.length) {
-                    var c = a.findById(s || i);
-                    n.dragMove({
-                        point: o,
-                        touchNode: c
-                    });
-                }
-            }));
-        }
-    })), t.subscribeTo(Dt, (function(e) {
-        var n, r;
-        if (t.cursor.type === _t.Normal && t.cursor.dragType === Kt.Move) {
-            var o = new O(t.cursor.position.topClientX, t.cursor.position.topClientY), i = null !== (r = null === (n = null == e ? void 0 : e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace;
-            if (i) {
-                var s = i.operation, a = s.moveHelper;
-                if (a.dragNodes.length) {
-                    var c = s.tree, u = i.viewport, l = i.outline, d = u.elementFromPoint(o), h = l.elementFromPoint(o), p = null == d ? void 0 : d.closest("\n      *[".concat(t.props.nodeIdAttrName, "],\n      *[").concat(t.props.outlineNodeIdAttrName, "]\n    ")), f = null == h ? void 0 : h.closest("\n    *[".concat(t.props.nodeIdAttrName, "],\n    *[").concat(t.props.outlineNodeIdAttrName, "]\n  ")), v = null == p ? void 0 : p.getAttribute(t.props.nodeIdAttrName), g = null == f ? void 0 : f.getAttribute(t.props.outlineNodeIdAttrName), y = c.findById(g || v);
-                    a.dragMove({
-                        point: o,
-                        touchNode: y
-                    });
                 }
             }
         }
-    })), t.subscribeTo(ot, (function() {
-        t.cursor.type === _t.Normal && t.cursor.dragType === Kt.Move && (t.workbench.eachWorkspace((function(t) {
-            var e = t.operation, n = e.moveHelper, r = n.dragNodes, o = n.closestNode, i = n.closestDirection, s = e.selection;
-            r.length && (r.length && o && i && (i === ye.After || i === ye.Under ? o.allowSibling(r) && s.batchSafeSelect(o.insertAfter.apply(o, tt([], Q(de.filterDroppable(r, o.parent)), !1))) : i === ye.Before || i === ye.Upper ? o.allowSibling(r) && s.batchSafeSelect(o.insertBefore.apply(o, tt([], Q(de.filterDroppable(r, o.parent)), !1))) : i === ye.Inner || i === ye.InnerAfter ? o.allowAppend(r) && (s.batchSafeSelect(o.append.apply(o, tt([], Q(de.filterDroppable(r, o)), !1))), 
-            n.dragDrop({
-                dropNode: o
-            })) : i === ye.InnerBefore && o.allowAppend(r) && (s.batchSafeSelect(o.prepend.apply(o, tt([], Q(de.filterDroppable(r, o)), !1))), 
-            n.dragDrop({
-                dropNode: o
-            }))), n.dragEnd());
-        })), t.cursor.setStyle(""));
-    }));
-}, function(t) {
-    t.subscribeTo(it, (function(e) {
-        var n, r, o, i;
-        if (t.cursor.status === Ut.Normal) {
-            var s = e.data.target, a = null === (n = null == s ? void 0 : s.closest) || void 0 === n ? void 0 : n.call(s, "\n      *[".concat(t.props.nodeIdAttrName, "],\n      *[").concat(t.props.outlineNodeIdAttrName, "]\n    ")), c = null === (r = null == s ? void 0 : s.closest) || void 0 === r ? void 0 : r.call(s, "*[".concat(t.props.nodeSelectionIdAttrName, "]")), u = null !== (i = null === (o = e.context) || void 0 === o ? void 0 : o.workspace) && void 0 !== i ? i : t.workbench.activeWorkspace;
-            if (u) if (null == a ? void 0 : a.getAttribute) {
-                var l = a.getAttribute(t.props.nodeIdAttrName), d = a.getAttribute(t.props.outlineNodeIdAttrName), h = u.operation, p = h.selection, f = h.tree, v = f.findById(l || d);
-                v ? (t.keyboard.requestClean(), t.keyboard.isKeyDown(W.Meta) || t.keyboard.isKeyDown(W.Control) ? p.has(v) ? p.selected.length > 1 && p.remove(v) : p.add(v) : t.keyboard.isKeyDown(W.Shift) ? p.has(v) ? p.selected.length > 1 && p.remove(v) : p.crossAddTo(v) : p.select(v)) : p.select(f);
-            } else {
-                var g = new O(e.data.topClientX, e.data.topClientY), y = u.operation, m = u.viewport, w = u.outline, b = m.isPointInViewport(g, !1), E = w.isPointInViewport(g, !1);
-                if (c) return;
-                if (b || E) {
-                    var N = y.selection, S = y.tree;
-                    N.select(S);
+    });
+    engine.subscribeTo(DragMoveEvent, function (event) {
+        var _a, _b;
+        if (engine.cursor.dragType !== CursorDragType.Resize)
+            return;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        var helper = currentWorkspace === null || currentWorkspace === void 0 ? void 0 : currentWorkspace.operation.transformHelper;
+        var dragNodes = helper.dragNodes;
+        if (!dragNodes.length)
+            return;
+        helper.dragMove();
+        dragNodes.forEach(function (node) {
+            var element = node.getElement();
+            helper.resize(node, function (rect) {
+                element.style.width = rect.width + 'px';
+                element.style.height = rect.height + 'px';
+                element.style.position = 'absolute';
+                element.style.left = '0px';
+                element.style.top = '0px';
+                element.style.transform = "translate3d(".concat(rect.x, "px,").concat(rect.y, "px,0)");
+            });
+        });
+    });
+    engine.subscribeTo(DragStopEvent, function (event) {
+        var _a, _b;
+        if (engine.cursor.dragType !== CursorDragType.Resize)
+            return;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        var helper = currentWorkspace === null || currentWorkspace === void 0 ? void 0 : currentWorkspace.operation.transformHelper;
+        if (helper) {
+            helper.dragEnd();
+        }
+    });
+};
+
+var useSelectionEffect = function (engine) {
+    engine.subscribeTo(MouseClickEvent, function (event) {
+        var _a, _b, _c, _d;
+        if (engine.cursor.status !== CursorStatus.Normal)
+            return;
+        var target = event.data.target;
+        var el = (_a = target === null || target === void 0 ? void 0 : target.closest) === null || _a === void 0 ? void 0 : _a.call(target, "\n      *[".concat(engine.props.nodeIdAttrName, "],\n      *[").concat(engine.props.outlineNodeIdAttrName, "]\n    "));
+        var isHelpers = (_b = target === null || target === void 0 ? void 0 : target.closest) === null || _b === void 0 ? void 0 : _b.call(target, "*[".concat(engine.props.nodeSelectionIdAttrName, "]"));
+        var currentWorkspace = (_d = (_c = event.context) === null || _c === void 0 ? void 0 : _c.workspace) !== null && _d !== void 0 ? _d : engine.workbench.activeWorkspace;
+        if (!currentWorkspace)
+            return;
+        if (!(el === null || el === void 0 ? void 0 : el.getAttribute)) {
+            var point = new Point(event.data.topClientX, event.data.topClientY);
+            var operation_1 = currentWorkspace.operation;
+            var viewport = currentWorkspace.viewport;
+            var outline = currentWorkspace.outline;
+            var isInViewport = viewport.isPointInViewport(point, false);
+            var isInOutline = outline.isPointInViewport(point, false);
+            if (isHelpers)
+                return;
+            if (isInViewport || isInOutline) {
+                var selection_1 = operation_1.selection;
+                var tree_1 = operation_1.tree;
+                selection_1.select(tree_1);
+            }
+            return;
+        }
+        var nodeId = el.getAttribute(engine.props.nodeIdAttrName);
+        var structNodeId = el.getAttribute(engine.props.outlineNodeIdAttrName);
+        var operation = currentWorkspace.operation;
+        var selection = operation.selection;
+        var tree = operation.tree;
+        var node = tree.findById(nodeId || structNodeId);
+        if (node) {
+            engine.keyboard.requestClean();
+            if (engine.keyboard.isKeyDown(KeyCode.Meta) ||
+                engine.keyboard.isKeyDown(KeyCode.Control)) {
+                if (selection.has(node)) {
+                    if (selection.selected.length > 1) {
+                        selection.remove(node);
+                    }
+                }
+                else {
+                    selection.add(node);
+                }
+            }
+            else if (engine.keyboard.isKeyDown(KeyCode.Shift)) {
+                if (selection.has(node)) {
+                    if (selection.selected.length > 1) {
+                        selection.remove(node);
+                    }
+                }
+                else {
+                    selection.crossAddTo(node);
+                }
+            }
+            else {
+                selection.select(node);
+            }
+        }
+        else {
+            selection.select(tree);
+        }
+    });
+};
+
+var useFreeSelectionEffect = function (engine) {
+    engine.subscribeTo(DragStopEvent, function (event) {
+        if (engine.cursor.dragType !== CursorDragType.Move) {
+            return;
+        }
+        engine.workbench.eachWorkspace(function (workspace) {
+            var viewport = workspace.viewport;
+            var dragEndPoint = new Point(event.data.topClientX, event.data.topClientY);
+            var dragStartOffsetPoint = viewport.getOffsetPoint(new Point(engine.cursor.dragStartPosition.topClientX, engine.cursor.dragStartPosition.topClientY));
+            var dragEndOffsetPoint = viewport.getOffsetPoint(new Point(engine.cursor.position.topClientX, engine.cursor.position.topClientY));
+            if (!viewport.isPointInViewport(dragEndPoint, false))
+                return;
+            var tree = workspace.operation.tree;
+            var selectionRect = calcRectByStartEndPoint(dragStartOffsetPoint, dragEndOffsetPoint, viewport.dragScrollXDelta, viewport.dragScrollYDelta);
+            //DOMRect
+            var selected = [];
+            tree.eachChildren(function (node) {
+                var nodeRect = viewport.getValidNodeOffsetRect(node);
+                if (nodeRect && isCrossRectInRect(selectionRect, nodeRect)) {
+                    selected.push([node, nodeRect]);
+                }
+            });
+            var selectedNodes = selected.reduce(function (buf, _a) {
+                var _b = __read(_a, 2), node = _b[0], nodeRect = _b[1];
+                if (isRectInRect(nodeRect, selectionRect)) {
+                    if (selected.some(function (_a) {
+                        var _b = __read(_a, 1), selectNode = _b[0];
+                        return selectNode.isMyParents(node);
+                    })) {
+                        return buf;
+                    }
+                }
+                return buf.concat(node);
+            }, []);
+            workspace.operation.selection.batchSafeSelect(selectedNodes);
+        });
+        if (engine.cursor.type === CursorType.Selection) {
+            engine.cursor.setType(CursorType.Normal);
+        }
+    });
+};
+
+var useKeyboardEffect = function (engine) {
+    engine.subscribeTo(KeyDownEvent, function (event) {
+        var keyboard = engine.keyboard;
+        if (!keyboard)
+            return;
+        var workspace = engine.workbench.activeWorkspace || engine.workbench.currentWorkspace;
+        keyboard.handleKeyboard(event, workspace.getEventContext());
+    });
+    engine.subscribeTo(KeyUpEvent, function (event) {
+        var keyboard = engine.keyboard;
+        if (!keyboard)
+            return;
+        var workspace = engine.workbench.activeWorkspace || engine.workbench.currentWorkspace;
+        keyboard.handleKeyboard(event, workspace.getEventContext());
+    });
+};
+
+var useAutoScrollEffect = function (engine) {
+    var xScroller = null;
+    var yScroller = null;
+    var xScrollerAnimationStop = null;
+    var yScrollerAnimationStop = null;
+    var scrolling = function (point, viewport) {
+        if (engine.cursor.status === CursorStatus.Dragging) {
+            xScroller = calcAutoScrollBasicInfo(point, 'x', viewport.rect);
+            yScroller = calcAutoScrollBasicInfo(point, 'y', viewport.rect);
+            if (xScroller) {
+                if (xScrollerAnimationStop) {
+                    xScrollerAnimationStop();
+                }
+                xScrollerAnimationStop = scrollAnimate(viewport.scrollContainer, 'x', xScroller.direction, xScroller.speed);
+            }
+            else {
+                if (xScrollerAnimationStop) {
+                    xScrollerAnimationStop();
+                }
+            }
+            if (yScroller) {
+                if (yScrollerAnimationStop) {
+                    yScrollerAnimationStop();
+                }
+                yScrollerAnimationStop = scrollAnimate(viewport.scrollContainer, 'y', yScroller.direction, yScroller.speed);
+            }
+            else {
+                if (yScrollerAnimationStop) {
+                    yScrollerAnimationStop();
                 }
             }
         }
-    }));
-}, function(t) {
-    t.subscribeTo(ut, (function(e) {
-        var n = t.keyboard;
-        if (n) {
-            var r = t.workbench.activeWorkspace || t.workbench.currentWorkspace;
-            n.handleKeyboard(e, r.getEventContext());
-        }
-    })), t.subscribeTo(lt, (function(e) {
-        var n = t.keyboard;
-        if (n) {
-            var r = t.workbench.activeWorkspace || t.workbench.currentWorkspace;
-            n.handleKeyboard(e, r.getEventContext());
-        }
-    }));
-}, function(t) {
-    var e = null, n = null, r = null, o = null, i = function(i, s) {
-        t.cursor.status === Ut.Dragging && (e = j(i, "x", s.rect), n = j(i, "y", s.rect), 
-        e ? (r && r(), r = X(s.scrollContainer, "x", e.direction, e.speed)) : r && r(), 
-        n ? (o && o(), o = X(s.scrollContainer, "y", n.direction, n.speed)) : o && o());
     };
-    t.subscribeTo(rt, (function() {
-        t.workbench.eachWorkspace((function(t) {
-            t.viewport.takeDragStartSnapshot();
-        }));
-    })), t.subscribeTo(nt, (function(e) {
-        t.workbench.eachWorkspace((function(t) {
-            var n = t.viewport, r = t.outline, o = new O(e.data.topClientX, e.data.topClientY);
-            r.isPointInViewport(o) ? i(o, r) : n.isPointInViewport(o) && i(o, n);
-        }));
-    })), t.subscribeTo(ot, (function() {
-        e = null, n = null, r && r(), o && o();
-    }));
-}, function(t) {
-    t.subscribeWith([ "append:node", "insert:after", "insert:before", "insert:children", "drag:node", "drop:node", "prepend:node", "remove:node", "select:node", "update:children", "wrap:node", "update:node:props" ], (function(e) {
-        var n;
-        (null === (n = e.context) || void 0 === n ? void 0 : n.workbench) && t.workbench.setActiveWorkspace(e.context.workspace);
-    })), t.subscribeTo(bt, (function(e) {
-        t.workbench.eachWorkspace((function(t) {
-            t !== e.context.workspace && t.operation.selection.clear();
-        }));
-    }));
-}, function(e) {
-    var n = {
-        activeElements: new Map,
+    engine.subscribeTo(DragStartEvent, function () {
+        engine.workbench.eachWorkspace(function (workspace) {
+            workspace.viewport.takeDragStartSnapshot();
+        });
+    });
+    engine.subscribeTo(DragMoveEvent, function (event) {
+        engine.workbench.eachWorkspace(function (workspace) {
+            var viewport = workspace.viewport;
+            var outline = workspace.outline;
+            var point = new Point(event.data.topClientX, event.data.topClientY);
+            if (outline.isPointInViewport(point)) {
+                scrolling(point, outline);
+            }
+            else if (viewport.isPointInViewport(point)) {
+                scrolling(point, viewport);
+            }
+        });
+    });
+    engine.subscribeTo(DragStopEvent, function () {
+        xScroller = null;
+        yScroller = null;
+        if (xScrollerAnimationStop) {
+            xScrollerAnimationStop();
+        }
+        if (yScrollerAnimationStop) {
+            yScrollerAnimationStop();
+        }
+    });
+};
+
+var useWorkspaceEffect = function (engine) {
+    engine.subscribeWith([
+        'append:node',
+        'insert:after',
+        'insert:before',
+        'insert:children',
+        'drag:node',
+        'drop:node',
+        'prepend:node',
+        'remove:node',
+        'select:node',
+        'update:children',
+        'wrap:node',
+        'update:node:props',
+    ], function (event) {
+        var _a;
+        if ((_a = event.context) === null || _a === void 0 ? void 0 : _a.workbench) {
+            engine.workbench.setActiveWorkspace(event.context.workspace);
+        }
+    });
+    engine.subscribeTo(SelectNodeEvent, function (event) {
+        engine.workbench.eachWorkspace(function (workspace) {
+            if (workspace !== event.context.workspace) {
+                workspace.operation.selection.clear();
+            }
+        });
+    });
+};
+
+function getAllRanges(sel) {
+    var ranges = [];
+    for (var i = 0; i < sel.rangeCount; i++) {
+        var range = sel.getRangeAt(i);
+        ranges[i] = {
+            collapsed: range.collapsed,
+            startOffset: range.startOffset,
+            endOffset: range.endOffset,
+        };
+    }
+    return ranges;
+}
+function setEndOfContenteditable(contentEditableElement) {
+    var range = document.createRange();
+    range.selectNodeContents(contentEditableElement);
+    range.collapse(false);
+    var selection = globalThisPolyfill.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+function createCaretCache(el) {
+    var currentSelection = globalThisPolyfill.getSelection();
+    if (currentSelection.containsNode(el))
+        return;
+    var ranges = getAllRanges(currentSelection);
+    return function (offset) {
+        if (offset === void 0) { offset = 0; }
+        var sel = globalThisPolyfill.getSelection();
+        var firstNode = el.childNodes[0];
+        if (!firstNode)
+            return;
+        sel.removeAllRanges();
+        ranges.forEach(function (item) {
+            var range = document.createRange();
+            range.collapse(item.collapsed);
+            range.setStart(firstNode, item.startOffset + offset);
+            range.setEnd(firstNode, item.endOffset + offset);
+            sel.addRange(range);
+        });
+    };
+}
+var useContentEditableEffect = function (engine) {
+    var globalState = {
+        activeElements: new Map(),
         queue: [],
         requestTimer: null,
-        isComposition: !1
+        isComposition: false,
     };
-    function r(t) {
-        "Enter" === t.key && (t.stopPropagation(), t.preventDefault());
+    function onKeyDownHandler(event) {
+        if (event.key === 'Enter') {
+            event.stopPropagation();
+            event.preventDefault();
+        }
     }
-    function o(t) {
-        var r = this, o = n.activeElements.get(this);
-        if (t.stopPropagation(), t.preventDefault(), o) {
-            var i = t.target, s = function() {
-                if (n.queue.length = 0, !n.isComposition) {
-                    var t = Be(i);
-                    U.setIn(o.props, r.getAttribute(e.props.contentEditableAttrName), null == i ? void 0 : i.textContent), 
-                    c((function() {
-                        o.takeSnapshot("update:node:props"), t();
-                    }));
-                }
+    function onInputHandler(event) {
+        var _this = this;
+        var node = globalState.activeElements.get(this);
+        event.stopPropagation();
+        event.preventDefault();
+        if (node) {
+            var target_1 = event.target;
+            var handler = function () {
+                globalState.queue.length = 0;
+                if (globalState.isComposition)
+                    return;
+                var restore = createCaretCache(target_1);
+                Path.setIn(node.props, _this.getAttribute(engine.props.contentEditableAttrName), target_1 === null || target_1 === void 0 ? void 0 : target_1.textContent);
+                requestIdle(function () {
+                    node.takeSnapshot('update:node:props');
+                    restore();
+                });
             };
-            n.queue.push(s), clearTimeout(n.requestTimer), n.requestTimer = setTimeout(s, 600);
+            globalState.queue.push(handler);
+            clearTimeout(globalState.requestTimer);
+            globalState.requestTimer = setTimeout(handler, 600);
         }
     }
-    function i() {
-        clearTimeout(n.requestTimer), n.requestTimer = setTimeout(n.queue[n.queue.length - 1], 600);
+    function onSelectionChangeHandler() {
+        clearTimeout(globalState.requestTimer);
+        globalState.requestTimer = setTimeout(globalState.queue[globalState.queue.length - 1], 600);
     }
-    function s(t) {
-        "compositionend" === t.type ? (n.isComposition = !1, o(t)) : (clearTimeout(n.requestTimer), 
-        n.isComposition = !0);
-    }
-    function a(r) {
-        r.preventDefault();
-        var o = n.activeElements.get(this), i = r.clipboardData.getData("text"), s = t.getSelection(), a = r.target, c = s.getRangeAt(0), u = Be(a);
-        c.deleteContents(), c.insertNode(document.createTextNode(i)), U.setIn(o.props, this.getAttribute(e.props.contentEditableAttrName), a.textContent), 
-        u(i.length);
-    }
-    function u(t) {
-        if (t) {
-            var n = t.getAttribute(e.props.contentEditableNodeIdAttrName);
-            if (n) return n;
-            var r = t.closest("*[".concat(e.props.nodeIdAttrName, "]"));
-            return r ? r.getAttribute(e.props.nodeIdAttrName) : void 0;
+    function onCompositionHandler(event) {
+        if (event.type === 'compositionend') {
+            globalState.isComposition = false;
+            onInputHandler(event);
+        }
+        else {
+            clearTimeout(globalState.requestTimer);
+            globalState.isComposition = true;
         }
     }
-    e.subscribeTo(it, (function(t) {
-        var r, c = t.data.target, u = null === (r = null == c ? void 0 : c.closest) || void 0 === r ? void 0 : r.call(c, "*[".concat(e.props.contentEditableAttrName, "]"));
-        u && "true" === u.getAttribute("contenteditable") || n.activeElements.forEach((function(t, e) {
-            n.activeElements.delete(e), e.removeAttribute("contenteditable"), e.removeAttribute("spellcheck"), 
-            e.removeEventListener("input", o), e.removeEventListener("compositionstart", s), 
-            e.removeEventListener("compositionupdate", s), e.removeEventListener("compositionend", s), 
-            e.removeEventListener("past", a), document.removeEventListener("selectionchange", i);
-        }));
-    })), e.subscribeTo(st, (function(t) {
-        var c, l = t.data.target, d = null === (c = null == l ? void 0 : l.closest) || void 0 === c ? void 0 : c.call(l, "*[".concat(e.props.contentEditableAttrName, "]")), h = e.workbench.activeWorkspace, p = h.operation.tree;
-        if (d) {
-            var f = d.getAttribute("contenteditable");
-            if ("false" === f || !f) {
-                var v = u(d);
-                if (v) {
-                    var g = p.findById(v);
-                    g && (n.activeElements.set(d, g), d.setAttribute("spellcheck", "false"), d.setAttribute("contenteditable", "true"), 
-                    d.focus(), d.addEventListener("input", o), d.addEventListener("compositionstart", s), 
-                    d.addEventListener("compositionupdate", s), d.addEventListener("compositionend", s), 
-                    d.addEventListener("keydown", r), d.addEventListener("paste", a), document.addEventListener("selectionchange", i), 
-                    Le(d));
+    function onPastHandler(event) {
+        event.preventDefault();
+        var node = globalState.activeElements.get(this);
+        var text = event.clipboardData.getData('text');
+        var selObj = globalThisPolyfill.getSelection();
+        var target = event.target;
+        var selRange = selObj.getRangeAt(0);
+        var restore = createCaretCache(target);
+        selRange.deleteContents();
+        selRange.insertNode(document.createTextNode(text));
+        Path.setIn(node.props, this.getAttribute(engine.props.contentEditableAttrName), target.textContent);
+        restore(text.length);
+    }
+    function findTargetNodeId(element) {
+        if (!element)
+            return;
+        var nodeId = element.getAttribute(engine.props.contentEditableNodeIdAttrName);
+        if (nodeId)
+            return nodeId;
+        var parent = element.closest("*[".concat(engine.props.nodeIdAttrName, "]"));
+        if (parent)
+            return parent.getAttribute(engine.props.nodeIdAttrName);
+    }
+    engine.subscribeTo(MouseClickEvent, function (event) {
+        var _a;
+        var target = event.data.target;
+        var editableElement = (_a = target === null || target === void 0 ? void 0 : target.closest) === null || _a === void 0 ? void 0 : _a.call(target, "*[".concat(engine.props.contentEditableAttrName, "]"));
+        if (editableElement &&
+            editableElement.getAttribute('contenteditable') === 'true')
+            return;
+        globalState.activeElements.forEach(function (node, element) {
+            globalState.activeElements.delete(element);
+            element.removeAttribute('contenteditable');
+            element.removeAttribute('spellcheck');
+            element.removeEventListener('input', onInputHandler);
+            element.removeEventListener('compositionstart', onCompositionHandler);
+            element.removeEventListener('compositionupdate', onCompositionHandler);
+            element.removeEventListener('compositionend', onCompositionHandler);
+            element.removeEventListener('past', onPastHandler);
+            document.removeEventListener('selectionchange', onSelectionChangeHandler);
+        });
+    });
+    engine.subscribeTo(MouseDoubleClickEvent, function (event) {
+        var _a;
+        var target = event.data.target;
+        var editableElement = (_a = target === null || target === void 0 ? void 0 : target.closest) === null || _a === void 0 ? void 0 : _a.call(target, "*[".concat(engine.props.contentEditableAttrName, "]"));
+        var workspace = engine.workbench.activeWorkspace;
+        var tree = workspace.operation.tree;
+        if (editableElement) {
+            var editable = editableElement.getAttribute('contenteditable');
+            if (editable === 'false' || !editable) {
+                var nodeId = findTargetNodeId(editableElement);
+                if (nodeId) {
+                    var targetNode = tree.findById(nodeId);
+                    if (targetNode) {
+                        globalState.activeElements.set(editableElement, targetNode);
+                        editableElement.setAttribute('spellcheck', 'false');
+                        editableElement.setAttribute('contenteditable', 'true');
+                        editableElement.focus();
+                        editableElement.addEventListener('input', onInputHandler);
+                        editableElement.addEventListener('compositionstart', onCompositionHandler);
+                        editableElement.addEventListener('compositionupdate', onCompositionHandler);
+                        editableElement.addEventListener('compositionend', onCompositionHandler);
+                        editableElement.addEventListener('keydown', onKeyDownHandler);
+                        editableElement.addEventListener('paste', onPastHandler);
+                        document.addEventListener('selectionchange', onSelectionChangeHandler);
+                        setEndOfContenteditable(editableElement);
+                    }
                 }
             }
         }
-    }));
-}, function(t) {
-    t.subscribeTo(rt, (function(e) {
-        var n, r, o = e.data.target, i = null !== (r = null === (n = e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace, s = null == o ? void 0 : o.closest("*[".concat(t.props.nodeTranslateAttrName, "]"));
-        if (i) {
-            var a = i.operation.transformHelper;
-            if (s) {
-                var c = s.getAttribute(t.props.nodeTranslateAttrName);
-                if (c) {
-                    var u = s.closest("*[".concat(t.props.nodeSelectionIdAttrName, "]"));
-                    if (u) {
-                        var l = u.getAttribute(t.props.nodeSelectionIdAttrName);
-                        if (l) {
-                            var d = t.findNodeById(l);
-                            d && a.dragStart({
-                                dragNodes: [ d ],
-                                type: "translate"
-                            });
+    });
+};
+
+var useTranslateEffect = function (engine) {
+    engine.subscribeTo(DragStartEvent, function (event) {
+        var _a, _b;
+        var target = event.data.target;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        var handler = target === null || target === void 0 ? void 0 : target.closest("*[".concat(engine.props.nodeTranslateAttrName, "]"));
+        if (!currentWorkspace)
+            return;
+        var helper = currentWorkspace.operation.transformHelper;
+        if (handler) {
+            var type = handler.getAttribute(engine.props.nodeTranslateAttrName);
+            if (type) {
+                var selectionElement = handler.closest("*[".concat(engine.props.nodeSelectionIdAttrName, "]"));
+                if (selectionElement) {
+                    var nodeId = selectionElement.getAttribute(engine.props.nodeSelectionIdAttrName);
+                    if (nodeId) {
+                        var node = engine.findNodeById(nodeId);
+                        if (node) {
+                            helper.dragStart({ dragNodes: [node], type: 'translate' });
                         }
                     }
                 }
             }
         }
-    })), t.subscribeTo(nt, (function(e) {
-        var n, r;
-        if (t.cursor.dragType === Kt.Translate) {
-            var o = null !== (r = null === (n = e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace, i = null == o ? void 0 : o.operation.transformHelper, s = i.dragNodes;
-            s.length && (i.dragMove(), s.forEach((function(t) {
-                var e = t.getElement();
-                i.translate(t, (function(t) {
-                    e.style.position = "absolute", e.style.left = "0px", e.style.top = "0px", e.style.transform = "translate3d(".concat(t.x, "px,").concat(t.y, "px,0)");
-                }));
-            })));
+    });
+    engine.subscribeTo(DragMoveEvent, function (event) {
+        var _a, _b;
+        if (engine.cursor.dragType !== CursorDragType.Translate)
+            return;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        var helper = currentWorkspace === null || currentWorkspace === void 0 ? void 0 : currentWorkspace.operation.transformHelper;
+        var dragNodes = helper.dragNodes;
+        if (!dragNodes.length)
+            return;
+        helper.dragMove();
+        dragNodes.forEach(function (node) {
+            var element = node.getElement();
+            helper.translate(node, function (translate) {
+                element.style.position = 'absolute';
+                element.style.left = '0px';
+                element.style.top = '0px';
+                element.style.transform = "translate3d(".concat(translate.x, "px,").concat(translate.y, "px,0)");
+            });
+        });
+    });
+    engine.subscribeTo(DragStopEvent, function (event) {
+        var _a, _b;
+        if (engine.cursor.dragType !== CursorDragType.Translate)
+            return;
+        var currentWorkspace = (_b = (_a = event.context) === null || _a === void 0 ? void 0 : _a.workspace) !== null && _b !== void 0 ? _b : engine.workbench.activeWorkspace;
+        var helper = currentWorkspace === null || currentWorkspace === void 0 ? void 0 : currentWorkspace.operation.transformHelper;
+        if (helper) {
+            helper.dragEnd();
         }
-    })), t.subscribeTo(ot, (function(e) {
-        var n, r;
-        if (t.cursor.dragType === Kt.Translate) {
-            var o = null !== (r = null === (n = e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace, i = null == o ? void 0 : o.operation.transformHelper;
-            i && i.dragEnd();
+    });
+};
+
+var SelectNodes = new Shortcut({
+    codes: [[KeyCode.Meta], [KeyCode.Control]],
+});
+var SelectSameTypeNodes = new Shortcut({
+    codes: [KeyCode.Shift],
+});
+var PreventCommandX = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.X],
+        [KeyCode.Control, KeyCode.X],
+    ],
+});
+var SelectAllNodes = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.A],
+        [KeyCode.Control, KeyCode.A],
+    ],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            var tree = operation.tree;
+            var selection = operation.selection;
+            selection.batchSelect(tree.descendants);
         }
-    }));
-}, function(t) {
-    var e = function(e) {
-        var n = null == e ? void 0 : e.closest("*[".concat(t.props.nodeResizeHandlerAttrName, "]"));
-        if (n) {
-            var r = n.getAttribute(t.props.nodeResizeHandlerAttrName);
-            if (r) {
-                var o = n.closest("*[".concat(t.props.nodeSelectionIdAttrName, "]"));
-                if (o) {
-                    var i = o.getAttribute(t.props.nodeSelectionIdAttrName);
-                    if (i) {
-                        var s = t.findNodeById(i);
-                        if (s) return {
-                            direction: r,
-                            node: s,
-                            element: o
-                        };
-                    }
-                }
-            }
-        }
-    };
-    t.subscribeTo(rt, (function(n) {
-        var r, o, i = n.data.target, s = null !== (o = null === (r = n.context) || void 0 === r ? void 0 : r.workspace) && void 0 !== o ? o : t.workbench.activeWorkspace;
-        if (s) {
-            var a = e(i), c = s.operation.transformHelper;
-            if (a) {
-                var u = a.element.closest("*[".concat(t.props.nodeSelectionIdAttrName, "]"));
-                if (u) {
-                    var l = u.getAttribute(t.props.nodeSelectionIdAttrName);
-                    if (l) {
-                        var d = t.findNodeById(l);
-                        d && c.dragStart({
-                            dragNodes: [ d ],
-                            type: "resize",
-                            direction: a.direction
-                        });
-                    }
-                }
-            }
-        }
-    })), t.subscribeTo(nt, (function(e) {
-        var n, r;
-        if (t.cursor.dragType === Kt.Resize) {
-            var o = null !== (r = null === (n = e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace, i = null == o ? void 0 : o.operation.transformHelper, s = i.dragNodes;
-            s.length && (i.dragMove(), s.forEach((function(t) {
-                var e = t.getElement();
-                i.resize(t, (function(t) {
-                    e.style.width = t.width + "px", e.style.height = t.height + "px", e.style.position = "absolute", 
-                    e.style.left = "0px", e.style.top = "0px", e.style.transform = "translate3d(".concat(t.x, "px,").concat(t.y, "px,0)");
-                }));
-            })));
-        }
-    })), t.subscribeTo(ot, (function(e) {
-        var n, r;
-        if (t.cursor.dragType === Kt.Resize) {
-            var o = null !== (r = null === (n = e.context) || void 0 === n ? void 0 : n.workspace) && void 0 !== r ? r : t.workbench.activeWorkspace, i = null == o ? void 0 : o.operation.transformHelper;
-            i && i.dragEnd();
-        }
-    }));
-} ], en = [ Ft, Vt, zt, qt, Ht, $t ], nn = [ Ve, Xe, ze, Ye, Fe, He, Ue, Je, Qe, Ke, _e, $e ], rn = function(t) {
-    return (null == t ? void 0 : t.Behavior) && on(t.Behavior);
-}, on = function(t) {
-    return Array.isArray(t) && t.every(sn);
-}, sn = function(t) {
-    return (null == t ? void 0 : t.name) || (null == t ? void 0 : t.selector) || (null == t ? void 0 : t.extends) || (null == t ? void 0 : t.designerProps) || (null == t ? void 0 : t.designerLocales);
-}, an = function(t) {
-    return (null == t ? void 0 : t.Resource) && cn(t.Resource);
-}, cn = function(t) {
-    return Array.isArray(t) && t.every(un);
-}, un = function(t) {
-    return (null == t ? void 0 : t.node) && !!t.node.isSourceNode && t.node instanceof de;
-}, ln = function() {
-    for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-    var n = {};
-    return t.forEach((function(t) {
-        Zt(n, t);
-    })), n;
-}, dn = function() {
-    for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-    return t.reduce((function(t, e) {
-        if (g(e)) return t.concat(dn.apply(void 0, tt([], Q(e), !1)));
-        var n = (e || {}).selector;
-        return n ? ("string" == typeof n && (e.selector = function(t) {
-            return t.componentName === n;
-        }), t.concat(e)) : t;
-    }), []);
-}, hn = function() {
-    for (var t = [], e = 0; e < arguments.length; e++) t[e] = arguments[e];
-    return t.reduce((function(t, e) {
-        return t.concat(G(G({}, e), {
-            node: new de({
-                componentName: "$$ResourceNode$$",
-                isSourceNode: !0,
-                children: e.elements || []
-            })
-        }));
-    }), []);
-}, pn = function(t) {
-    void 0 === t && (t = {});
-    var e = t.drivers || [], n = t.effects || [], r = t.shortcuts || [];
-    return q((function() {
-        return new We(G(G({}, t), {
-            effects: tt(tt([], Q(n), !1), Q(tn), !1),
-            drivers: tt(tt([], Q(e), !1), Q(en), !1),
-            shortcuts: tt(tt([], Q(r), !1), Q(nn), !1)
-        }));
-    }));
-}, fn = function(t) {
-    void 0 === t && (t = {});
-    var e = t.extConfig, n = Z(t, [ "extConfig" ]), r = K(G({}, n));
-    return Object.assign(r, {
-        extConfig: G({}, e)
-    }), r;
-}, vn = Object.freeze({
-    __proto__: null,
-    isBehaviorHost: rn,
-    isBehaviorList: on,
-    isBehavior: sn,
-    isResourceHost: an,
-    isResourceList: cn,
-    isResource: un,
-    createLocales: ln,
-    createBehavior: dn,
-    createResource: hn,
-    createDesigner: pn,
-    GlobalRegistry: ie,
-    Engine: We,
-    get ScreenType() {
-        return Se;
     },
-    get ScreenStatus() {
-        return ke;
-    },
-    Screen: Te,
-    get CursorStatus() {
-        return Ut;
-    },
-    get CursorDragType() {
-        return Kt;
-    },
-    get CursorType() {
-        return _t;
-    },
-    Cursor: Ee,
-    Operation: Ce,
-    Viewport: he,
-    TreeNode: de,
-    Workbench: Ae,
-    Workspace: Oe,
-    Selection: pe,
-    get ClosestPosition() {
-        return ye;
-    },
-    MoveHelper: Re,
-    Keyboard: Ie,
-    KeyCode: W,
-    Shortcut: De,
-    History: Pe,
-    DragMoveEvent: nt,
-    DragStartEvent: rt,
-    DragStopEvent: ot,
-    MouseClickEvent: it,
-    MouseDoubleClickEvent: st,
-    MouseMoveEvent: at,
-    KeyDownEvent: ut,
-    KeyUpEvent: lt,
-    DragNodeEvent: ht,
-    DropNodeEvent: pt,
-    HoverNodeEvent: ft,
-    InsertAfterEvent: vt,
-    InsertBeforeEvent: gt,
-    InsertChildrenEvent: yt,
-    PrependNodeEvent: mt,
-    RemoveNodeEvent: wt,
-    SelectNodeEvent: bt,
-    UnSelectNodeEvent: Et,
-    UpdateChildrenEvent: Nt,
-    UpdateNodePropsEvent: St,
-    WrapNodeEvent: kt,
-    CloneNodeEvent: Rt,
-    AppendNodeEvent: Ct,
-    FromNodeEvent: Pt,
-    ViewportResizeEvent: At,
-    ViewportScrollEvent: Dt,
-    AddWorkspaceEvent: It,
-    RemoveWorkspaceEvent: Tt,
-    SwitchWorkspaceEvent: Wt,
-    HistoryUndoEvent: Lt,
-    HistoryRedoEvent: Bt,
-    HistoryGotoEvent: jt,
-    HistoryPushEvent: Xt,
-    createExtForm: fn
 });
 
-(null === (je = null == t ? void 0 : t["FormCreated"]) || void 0 === je ? void 0 : je["Core"]) ? module.exports && (module.exports = G({
-    __esModule: !0
-}, t["FormCreated"]["Core"])) : (t["FormCreated"] = t["FormCreated"] || {}, t["FormCreated"].Core = vn);
+/**
+ * 快捷删除，快捷复制粘贴
+ */
+var DeleteNodes = new Shortcut({
+    codes: [[KeyCode.Backspace], [KeyCode.Delete]],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            TreeNode.remove(operation.selection.selectedNodes);
+        }
+    },
+});
+var Clipboard = {
+    nodes: [],
+};
+var CopyNodes = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.C],
+        [KeyCode.Control, KeyCode.C],
+    ],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            Clipboard.nodes = operation.selection.selectedNodes;
+        }
+    },
+});
+var PasteNodes = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.V],
+        [KeyCode.Control, KeyCode.V],
+    ],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            TreeNode.clone(Clipboard.nodes);
+        }
+    },
+});
 
-export { It as AddWorkspaceEvent, Ct as AppendNodeEvent, Rt as CloneNodeEvent, ye as ClosestPosition, Ee as Cursor, Kt as CursorDragType, Ut as CursorStatus, _t as CursorType, nt as DragMoveEvent, ht as DragNodeEvent, rt as DragStartEvent, ot as DragStopEvent, pt as DropNodeEvent, We as Engine, Pt as FromNodeEvent, ie as GlobalRegistry, Pe as History, jt as HistoryGotoEvent, Xt as HistoryPushEvent, Bt as HistoryRedoEvent, Lt as HistoryUndoEvent, ft as HoverNodeEvent, vt as InsertAfterEvent, gt as InsertBeforeEvent, yt as InsertChildrenEvent, ut as KeyDownEvent, lt as KeyUpEvent, Ie as Keyboard, it as MouseClickEvent, st as MouseDoubleClickEvent, at as MouseMoveEvent, Re as MoveHelper, Ce as Operation, mt as PrependNodeEvent, wt as RemoveNodeEvent, Tt as RemoveWorkspaceEvent, Te as Screen, ke as ScreenStatus, Se as ScreenType, bt as SelectNodeEvent, pe as Selection, De as Shortcut, Wt as SwitchWorkspaceEvent, de as TreeNode, Et as UnSelectNodeEvent, Nt as UpdateChildrenEvent, St as UpdateNodePropsEvent, he as Viewport, At as ViewportResizeEvent, Dt as ViewportScrollEvent, Ae as Workbench, Oe as Workspace, kt as WrapNodeEvent, dn as createBehavior, pn as createDesigner, fn as createExtForm, ln as createLocales, hn as createResource, sn as isBehavior, rn as isBehaviorHost, on as isBehaviorList, un as isResource, an as isResourceHost, cn as isResourceList };
+var UndoMutation = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.Z],
+        [KeyCode.Control, KeyCode.Z],
+    ],
+    handler: function (context) {
+        var workspace = context === null || context === void 0 ? void 0 : context.workspace;
+        if (workspace) {
+            workspace.history.undo();
+        }
+        workspace.operation.hover.clear();
+    },
+});
+var RedoMutation = new Shortcut({
+    codes: [
+        [KeyCode.Meta, KeyCode.Shift, KeyCode.Z],
+        [KeyCode.Control, KeyCode.Shift, KeyCode.Z],
+    ],
+    handler: function (context) {
+        var workspace = context === null || context === void 0 ? void 0 : context.workspace;
+        if (workspace) {
+            workspace.history.redo();
+        }
+        workspace.operation.hover.clear();
+    },
+});
+
+var CursorSwitchSelection = new Shortcut({
+    codes: [KeyCode.Shift, KeyCode.S],
+    handler: function (context) {
+        var engine = context === null || context === void 0 ? void 0 : context.engine;
+        if (engine) {
+            engine.cursor.setType(CursorType.Selection);
+        }
+    },
+});
+
+var findBottomLastChild = function (node) {
+    if (!node)
+        return node;
+    if (node.lastChild) {
+        return findBottomLastChild(node.lastChild);
+    }
+    return node;
+};
+var findTopParentNext = function (node) {
+    var _a;
+    if (!node.parent)
+        return node;
+    if ((_a = node.parent) === null || _a === void 0 ? void 0 : _a.next)
+        return node.parent.next;
+    return findTopParentNext(node.parent);
+};
+var SelectPrevNode = new Shortcut({
+    codes: [
+        [KeyCode.Up],
+        [KeyCode.PageUp],
+        [KeyCode.ArrowUp],
+        [KeyCode.Left],
+        [KeyCode.LeftWindowKey],
+        [KeyCode.ArrowLeft],
+    ],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            var tree = operation.tree;
+            var selection = operation.selection;
+            var selectedNode = tree.findById(selection.last);
+            if (selectedNode) {
+                var previousNode = selectedNode.previous;
+                if (previousNode) {
+                    var bottom = findBottomLastChild(previousNode);
+                    if (bottom) {
+                        selection.select(bottom);
+                    }
+                    else {
+                        selection.select(previousNode);
+                    }
+                }
+                else if (selectedNode.parent) {
+                    selection.select(selectedNode.parent);
+                }
+                else {
+                    var bottom = findBottomLastChild(selectedNode.lastChild);
+                    if (bottom) {
+                        selection.select(bottom);
+                    }
+                }
+            }
+        }
+    },
+});
+var SelectNextNode = new Shortcut({
+    codes: [
+        [KeyCode.Down],
+        [KeyCode.PageDown],
+        [KeyCode.ArrowDown],
+        [KeyCode.Right],
+        [KeyCode.RightWindowKey],
+        [KeyCode.ArrowRight],
+    ],
+    handler: function (context) {
+        var operation = context === null || context === void 0 ? void 0 : context.workspace.operation;
+        if (operation) {
+            var tree = operation.tree;
+            var selection = operation.selection;
+            var selectedNode = tree.findById(selection.last);
+            if (selectedNode) {
+                var nextNode = selectedNode.firstChild
+                    ? selectedNode.firstChild
+                    : selectedNode.next;
+                if (nextNode) {
+                    selection.select(nextNode);
+                }
+                else {
+                    selection.select(findTopParentNext(selectedNode));
+                }
+            }
+        }
+    },
+});
+
+var DEFAULT_EFFECTS = [
+    useFreeSelectionEffect,
+    useCursorEffect,
+    useViewportEffect,
+    useDragDropEffect,
+    useSelectionEffect,
+    useKeyboardEffect,
+    useAutoScrollEffect,
+    useWorkspaceEffect,
+    useContentEditableEffect,
+    useTranslateEffect,
+    useResizeEffect,
+];
+var DEFAULT_DRIVERS = [
+    MouseMoveDriver,
+    DragDropDriver,
+    MouseClickDriver,
+    ViewportResizeDriver,
+    ViewportScrollDriver,
+    KeyboardDriver,
+];
+var DEFAULT_SHORTCUTS = [
+    PreventCommandX,
+    SelectNodes,
+    SelectAllNodes,
+    SelectSameTypeNodes,
+    DeleteNodes,
+    CopyNodes,
+    PasteNodes,
+    SelectPrevNode,
+    SelectNextNode,
+    UndoMutation,
+    RedoMutation,
+    CursorSwitchSelection,
+];
+
+var isBehaviorHost = function (val) {
+    return (val === null || val === void 0 ? void 0 : val.Behavior) && isBehaviorList(val.Behavior);
+};
+var isBehaviorList = function (val) {
+    return Array.isArray(val) && val.every(isBehavior);
+};
+var isBehavior = function (val) {
+    return (val === null || val === void 0 ? void 0 : val.name) ||
+        (val === null || val === void 0 ? void 0 : val.selector) ||
+        (val === null || val === void 0 ? void 0 : val.extends) ||
+        (val === null || val === void 0 ? void 0 : val.designerProps) ||
+        (val === null || val === void 0 ? void 0 : val.designerLocales);
+};
+var isResourceHost = function (val) {
+    return (val === null || val === void 0 ? void 0 : val.Resource) && isResourceList(val.Resource);
+};
+var isResourceList = function (val) {
+    return Array.isArray(val) && val.every(isResource);
+};
+var isResource = function (val) {
+    return (val === null || val === void 0 ? void 0 : val.node) && !!val.node.isSourceNode && val.node instanceof TreeNode;
+};
+var createLocales = function () {
+    var packages = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        packages[_i] = arguments[_i];
+    }
+    var results = {};
+    packages.forEach(function (locales) {
+        mergeLocales(results, locales);
+    });
+    return results;
+};
+// 创建组件的行为，locals 信息、propsSchema 可修改属性
+var createBehavior = function () {
+    var behaviors = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        behaviors[_i] = arguments[_i];
+    }
+    return behaviors.reduce(function (buf, behavior) {
+        if (isArr(behavior))
+            return buf.concat(createBehavior.apply(void 0, __spreadArray([], __read(behavior), false)));
+        var selector = (behavior || {}).selector;
+        if (!selector)
+            return buf;
+        if (typeof selector === 'string') {
+            behavior.selector = function (node) { return node.componentName === selector; };
+        }
+        return buf.concat(behavior);
+    }, []);
+};
+// 创建资源基础信息，用于左侧拖拽组件
+var createResource = function () {
+    var sources = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        sources[_i] = arguments[_i];
+    }
+    return sources.reduce(function (buf, source) {
+        return buf.concat(__assign(__assign({}, source), { node: new TreeNode({
+                componentName: '$$ResourceNode$$',
+                isSourceNode: true,
+                children: source.elements || [],
+            }) }));
+    }, []);
+};
+// 创建设计器实例
+var createDesigner = function (props) {
+    if (props === void 0) { props = {}; }
+    var drivers = props.drivers || [];
+    var effects = props.effects || [];
+    var shortcuts = props.shortcuts || [];
+    // untracked 不会对返回值进行依赖收集
+    return untracked(function () {
+        return new Engine(__assign(__assign({}, props), { effects: __spreadArray(__spreadArray([], __read(effects), false), __read(DEFAULT_EFFECTS), false), drivers: __spreadArray(__spreadArray([], __read(drivers), false), __read(DEFAULT_DRIVERS), false), shortcuts: __spreadArray(__spreadArray([], __read(shortcuts), false), __read(DEFAULT_SHORTCUTS), false) }));
+    });
+};
+
+var createExtForm = function (props) {
+    if (props === void 0) { props = {}; }
+    var extConfig = props.extConfig, formilyFormProps = __rest(props, ["extConfig"]);
+    var form = createForm(__assign({}, formilyFormProps));
+    Object.assign(form, { extConfig: __assign({}, extConfig) });
+    return form;
+};
+
+var Core = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  isBehaviorHost: isBehaviorHost,
+  isBehaviorList: isBehaviorList,
+  isBehavior: isBehavior,
+  isResourceHost: isResourceHost,
+  isResourceList: isResourceList,
+  isResource: isResource,
+  createLocales: createLocales,
+  createBehavior: createBehavior,
+  createResource: createResource,
+  createDesigner: createDesigner,
+  GlobalRegistry: GlobalRegistry,
+  Engine: Engine,
+  get ScreenType () { return ScreenType; },
+  get ScreenStatus () { return ScreenStatus; },
+  Screen: Screen,
+  get CursorStatus () { return CursorStatus; },
+  get CursorDragType () { return CursorDragType; },
+  get CursorType () { return CursorType; },
+  Cursor: Cursor,
+  Operation: Operation,
+  Viewport: Viewport,
+  TreeNode: TreeNode,
+  Workbench: Workbench,
+  Workspace: Workspace,
+  Selection: Selection,
+  get ClosestPosition () { return ClosestPosition; },
+  MoveHelper: MoveHelper,
+  Keyboard: Keyboard,
+  KeyCode: KeyCode,
+  Shortcut: Shortcut,
+  History: History,
+  DragMoveEvent: DragMoveEvent,
+  DragStartEvent: DragStartEvent,
+  DragStopEvent: DragStopEvent,
+  MouseClickEvent: MouseClickEvent,
+  MouseDoubleClickEvent: MouseDoubleClickEvent,
+  MouseMoveEvent: MouseMoveEvent,
+  KeyDownEvent: KeyDownEvent,
+  KeyUpEvent: KeyUpEvent,
+  DragNodeEvent: DragNodeEvent,
+  DropNodeEvent: DropNodeEvent,
+  HoverNodeEvent: HoverNodeEvent,
+  InsertAfterEvent: InsertAfterEvent,
+  InsertBeforeEvent: InsertBeforeEvent,
+  InsertChildrenEvent: InsertChildrenEvent,
+  PrependNodeEvent: PrependNodeEvent,
+  RemoveNodeEvent: RemoveNodeEvent,
+  SelectNodeEvent: SelectNodeEvent,
+  UnSelectNodeEvent: UnSelectNodeEvent,
+  UpdateChildrenEvent: UpdateChildrenEvent,
+  UpdateNodePropsEvent: UpdateNodePropsEvent,
+  WrapNodeEvent: WrapNodeEvent,
+  CloneNodeEvent: CloneNodeEvent,
+  AppendNodeEvent: AppendNodeEvent,
+  FromNodeEvent: FromNodeEvent,
+  ViewportResizeEvent: ViewportResizeEvent,
+  ViewportScrollEvent: ViewportScrollEvent,
+  AddWorkspaceEvent: AddWorkspaceEvent,
+  RemoveWorkspaceEvent: RemoveWorkspaceEvent,
+  SwitchWorkspaceEvent: SwitchWorkspaceEvent,
+  HistoryUndoEvent: HistoryUndoEvent,
+  HistoryRedoEvent: HistoryRedoEvent,
+  HistoryGotoEvent: HistoryGotoEvent,
+  HistoryPushEvent: HistoryPushEvent,
+  createExtForm: createExtForm
+});
+
+var _a;
+if ((_a = globalThisPolyfill === null || globalThisPolyfill === void 0 ? void 0 : globalThisPolyfill['FormCreated']) === null || _a === void 0 ? void 0 : _a['Core']) {
+    if (module.exports) {
+        module.exports = __assign({ __esModule: true }, globalThisPolyfill['FormCreated']['Core']);
+    }
+}
+else {
+    globalThisPolyfill['FormCreated'] = globalThisPolyfill['FormCreated'] || {};
+    globalThisPolyfill['FormCreated'].Core = Core;
+}
+
+export { AddWorkspaceEvent, AppendNodeEvent, CloneNodeEvent, ClosestPosition, Cursor, CursorDragType, CursorStatus, CursorType, DragMoveEvent, DragNodeEvent, DragStartEvent, DragStopEvent, DropNodeEvent, Engine, FromNodeEvent, GlobalRegistry, History, HistoryGotoEvent, HistoryPushEvent, HistoryRedoEvent, HistoryUndoEvent, HoverNodeEvent, InsertAfterEvent, InsertBeforeEvent, InsertChildrenEvent, KeyDownEvent, KeyUpEvent, Keyboard, MouseClickEvent, MouseDoubleClickEvent, MouseMoveEvent, MoveHelper, Operation, PrependNodeEvent, RemoveNodeEvent, RemoveWorkspaceEvent, Screen, ScreenStatus, ScreenType, SelectNodeEvent, Selection, Shortcut, SwitchWorkspaceEvent, TreeNode, UnSelectNodeEvent, UpdateChildrenEvent, UpdateNodePropsEvent, Viewport, ViewportResizeEvent, ViewportScrollEvent, Workbench, Workspace, WrapNodeEvent, createBehavior, createDesigner, createExtForm, createLocales, createResource, isBehavior, isBehaviorHost, isBehaviorList, isResource, isResourceHost, isResourceList };
