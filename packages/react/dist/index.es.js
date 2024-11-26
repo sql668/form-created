@@ -6296,7 +6296,10 @@ var Ur = function(e) {
     }, r["&.absolute"] = {
         position: "absolute"
     }, r["&.relative"] = {
-        position: "relative"
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        overflow: "hidden"
     }, r), a["&-header"] = (l = {
         display: "flex",
         alignItems: "center",

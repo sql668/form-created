@@ -7,6 +7,7 @@ export interface ITreeNode {
     hidden?: boolean;
     isSourceNode?: boolean;
     id?: string;
+    /** // 组件的props, decorator 属性，代表字段的 UI 装饰器，通常我们都会指定为 FormItem， component 属性，代表我们这个组件所需要展示UI的使用用的组件，在设置容器组件的时候，需要设置 type = void */
     props?: Record<string | number | symbol, any>;
     children?: ITreeNode[];
 }
