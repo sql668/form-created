@@ -29,6 +29,7 @@ import { genSettingsFormStyle } from './styles';
 
 export const SettingsForm: React.FC<ISettingFormProps> = observer(
   (props) => {
+    console.log("SettingsForm rebder")
     const workbench = useWorkbench();
     const currentWorkspace =
       workbench?.activeWorkspace || workbench?.currentWorkspace;
