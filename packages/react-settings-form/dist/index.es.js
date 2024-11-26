@@ -7,7 +7,11 @@ import { SketchPicker } from 'react-color';
 import cls from 'classnames';
 import Editor, { loader as loader$1 } from '@monaco-editor/react';
 import { parse, parseExpression } from '@babel/parser';
+<<<<<<< HEAD
 import { uid, isStr, cancelIdle, requestIdle, globalThisPolyfill } from '@form-created/shared';
+=======
+import { uid, isStr, globalThisPolyfill } from '@form-created/shared';
+>>>>>>> dev
 import { createPortal } from 'react-dom';
 import { observer, useField, Field, createSchemaField } from '@formily/react';
 import { FormLayout, FormItem, Select as Select$1, Input as Input$1, NumberPicker, Radio, DatePicker, TimePicker, Switch, Space, ArrayItems, ArrayTable, FormCollapse, FormGrid, FormTab, Form } from '@formily/antd-v5';
@@ -126,6 +130,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
+<<<<<<< HEAD
 
 var __assign = function() {
   __assign = Object.assign || function __assign(t) {
@@ -138,6 +143,20 @@ var __assign = function() {
   return __assign.apply(this, arguments);
 };
 
+=======
+
+var __assign = function() {
+  __assign = Object.assign || function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+      return t;
+  };
+  return __assign.apply(this, arguments);
+};
+
+>>>>>>> dev
 function __rest(s, e) {
   var t = {};
   for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -976,10 +995,17 @@ var MonacoInput = function (_a) {
                 return helpLink;
             if (isFileLanguage()) {
                 return 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript';
+<<<<<<< HEAD
             }
             if (isExpLanguage()) {
                 return 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators';
             }
+=======
+            }
+            if (isExpLanguage()) {
+                return 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators';
+            }
+>>>>>>> dev
         };
         if (helpLink === false)
             return null;
@@ -2297,9 +2323,15 @@ var genSettingsFormStyle = function (prefixCls, token) {
 };
 
 // import './styles.less'
+<<<<<<< HEAD
 var GlobalState = {
     idleRequest: null,
 };
+=======
+// const GlobalState = {
+//   idleRequest: null,
+// };
+>>>>>>> dev
 var SettingsForm = observer(function (props) {
     var _a, _b;
     var workbench = useWorkbench();
@@ -2325,6 +2357,7 @@ var SettingsForm = observer(function (props) {
                 effectSnapshot(operation);
                 (_a = props.effects) === null || _a === void 0 ? void 0 : _a.call(props, form);
             },
+<<<<<<< HEAD
         });
     }, [node, node === null || node === void 0 ? void 0 : node.props, schema, operation, isEmpty]);
     var render = function () {
@@ -2352,6 +2385,28 @@ var SettingsForm = observer(function (props) {
             timeout: 500,
         });
     },
+=======
+        });
+    }, [node, node === null || node === void 0 ? void 0 : node.props, schema, operation, isEmpty]);
+    var render = function () {
+        if (!isEmpty) {
+            return (React.createElement("div", { className: cls(prefix, props.className, hashId), style: props.style, key: node.id },
+                React.createElement(SettingsFormContext.Provider, { value: props },
+                    React.createElement(Form, { form: form, colon: false, labelWidth: 120, labelAlign: "left", wrapperAlign: "right", feedbackLayout: "none", tooltipLayout: "text" },
+                        React.createElement(SchemaField, { schema: schema, components: props.components, scope: __assign({ $node: node }, props.scope) })))));
+        }
+        return (React.createElement("div", { className: prefix + '-empty' },
+            React.createElement(Empty, null)));
+    };
+    var _c = useCssInJs({
+        prefix: prefix,
+        styleFun: genSettingsFormStyle,
+    }), hashId = _c.hashId, wrapSSR = _c.wrapSSR;
+    return wrapSSR(React.createElement(IconWidget.Provider, { tooltip: true },
+        React.createElement("div", { className: cls(prefix + '-wrapper', hashId) },
+            !isEmpty && React.createElement(NodePathWidget, { workspaceId: currentWorkspaceId }),
+            React.createElement("div", { className: cls(prefix + '-content', hashId) }, render()))));
+>>>>>>> dev
 });
 
 var loadScript = function (props) { return __awaiter(void 0, void 0, void 0, function () {

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { createForm } from '@formily/core';
 import { Form } from '@formily/antd-v5';
 import { observer } from '@formily/react';
-import { requestIdle, cancelIdle } from '@form-created/shared';
+//import { requestIdle, cancelIdle } from '@form-created/shared';
 import {
   usePrefix,
   useSelected,
@@ -23,9 +23,9 @@ import cls from 'classnames';
 import { genSettingsFormStyle } from './styles';
 // import './styles.less'
 
-const GlobalState = {
-  idleRequest: null,
-};
+// const GlobalState = {
+//   idleRequest: null,
+// };
 
 export const SettingsForm: React.FC<ISettingFormProps> = observer(
   (props) => {
@@ -105,12 +105,12 @@ export const SettingsForm: React.FC<ISettingFormProps> = observer(
       </IconWidget.Provider>,
     );
   },
-  {
-    scheduler: (update) => {
-      cancelIdle(GlobalState.idleRequest);
-      GlobalState.idleRequest = requestIdle(update, {
-        timeout: 500,
-      });
-    },
-  },
+  // {
+  //   scheduler: (update) => {
+  //     cancelIdle(GlobalState.idleRequest);
+  //     GlobalState.idleRequest = requestIdle(update, {
+  //       timeout: 500,
+  //     });
+  //   },
+  // },
 );

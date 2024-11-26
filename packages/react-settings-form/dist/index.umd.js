@@ -45932,9 +45932,9 @@
   };
 
   // import './styles.less'
-  var GlobalState = {
-      idleRequest: null,
-  };
+  // const GlobalState = {
+  //   idleRequest: null,
+  // };
   var SettingsForm = react$1.observer(function (props) {
       var _a, _b;
       var workbench = react.useWorkbench();
@@ -45980,13 +45980,6 @@
           React__default["default"].createElement("div", { className: cls__default["default"](prefix + '-wrapper', hashId) },
               !isEmpty && React__default["default"].createElement(react.NodePathWidget, { workspaceId: currentWorkspaceId }),
               React__default["default"].createElement("div", { className: cls__default["default"](prefix + '-content', hashId) }, render()))));
-  }, {
-      scheduler: function (update) {
-          shared.cancelIdle(GlobalState.idleRequest);
-          GlobalState.idleRequest = shared.requestIdle(update, {
-              timeout: 500,
-          });
-      },
   });
 
   var loadScript = function (props) { return __awaiter$2(void 0, void 0, void 0, function () {
