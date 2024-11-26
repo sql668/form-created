@@ -4,3 +4,4 @@ export * from './components';
 export * from './SchemaField';
 export * from './SettingsForm';
 export * from './effects';
+export * from "./shared"

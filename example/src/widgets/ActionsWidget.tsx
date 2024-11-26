@@ -9,7 +9,10 @@ import { loadInitialSchema, saveSchema } from '../service'
 export const ActionsWidget = observer(() => {
   const designer = useDesigner()
   useEffect(() => {
-    loadInitialSchema(designer)
+    setTimeout(() => {
+      loadInitialSchema(designer)
+    }, 3000);
+    
   }, [])
   const supportLocales = ['zh-cn', 'en-us', 'ko-kr']
   useEffect(() => {

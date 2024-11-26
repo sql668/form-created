@@ -1,6 +1,6 @@
 {
   "name": "@form-created/react",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "",
   "main": "dist/index.es.js",
   "module": "dist/index.es.js",

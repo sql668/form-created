@@ -1,7 +1,7 @@
 {
   "name": "vite-react-ts-seed",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-beta.3",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,17 +1,18 @@
-import {useMemo } from 'react'
+import { useMemo } from 'react'
 
-import { CaseWidget, ComponentTreeWidget, CompositePanel, Designer, DesignerToolsWidget, HistoryWidget, OutlineTreeWidget, ResourceWidget, SettingsPanel, StudioPanel, ToolbarPanel,  ViewPanel, ViewportPanel, ViewToolsWidget, Workspace, WorkspacePanel } from '@form-created/react'
+import { CaseWidget, ComponentTreeWidget, CompositePanel, Designer, DesignerToolsWidget, HistoryWidget, OutlineTreeWidget, ResourceWidget, SettingsPanel, StudioPanel, ToolbarPanel, ViewPanel, ViewportPanel, ViewToolsWidget, Workspace, WorkspacePanel } from '@form-created/react'
 import { createDesigner, GlobalRegistry, KeyCode, Shortcut } from '@form-created/core'
 import { ActionsWidget } from './widgets/ActionsWidget'
 import { LogoWidget } from './widgets/LogoWidget'
 import { saveSchema, setCaseSchema } from './service'
-import { ArrayCards, ArrayTable, Card, Cascader, Checkbox, DatePicker, FormCollapse, FormGrid, FormLayout, FormTab, Input, NumberPicker, ObjectContainer, Password, Radio, Rate, Select, Slider, Space, Switch, TimePicker, Transfer, TreeSelect, Upload,Text, Form, Field,Slot } from '@form-created/formily-antd'
+import { ArrayCards, ArrayTable, Card, Cascader, Checkbox, DatePicker, FormCollapse, FormGrid, FormLayout, FormTab, Input, NumberPicker, ObjectContainer, Password, Radio, Rate, Select, Slider, Space, Switch, TimePicker, Transfer, TreeSelect, Upload, Text, Form, Field, Slot } from '@form-created/formily-antd'
 import { SchemaEditorWidget } from './widgets/SchemaEditorWidget'
 import { MarkupSchemaWidget } from './widgets/MarkupSchemaWidget'
 import { PreviewWidget } from './widgets/PreviewWidget'
 import { SettingsForm } from '@form-created/react-settings-form'
-import { CaseDemo} from "./case"
+import { CaseDemo } from "./case"
 import { BaseCase } from './icons'
+import { Flex } from 'antd'
 
 
 // 注册 自定义的locales
@@ -24,7 +25,7 @@ GlobalRegistry.registerDesignerLocales({
       Displays: '展示组件',
     },
     panels: {
-      Case:'案例',
+      Case: '案例',
     }
   },
   'en-US': {
@@ -35,7 +36,7 @@ GlobalRegistry.registerDesignerLocales({
       Displays: 'Displays',
     },
     panels: {
-      Case:'Case',
+      Case: 'Case',
     }
   },
   'ko-KR': {
@@ -45,8 +46,8 @@ GlobalRegistry.registerDesignerLocales({
       Arrays: '배열',
       Displays: '디스플레이',
       panels: {
-      
-    }
+
+      }
     },
   },
 })
@@ -75,132 +76,138 @@ function App() {
   )
   //const tree = useTree("form")
   return (
-
-    <Designer engine={engine} position="relative">
-      <StudioPanel logo={<LogoWidget />} actions={<ActionsWidget />}>
-        <CompositePanel>
-          <CompositePanel.Item title="panels.Component" icon="Component">
-            <ResourceWidget
-              title="sources.Inputs"
-              sources={[
-                Input,
-                Password,
-                NumberPicker,
-                Rate,
-                Slider,
-                Select,
-                TreeSelect,
-                Cascader,
-                Transfer,
-                Checkbox,
-                Radio,
-                DatePicker,
-                TimePicker,
-                Upload,
-                Switch,
-                ObjectContainer,
-              ]}
-            />
-            <ResourceWidget
-              title="sources.Layouts"
-              sources={[
-                Card,
-                FormGrid,
-                FormTab,
-                FormLayout,
-                FormCollapse,
-                Space,
-              ]}
-            />
-            <ResourceWidget
-              title="sources.Arrays"
-              sources={[ArrayCards, ArrayTable]}
-            />
-            <ResourceWidget title="sources.Displays" sources={[Text]} />
-            <ResourceWidget title="功能组件" sources={[Slot]} />
-          </CompositePanel.Item>
-          <CompositePanel.Item title="panels.OutlinedTree" icon="Outline">
-            <OutlineTreeWidget />
-          </CompositePanel.Item>
-          <CompositePanel.Item title="panels.History" icon="History">
-            <HistoryWidget />
-          </CompositePanel.Item>
-          <CompositePanel.Item title="panels.Case" icon="Case">
-            <CaseWidget title="最佳实践" cases={CaseDemo} onClick={(e, item) => { 
-              setCaseSchema(engine, item.schema)
-              setTimeout(() => {
-                console.log(engine.workbench.currentWorkspace.operation)
-                engine.workbench.currentWorkspace.operation.selection.selected = [engine.workbench.currentWorkspace.operation.tree.id]
-                //engine.workbench.currentWorkspace.operation.selection.selected = [engine.workbench.currentWorkspace.operation.tree.children[0].id]
-              }, 0);
-            }}/>
-          </CompositePanel.Item>
-        </CompositePanel>
-        <Workspace id="form">
-          <WorkspacePanel>
-            <ToolbarPanel>
-              <DesignerToolsWidget />
-              <ViewToolsWidget
-                use={['DESIGNABLE', 'JSONTREE', 'MARKUP', 'PREVIEW']}
-              />
-            </ToolbarPanel>
-            <ViewportPanel style={{ height: '100%' }}>
-              <ViewPanel type="DESIGNABLE">
-                {() => (
-                  <ComponentTreeWidget
-                    components={{
-                      Form,
-                      Field,
-                      Input,
-                      Select,
-                      TreeSelect,
-                      Cascader,
-                      Radio,
-                      Checkbox,
-                      Slider,
-                      Rate,
-                      NumberPicker,
-                      Transfer,
-                      Password,
-                      DatePicker,
-                      TimePicker,
-                      Upload,
-                      Switch,
-                      Text,
-                      Card,
-                      ArrayCards,
-                      ArrayTable,
-                      Space,
-                      FormTab,
-                      FormCollapse,
-                      FormGrid,
-                      FormLayout,
-                      ObjectContainer,
-                      Slot
-                    }}
+    <div style={{ display: 'flex' }}>
+      <div>左侧惨淡蓝</div>
+      <div style={{flex:1}}>
+        <Designer engine={engine} position="relative">
+          <StudioPanel logo={<LogoWidget />} actions={<ActionsWidget />}>
+            <CompositePanel>
+              <CompositePanel.Item title="panels.Component" icon="Component">
+                <ResourceWidget
+                  title="sources.Inputs"
+                  sources={[
+                    Input,
+                    Password,
+                    NumberPicker,
+                    Rate,
+                    Slider,
+                    Select,
+                    TreeSelect,
+                    Cascader,
+                    Transfer,
+                    Checkbox,
+                    Radio,
+                    DatePicker,
+                    TimePicker,
+                    Upload,
+                    Switch,
+                    ObjectContainer,
+                  ]}
+                />
+                <ResourceWidget
+                  title="sources.Layouts"
+                  sources={[
+                    Card,
+                    FormGrid,
+                    FormTab,
+                    FormLayout,
+                    FormCollapse,
+                    Space,
+                  ]}
+                />
+                <ResourceWidget
+                  title="sources.Arrays"
+                  sources={[ArrayCards, ArrayTable]}
+                />
+                <ResourceWidget title="sources.Displays" sources={[Text]} />
+                <ResourceWidget title="功能组件" sources={[Slot]} />
+              </CompositePanel.Item>
+              <CompositePanel.Item title="panels.OutlinedTree" icon="Outline">
+                <OutlineTreeWidget />
+              </CompositePanel.Item>
+              <CompositePanel.Item title="panels.History" icon="History">
+                <HistoryWidget />
+              </CompositePanel.Item>
+              <CompositePanel.Item title="panels.Case" icon="Case">
+                <CaseWidget title="最佳实践" cases={CaseDemo} onClick={(e, item) => {
+                  setCaseSchema(engine, item.schema)
+                  setTimeout(() => {
+                    console.log(engine.workbench.currentWorkspace.operation)
+                    engine.workbench.currentWorkspace.operation.selection.selected = [engine.workbench.currentWorkspace.operation.tree.id]
+                    //engine.workbench.currentWorkspace.operation.selection.selected = [engine.workbench.currentWorkspace.operation.tree.children[0].id]
+                  }, 0);
+                }} />
+              </CompositePanel.Item>
+            </CompositePanel>
+            <Workspace id="form">
+              <WorkspacePanel>
+                <ToolbarPanel>
+                  <DesignerToolsWidget />
+                  <ViewToolsWidget
+                    use={['DESIGNABLE', 'JSONTREE', 'MARKUP', 'PREVIEW']}
                   />
-                )}
-              </ViewPanel>
-              <ViewPanel type="JSONTREE" scrollable={false}>
-                {(tree, onChange) => (
-                  <SchemaEditorWidget tree={tree} onChange={onChange} />
-                )}
-              </ViewPanel>
-              <ViewPanel type="MARKUP" scrollable={false}>
-                {(tree) => <MarkupSchemaWidget tree={tree} />}
-              </ViewPanel>
-              <ViewPanel type="PREVIEW">
-                {(tree) => <PreviewWidget tree={tree} />}
-              </ViewPanel>
-            </ViewportPanel>
-          </WorkspacePanel>
-        </Workspace>
-        <SettingsPanel title="panels.PropertySettings">
-          <SettingsForm uploadAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" />
-        </SettingsPanel>
-      </StudioPanel>
-    </Designer>
-    
+                </ToolbarPanel>
+                <ViewportPanel style={{ height: '100%' }}>
+                  <ViewPanel type="DESIGNABLE">
+                    {() => (
+                      <ComponentTreeWidget
+                        components={{
+                          Form,
+                          Field,
+                          Input,
+                          Select,
+                          TreeSelect,
+                          Cascader,
+                          Radio,
+                          Checkbox,
+                          Slider,
+                          Rate,
+                          NumberPicker,
+                          Transfer,
+                          Password,
+                          DatePicker,
+                          TimePicker,
+                          Upload,
+                          Switch,
+                          Text,
+                          Card,
+                          ArrayCards,
+                          ArrayTable,
+                          Space,
+                          FormTab,
+                          FormCollapse,
+                          FormGrid,
+                          FormLayout,
+                          ObjectContainer,
+                          Slot
+                        }}
+                      />
+                    )}
+                  </ViewPanel>
+                  <ViewPanel type="JSONTREE" scrollable={false}>
+                    {(tree, onChange) => (
+                      <SchemaEditorWidget tree={tree} onChange={onChange} />
+                    )}
+                  </ViewPanel>
+                  <ViewPanel type="MARKUP" scrollable={false}>
+                    {(tree) => <MarkupSchemaWidget tree={tree} />}
+                  </ViewPanel>
+                  <ViewPanel type="PREVIEW">
+                    {(tree) => <PreviewWidget tree={tree} />}
+                  </ViewPanel>
+                </ViewportPanel>
+              </WorkspacePanel>
+            </Workspace>
+            <SettingsPanel title="panels.PropertySettings">
+              <SettingsForm uploadAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" />
+            </SettingsPanel>
+          </StudioPanel>
+        </Designer>
+      </div>
+
+    </div>
+
+
   )
 }
 
