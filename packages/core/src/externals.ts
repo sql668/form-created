@@ -80,6 +80,7 @@ export const createDesigner = (props: IEngineProps<Engine> = {}) => {
   const drivers = props.drivers || []
   const effects = props.effects || []
   const shortcuts = props.shortcuts || []
+  // untracked 不会对返回值进行依赖收集
   return untracked(
     () =>
       new Engine({

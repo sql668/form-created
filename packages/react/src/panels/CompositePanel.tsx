@@ -73,6 +73,7 @@ export const CompositePanel: React.FC<ICompositePanelProps> & {
   const activeKeyRef = useRef(null);
   const [pinning, setPinning] = useState(props.defaultPinning ?? false);
   const [visible, setVisible] = useState(props.defaultOpen ?? true);
+  // 解析获取所有的CompositePanel.Item
   const items = parseItems(props.children);
   const currentItem = findItem(items, activeKey);
   const content = currentItem?.children;
@@ -191,8 +192,10 @@ export const CompositePanel: React.FC<ICompositePanelProps> & {
               onClick={(e: any) => {
                 if (shape === 'tab') {
                   if (activeKey === item.key) {
+                    // 隐藏CompositePanel.Item对应的widget
                     setVisible(!visible);
                   } else {
+                    // 显示CompositePanel.Item对应的widget
                     setVisible(true);
                   }
                   if (!props?.activeKey || !props?.onChange)
