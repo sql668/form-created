@@ -1,7 +1,0 @@
-import React from 'react';
-import { TreeNode } from '@form-created/core';
-export interface ISelectorProps {
-    node: TreeNode;
-    style?: React.CSSProperties;
-}
-export declare const Selector: React.FC<ISelectorProps>;
