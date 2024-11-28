@@ -1,6 +1,6 @@
 {
   "name": "@form-created/react-settings-form",
-  "version": "0.0.1-beta.6",
+  "version": "0.0.1-beta.7",
   "description": "",
   "main": "dist/index.es.js",
   "module": "dist/index.es.js",

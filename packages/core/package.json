@@ -1,6 +1,6 @@
 {
   "name": "@form-created/core",
-  "version": "0.0.1-beta.6",
+  "version": "0.0.1-beta.7",
   "description": "",
   "main": "dist/index.es.js",
   "module": "dist/index.es.js",
@@ -38,8 +38,10 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-transition-group": "^4.4.5",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "classnames": "^2.3.1",
     "cross-env": "^7.0.3",
     "husky": "^8.0.1",
+    "lodash-es": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -53,16 +55,14 @@
     "sass": "^1.54.4",
     "typescript": "~5.4.5",
     "web-vitals": "^2.1.4",
-    "webpack": "^5.72.0",
-    "classnames": "^2.3.1",
-    "lodash-es": "^4.17.21"
+    "webpack": "^5.72.0"
   },
   "dependencies": {
+    "@form-created/shared": "workspace:^",
+    "@formily/core": "^2.3.2",
     "@formily/json-schema": "^2.3.2",
     "@formily/path": "^2.3.2",
     "@formily/reactive": "^2.3.2",
-    "@formily/core": "^2.3.2",
-    "@form-created/shared": "workspace:^",
     "@juggle/resize-observer": "^3.4.0"
   },
   "peerDependencies": {
