@@ -38,9 +38,9 @@ const getVersion = async () => {
 
 async function main() {
   try {
-    // console.log(semver.lt("0.0.0", "0.0.1-beta.6"))
-    // console.log( semver.lt("0.0.1", "0.0.1-beta.6"))
-    // console.log(semver.lt("0.0.2", "0.0.1-beta.6"))
+    //console.log(semver.lt("0.0.0", "0.0.1-beta.6"))  //true
+    //console.log( semver.lt("0.0.1", "0.0.1-beta.6"))  //false
+    //console.log(semver.lt("0.0.2", "0.0.1-beta.6"))   //false
     const newVersion = await getVersion()
     console.log("version: ", newVersion)
     const lastVersion = await getNpmLatestVersion("@form-created/core")

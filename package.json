@@ -9,6 +9,7 @@
     "dev": "pnpm -C example dev",
     "build": "pnpm -C packages/antd build",
     "update:version": "tsx scripts/update-version.ts",
+    "sv": "tsx scripts/mysemver.ts",
     "build:all": "pnpm run clean && pnpm run shared:build && pnpm run core:build && pnpm run react:build && pnpm run setting-form:build && pnpm run tansform:build && pnpm run setters:build && pnpm run antd:build",
     "shared:build": "pnpm -C packages/shared build",
     "core:build": "pnpm -C packages/core build",
